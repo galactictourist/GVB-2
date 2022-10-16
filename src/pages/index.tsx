@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { Footer } from '../components/Footer'
-import { Header } from '../components/Header'
+import Header from '../components/Header'
 import { ItemGrid } from '../components/ItemGrid'
 import { Partner } from '../components/Partner'
 
