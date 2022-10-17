@@ -17,6 +17,9 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Logo from '../../../public/img/givabit_logo.jpg'
+import { useWeb3React } from '@web3-react/core'
+import { injectedConnector } from '~/config'
+import { formatWalletAddress } from '~/utils/wallet'
 
 const explore = [
   {
@@ -68,6 +71,11 @@ function classNames(...classes: string[]) {
 }
 
 const Header: React.FC<any> = () => {
+  const { account, activate } = useWeb3React()
+  async function connect() {
+    await activate(injectedConnector)
+  }
+
   return (
     <Popover className="fixed w-full bg-white shadow-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -148,12 +156,22 @@ const Header: React.FC<any> = () => {
             </a>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-            <a
-              href="#"
-              className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-            >
-              Connect
-            </a>
+            {account ? (
+              <a
+                href="#"
+                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+              >
+                {formatWalletAddress(account)}
+              </a>
+            ) : (
+              <a
+                href="#"
+                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                onClick={(e) => connect()}
+              >
+                Connect
+              </a>
+            )}
           </div>
         </div>
       </div>
