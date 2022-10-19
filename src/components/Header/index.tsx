@@ -16,63 +16,74 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import Logo from "../../../public/img/givabit_logo.jpg"
+import Logo from '../../../public/img/givabit_logo.jpg'
+import { useWeb3React } from '@web3-react/core'
+import { injectedConnector } from '~/config'
+import { formatWalletAddress } from '~/utils/wallet'
 
 const explore = [
-    {
-      name: 'Education',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-      href: '#',
-      icon: ChartBarIcon,
-    },
-    {
-      name: 'Health & Medical Reseach',
-      description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-      href: '#',
-      icon: CursorArrowRaysIcon,
-    },
-    {
-      name: 'Animal Welfare',
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-      href: '#',
-      icon: Squares2X2Icon,
-    },
-    {
-      name: 'Human Services',
-      description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-      href: '#',
-      icon: ArrowPathIcon,
-    },
-    {
-      name: 'Art & Culture',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-      href: '#',
-      icon: ChartBarIcon,
-    },
-    {
-      name: 'Environment',
-      description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-      href: '#',
-      icon: CursorArrowRaysIcon,
-    },
-  ]
+  {
+    name: 'Education',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+    href: '#',
+    icon: ChartBarIcon,
+  },
+  {
+    name: 'Health & Medical Reseach',
+    description:
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+    href: '#',
+    icon: CursorArrowRaysIcon,
+  },
+  {
+    name: 'Animal Welfare',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+    href: '#',
+    icon: Squares2X2Icon,
+  },
+  {
+    name: 'Human Services',
+    description:
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+    href: '#',
+    icon: ArrowPathIcon,
+  },
+  {
+    name: 'Art & Culture',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+    href: '#',
+    icon: ChartBarIcon,
+  },
+  {
+    name: 'Environment',
+    description:
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+    href: '#',
+    icon: CursorArrowRaysIcon,
+  },
+]
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 const Header: React.FC<any> = () => {
+  const { account, activate } = useWeb3React()
+  async function connect() {
+    await activate(injectedConnector)
+  }
+
   return (
-    <Popover className="fixed w-full shadow-xl bg-white">
+    <Popover className="fixed w-full bg-white shadow-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between border-b-2 border-gray-100 py-2 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <a href="#">
               <span className="sr-only">Your Company</span>
-              <Image 
-                    src={Logo}
-                    alt='Givabit logo'
-                />
+              <Image src={Logo} alt="Givabit logo" />
             </a>
           </div>
           <div className="-my-2 -mr-2 md:hidden">
@@ -119,7 +130,10 @@ const Header: React.FC<any> = () => {
                               href={item.href}
                               className="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
                             >
-                              <item.icon className="h-6 w-6 flex-shrink-0 text-n4gMediumTeal" aria-hidden="true" />
+                              <item.icon
+                                className="h-6 w-6 flex-shrink-0 text-n4gMediumTeal"
+                                aria-hidden="true"
+                              />
                               <div className="ml-4">
                                 <p className="text-base font-medium text-gray-900">{item.name}</p>
                                 <p className="mt-1 text-sm text-gray-500">{item.description}</p>
@@ -140,15 +154,24 @@ const Header: React.FC<any> = () => {
             <a href="#" className="text-lg font-medium text-gray-500 hover:text-gray-900">
               Create
             </a>
-            
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-            <a
-              href="#"
-              className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-            >
-              Connect
-            </a>
+            {account ? (
+              <a
+                href="#"
+                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+              >
+                {formatWalletAddress(account)}
+              </a>
+            ) : (
+              <a
+                href="#"
+                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                onClick={(e) => connect()}
+              >
+                Connect
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -162,15 +185,15 @@ const Header: React.FC<any> = () => {
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-95"
       >
-        <Popover.Panel focus className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden">
+        <Popover.Panel
+          focus
+          className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden"
+        >
           <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
             <div className="px-5 pt-5 pb-6">
               <div className="flex items-center justify-between">
                 <div>
-                    <Image 
-                        src={Logo}
-                        alt='Givabit logo'
-                    />
+                  <Image src={Logo} alt="Givabit logo" />
                 </div>
                 <div className="-mr-2">
                   <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-n4gMediumTeal">
@@ -187,7 +210,10 @@ const Header: React.FC<any> = () => {
                       href={item.href}
                       className="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50"
                     >
-                      <item.icon className="h-6 w-6 flex-shrink-0 text-n4gMediumTeal" aria-hidden="true" />
+                      <item.icon
+                        className="h-6 w-6 flex-shrink-0 text-n4gMediumTeal"
+                        aria-hidden="true"
+                      />
                       <span className="ml-3 text-base font-medium text-gray-900">{item.name}</span>
                     </a>
                   ))}
