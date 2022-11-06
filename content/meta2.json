@@ -1,0 +1,354 @@
+[
+  {
+    "name": "Ng4good_test #13",
+    "description": "Testing the randomizer at https://github.com/codeSTACKr/create-10k-nft-collection",
+    "collection": "Collection_C",
+    "cause": "Cause_Y",
+    "image": "13.png",
+    "attributes": [
+      {
+        "trait_type": "BG",
+        "value": "BG 5"
+      },
+      {
+        "trait_type": "body",
+        "value": "Body 2"
+      },
+      {
+        "trait_type": "Outfits",
+        "value": "Outfit 5"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Eyes 5"
+      },
+      {
+        "trait_type": "Mouths",
+        "value": "Mouth 1"
+      },
+      {
+        "trait_type": "beard and mustache",
+        "value": "Beard 5"
+      },
+      {
+        "trait_type": "Glasses",
+        "value": "Glasses 1_r"
+      }
+    ],
+    "custom_fields": {
+      "dna": "30e2aa4de2ce29a7c1fd37d3a54527ca0b229ab5",
+      "edition": 13,
+      "date": 1665067418984,
+      "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    },
+    "external_url": "https://codecats.xyz"
+  },
+  {
+    "name": "Ng4good_test #14",
+    "description": "Testing the randomizer at https://github.com/codeSTACKr/create-10k-nft-collection",
+    "collection": "Collection_C",
+    "cause": "Cause_Y",
+    "image": "14.png",
+    "attributes": [
+      {
+        "trait_type": "BG",
+        "value": "BG 13"
+      },
+      {
+        "trait_type": "body",
+        "value": "Body 1"
+      },
+      {
+        "trait_type": "Outfits",
+        "value": "Outfit 2"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Eyes 4"
+      },
+      {
+        "trait_type": "Mouths",
+        "value": "Mouth 1"
+      },
+      {
+        "trait_type": "beard and mustache",
+        "value": "Beard 9"
+      },
+      {
+        "trait_type": "Glasses",
+        "value": "Glasses 5_r"
+      }
+    ],
+    "custom_fields": {
+      "dna": "1b7e3e113a1e48a3a79745830b806592b1d4ab26",
+      "edition": 14,
+      "date": 1665067419497,
+      "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    },
+    "external_url": "https://codecats.xyz"
+  },
+  {
+    "name": "Ng4good_test #15",
+    "description": "Testing the randomizer at https://github.com/codeSTACKr/create-10k-nft-collection",
+    "collection": "Collection_C",
+    "cause": "Cause_Y",
+    "image": "15.png",
+    "attributes": [
+      {
+        "trait_type": "BG",
+        "value": "BG 5"
+      },
+      {
+        "trait_type": "body",
+        "value": "Body 3"
+      },
+      {
+        "trait_type": "Outfits",
+        "value": "Outfit 2"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Eyes 2"
+      },
+      {
+        "trait_type": "Mouths",
+        "value": "Mouth 2"
+      },
+      {
+        "trait_type": "beard and mustache",
+        "value": "Beard 1"
+      },
+      {
+        "trait_type": "Glasses",
+        "value": "Glasses 2_r"
+      }
+    ],
+    "custom_fields": {
+      "dna": "3fddb8bbc45ec3a683294d2a1131bf6e038b9ac4",
+      "edition": 15,
+      "date": 1665067419978,
+      "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    },
+    "external_url": "https://codecats.xyz"
+  },
+  {
+    "name": "Ng4good_test #16",
+    "description": "Testing the randomizer at https://github.com/codeSTACKr/create-10k-nft-collection",
+    "collection": "Collection_D",
+    "cause": "Cause_Y",
+    "image": "16.png",
+    "attributes": [
+      {
+        "trait_type": "BG",
+        "value": "BG 4"
+      },
+      {
+        "trait_type": "body",
+        "value": "Body 3"
+      },
+      {
+        "trait_type": "Outfits",
+        "value": "Outfit 3"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Eyes 5"
+      },
+      {
+        "trait_type": "Mouths",
+        "value": "Mouth 2"
+      },
+      {
+        "trait_type": "beard and mustache",
+        "value": "Beard 9"
+      },
+      {
+        "trait_type": "Glasses",
+        "value": "Glasses 2_r"
+      }
+    ],
+    "custom_fields": {
+      "dna": "859de8f6c3ecf2e544155484f98fa23bec65d991",
+      "edition": 16,
+      "date": 1665067420439,
+      "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    },
+    "external_url": "https://codecats.xyz"
+  },
+  {
+    "name": "Ng4good_test #17",
+    "description": "Testing the randomizer at https://github.com/codeSTACKr/create-10k-nft-collection",
+    "collection": "Collection_D",
+    "cause": "Cause_Y",
+    "image": "17.png",
+    "attributes": [
+      {
+        "trait_type": "BG",
+        "value": "BG 5"
+      },
+      {
+        "trait_type": "body",
+        "value": "Body 3"
+      },
+      {
+        "trait_type": "Outfits",
+        "value": "Outfit 3"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Eyes 1"
+      },
+      {
+        "trait_type": "Mouths",
+        "value": "Mouth 1"
+      },
+      {
+        "trait_type": "beard and mustache",
+        "value": "Beard 2"
+      },
+      {
+        "trait_type": "Glasses",
+        "value": "Glasses 2_r"
+      }
+    ],
+    "custom_fields": {
+      "dna": "2c8a58b320896c6388da407ea9cd293b93e2b193",
+      "edition": 17,
+      "date": 1665067420878,
+      "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    },
+    "external_url": "https://codecats.xyz"
+  },
+  {
+    "name": "Ng4good_test #18",
+    "description": "Testing the randomizer at https://github.com/codeSTACKr/create-10k-nft-collection",
+    "collection": "Collection_D",
+    "cause": "Cause_Y",
+    "image": "18.png",
+    "attributes": [
+      {
+        "trait_type": "BG",
+        "value": "BG 2"
+      },
+      {
+        "trait_type": "body",
+        "value": "Body 4"
+      },
+      {
+        "trait_type": "Outfits",
+        "value": "Outfit 2"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Eyes 3"
+      },
+      {
+        "trait_type": "Mouths",
+        "value": "Mouth 2"
+      },
+      {
+        "trait_type": "beard and mustache",
+        "value": "Beard 6"
+      },
+      {
+        "trait_type": "Glasses",
+        "value": "Glasses 5_r"
+      }
+    ],
+    "custom_fields": {
+      "dna": "ad6ac6d41f57b6ee8c99a5053e1e5b5c82546a4b",
+      "edition": 18,
+      "date": 1665067421314,
+      "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    },
+    "external_url": "https://codecats.xyz"
+  },
+  {
+    "name": "Ng4good_test #19",
+    "description": "Testing the randomizer at https://github.com/codeSTACKr/create-10k-nft-collection",
+    "collection": "Collection_D",
+    "cause": "Cause_Y",
+    "image": "19.png",
+    "attributes": [
+      {
+        "trait_type": "BG",
+        "value": "BG 4"
+      },
+      {
+        "trait_type": "body",
+        "value": "Body 1"
+      },
+      {
+        "trait_type": "Outfits",
+        "value": "Outfit 1"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Eyes 4"
+      },
+      {
+        "trait_type": "Mouths",
+        "value": "Mouth 1"
+      },
+      {
+        "trait_type": "beard and mustache",
+        "value": "Beard 3"
+      },
+      {
+        "trait_type": "Glasses",
+        "value": "Glasses 4_r"
+      }
+    ],
+    "custom_fields": {
+      "dna": "1b18e51b5dce1bfbd2e86189228afd2c1265f99f",
+      "edition": 19,
+      "date": 1665067421813,
+      "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    },
+    "external_url": "https://codecats.xyz"
+  },
+  {
+    "name": "Ng4good_test #20",
+    "description": "Testing the randomizer at https://github.com/codeSTACKr/create-10k-nft-collection",
+    "collection": "Collection_D",
+    "cause": "Cause_Y",
+    "image": "20.png",
+    "attributes": [
+      {
+        "trait_type": "BG",
+        "value": "BG 12"
+      },
+      {
+        "trait_type": "body",
+        "value": "Body 5"
+      },
+      {
+        "trait_type": "Outfits",
+        "value": "Outfit 6"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Eyes 5"
+      },
+      {
+        "trait_type": "Mouths",
+        "value": "Mouth 1"
+      },
+      {
+        "trait_type": "beard and mustache",
+        "value": "Beard 7"
+      },
+      {
+        "trait_type": "Glasses",
+        "value": "Glasses 4_r"
+      }
+    ],
+    "custom_fields": {
+      "dna": "6ea670f3b425ccd9ca32d06959918d6012e3411c",
+      "edition": 20,
+      "date": 1665067422331,
+      "compiler": "HashLips Art Engine - codeSTACKr Modified"
+    },
+    "external_url": "https://codecats.xyz"
+  }
+]
