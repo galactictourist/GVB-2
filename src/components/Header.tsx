@@ -4,66 +4,62 @@ import { Popover, Transition } from '@headlessui/react'
 import {
   ArrowPathIcon,
   Bars3Icon,
-  BookmarkSquareIcon,
-  CalendarIcon,
   ChartBarIcon,
   CursorArrowRaysIcon,
-  LifebuoyIcon,
-  PhoneIcon,
-  PlayIcon,
-  ShieldCheckIcon,
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import Logo from '../../../public/img/givabit_logo.jpg'
+import Logo from '../../public/img/givabit_logo.jpg'
 import { useWeb3React } from '@web3-react/core'
 import { injectedConnector } from '~/config'
 import { formatWalletAddress } from '~/utils/wallet'
+import Link from 'next/link'
 
 const explore = [
   {
     name: 'Education',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-    href: '#',
+      'The future of the world depends on the children of today, so investing in them is to take care of humanities future',
+    href: '/cause/Education',
     icon: ChartBarIcon,
-  },
-  {
-    name: 'Health & Medical Reseach',
-    description:
-      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-    href: '#',
-    icon: CursorArrowRaysIcon,
   },
   {
     name: 'Animal Welfare',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-    href: '#',
+      'Many animals across the world are in danger, whether it is from direct human intervention or climate change. Lets help them',
+    href: '/cause/Animals',
     icon: Squares2X2Icon,
-  },
-  {
-    name: 'Human Services',
-    description:
-      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-    href: '#',
-    icon: ArrowPathIcon,
-  },
-  {
-    name: 'Art & Culture',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-    href: '#',
-    icon: ChartBarIcon,
   },
   {
     name: 'Environment',
     description:
-      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-    href: '#',
+      'We have only one earth, and it is our responsibility for our future grandchildren to take care of it',
+    href: '/cause/Environment',
     icon: CursorArrowRaysIcon,
   },
+
+  //  {
+  //    name: 'Human Services',
+  //    description:
+  //     'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+  //    href: '#',
+  //   icon: ArrowPathIcon,
+  //  },
+  //  {
+  //    name: 'Art & Culture',
+  //    description:
+  //      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+  //    href: '#',
+  //    icon: ChartBarIcon,
+  //  },
+  //  {
+  //    name: 'Environment',
+  //    description:
+  //      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+  //    href: '#',
+  //    icon: CursorArrowRaysIcon,
+  //  },
 ]
 
 function classNames(...classes: string[]) {
@@ -77,14 +73,16 @@ const Header: React.FC<any> = () => {
   }
 
   return (
-    <Popover className="fixed w-full bg-white shadow-xl">
+    <Popover className="fixed z-30 w-full bg-white shadow-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex items-center justify-between border-b-2 border-gray-100 py-2 md:justify-start md:space-x-10">
+        <div className="flex items-center justify-between  py-2 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="#">
-              <span className="sr-only">Your Company</span>
-              <Image src={Logo} alt="Givabit logo" />
-            </a>
+            <Link href="/">
+              <a>
+                <span className="sr-only">Your Company</span>
+                <Image src={Logo} alt="Givabit logo" />
+              </a>
+            </Link>
           </div>
           <div className="-my-2 -mr-2 md:hidden">
             <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-n4gMediumTeal">
