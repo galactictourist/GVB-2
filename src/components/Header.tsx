@@ -92,8 +92,8 @@ const Header: React.FC<any> = () => {
 
   return (
     <Popover
-      className={`fixed z-30 w-full ${isScrolled && 'bg-n4gLightTeal'} ${
-        !isScrolled && 'shadow-md transition duration-700'
+      className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${
+        !isScrolled && 'transition duration-700'
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -102,7 +102,7 @@ const Header: React.FC<any> = () => {
             <Link href="/">
               <a>
                 <span className="sr-only">Givabit</span>
-                <Image src={Logo} alt="Givabit logo" height={50} width={200} />
+                <Image src={Logo} alt="Givabit logo" height={50} width={170} />
               </a>
             </Link>
           </div>
