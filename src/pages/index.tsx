@@ -44,8 +44,8 @@ const Home: NextPage = () => {
             <h2 className="flex items-center justify-center p-4 text-4xl text-gray-900">
               {cause.name}
             </h2>
-            <h3 className="flex items-center justify-center  text-gray-900">{cause.description}</h3>
-            <div className="mt-8 grid grid-cols-1 gap-y-12 pb-10 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+            {/* <h3 className="flex items-center justify-center  text-gray-900">{cause.description}</h3> */}
+            <div className="mt-4 grid grid-cols-1 gap-y-12 pb-10 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
               {showNfts(cause.name)}
             </div>
           </>

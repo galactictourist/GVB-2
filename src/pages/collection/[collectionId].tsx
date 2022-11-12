@@ -4,6 +4,7 @@ import Footer from '~/components/Footer'
 import Header from '~/components/Header'
 import nfts from '../../../content/meta.json'
 import { NftItem } from '~/components/NftList'
+import Head from 'next/head'
 
 const CollectionPage: NextPage = () => {
   const router = useRouter()
@@ -17,7 +18,13 @@ const CollectionPage: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>GivaBit | Collection </title>
+        <meta name="description" content="Support charities by buying an NFT" />
+      </Head>
+
       <Header />
+
       <div className="mx-auto max-w-2xl py-16 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <>

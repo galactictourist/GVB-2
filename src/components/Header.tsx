@@ -79,7 +79,7 @@ const Header: React.FC<any> = () => {
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <Link href="/">
               <a>
-                <span className="sr-only">Your Company</span>
+                <span className="sr-only">Givabit</span>
                 <Image src={Logo} alt="Givabit logo" />
               </a>
             </Link>
@@ -100,7 +100,7 @@ const Header: React.FC<any> = () => {
                       'group inline-flex items-center rounded-md bg-white text-lg font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-n4gMediumTeal focus:ring-offset-2'
                     )}
                   >
-                    <span>Solutions</span>
+                    <span>Causes</span>
                     <ChevronDownIcon
                       className={classNames(
                         open ? 'text-gray-600' : 'text-gray-400',
@@ -146,12 +146,16 @@ const Header: React.FC<any> = () => {
               )}
             </Popover>
 
-            <a href="#" className="text-lg font-medium text-gray-500 hover:text-gray-900">
-              About
-            </a>
-            <a href="#" className="text-lg font-medium text-gray-500 hover:text-gray-900">
-              Create
-            </a>
+            <Link href="/profile/">
+              <div className="text-lg font-medium text-gray-500 hover:cursor-pointer hover:text-gray-900">
+                Profile
+              </div>
+            </Link>
+            <Link href="/collection/create">
+              <div className="text-lg font-medium text-gray-500 hover:cursor-pointer hover:text-gray-900">
+                Collection
+              </div>
+            </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
             {account ? (
@@ -220,13 +224,16 @@ const Header: React.FC<any> = () => {
             </div>
             <div className="space-y-6 py-6 px-5">
               <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                <a href="#" className="text-base font-medium text-gray-900 hover:text-gray-700">
-                  About
-                </a>
-
-                <a href="#" className="text-base font-medium text-gray-900 hover:text-gray-700">
-                  Create
-                </a>
+                <Link href="/profile/">
+                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                    Profile
+                  </div>
+                </Link>
+                <Link href="/collection/create">
+                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                    Collection
+                  </div>
+                </Link>
               </div>
               <div>
                 <a

@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { HelmetProvider } from 'react-helmet-async'
 import { configureAppStore } from '../store/configureStore'
 import { Web3ReactProvider } from '@web3-react/core'
+import { Toaster } from 'react-hot-toast'
 import Web3 from 'web3'
 
 function getLibrary(provider: any) {
@@ -19,6 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <HelmetProvider>
         <Web3ReactProvider getLibrary={getLibrary}>
           <React.StrictMode>
+            <Toaster />
             <Component {...pageProps} />
           </React.StrictMode>
         </Web3ReactProvider>
