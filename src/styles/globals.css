@@ -3,3 +3,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .n4gForm {
+    @apply block w-full rounded-md border border-solid border-gray-300 p-2 shadow-sm focus:border-n4gMediumTeal sm:text-sm;
+  }
+}
