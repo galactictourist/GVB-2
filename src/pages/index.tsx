@@ -1,10 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
 import { NftItem } from '~/components/NftList'
 import nfts from '../../content/meta.json'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
 
 const causes = [
   {
@@ -39,8 +38,8 @@ const Home: NextPage = () => {
       </Head>
       <Header />
       <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        {causes.map((cause) => (
-          <>
+        {causes.map((cause, i) => (
+          <div key={i}>
             <h2 className="flex items-center justify-center p-4 text-4xl text-gray-900">
               {cause.name}
             </h2>
@@ -48,7 +47,7 @@ const Home: NextPage = () => {
             <div className="mt-8 grid grid-cols-1 gap-y-12 pb-10 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
               {showNfts(cause.name)}
             </div>
-          </>
+          </div>
         ))}
       </div>
       <Footer />
