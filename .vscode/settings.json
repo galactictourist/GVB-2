@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["givabit", "headlessui"]
+  "cSpell.words": ["givabit", "headlessui"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
 }

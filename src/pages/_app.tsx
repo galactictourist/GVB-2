@@ -1,11 +1,12 @@
-import '../styles/globals.css'
+import { Web3ReactProvider } from '@web3-react/core'
 import type { AppProps } from 'next/app'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import { HelmetProvider } from 'react-helmet-async'
-import { configureAppStore } from '../store/configureStore'
-import { Web3ReactProvider } from '@web3-react/core'
+import { Provider } from 'react-redux'
 import Web3 from 'web3'
+import { Auth } from '~/components/Auth/Auth'
+import { configureAppStore } from '../store/configureStore'
+import '../styles/globals.css'
 
 function getLibrary(provider: any) {
   return new Web3(provider)
@@ -19,6 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <HelmetProvider>
         <Web3ReactProvider getLibrary={getLibrary}>
           <React.StrictMode>
+            <Auth />
             <Component {...pageProps} />
           </React.StrictMode>
         </Web3ReactProvider>

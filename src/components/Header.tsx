@@ -1,20 +1,24 @@
-import Image from 'next/image'
-import { Fragment } from 'react'
 import { Popover, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import {
-  ArrowPathIcon,
   Bars3Icon,
   ChartBarIcon,
   CursorArrowRaysIcon,
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import Logo from '../../public/img/givabit_logo.jpg'
 import { useWeb3React } from '@web3-react/core'
-import { injectedConnector } from '~/config'
-import { formatWalletAddress } from '~/utils/wallet'
+import Image from 'next/image'
 import Link from 'next/link'
+import { Fragment, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { injectedConnector } from '~/config'
+import { givabitApi } from '~/services/givabit/api'
+import { formatWalletAddress } from '~/utils/wallet'
+import { signMessage } from '~/utils/web3'
+import Logo from '../../public/img/givabit_logo.jpg'
+import { useAuthSlice } from './Auth/slice'
+import { selectAuth } from './Auth/slice/selectors'
 
 const explore = [
   {
@@ -67,10 +71,36 @@ function classNames(...classes: string[]) {
 }
 
 const Header: React.FC<any> = () => {
-  const { account, activate } = useWeb3React()
-  async function connect() {
-    await activate(injectedConnector)
+  const { wallet } = useSelector(selectAuth)
+  const { actions } = useAuthSlice()
+  const dispatch = useDispatch()
+  const { active, account, connector, activate, error } = useWeb3React()
+  const [isSigningInUsingWallet, isSigningInUsingWalletSetter] = useState(false)
+
+  async function signOut() {
+    dispatch(actions.signOut())
   }
+
+  useEffect(() => {
+    ;(async () => {
+      if (isSigningInUsingWallet) {
+        try {
+          if (!connector || !account) {
+            await activate(injectedConnector, undefined, true)
+          } else {
+            const nonce = await givabitApi.getNonce(account)
+            const signResponse = await signMessage(connector, nonce, account)
+            const loginInfo = await givabitApi.loginUsingWallet(account, signResponse)
+            dispatch(actions.signedIn(loginInfo.user))
+            isSigningInUsingWalletSetter(false)
+          }
+        } catch (e) {
+          isSigningInUsingWalletSetter(false)
+        }
+      }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSigningInUsingWallet, connector, account])
 
   return (
     <Popover className="fixed z-30 w-full bg-white shadow-md">
@@ -154,18 +184,21 @@ const Header: React.FC<any> = () => {
             </a>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-            {account ? (
+            {wallet ? (
               <a
                 href="#"
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                onClick={() => signOut()}
               >
-                {formatWalletAddress(account)}
+                {formatWalletAddress(wallet)}
               </a>
             ) : (
               <a
                 href="#"
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                onClick={(e) => connect()}
+                onClick={() => {
+                  isSigningInUsingWalletSetter(true)
+                }}
               >
                 Connect
               </a>
