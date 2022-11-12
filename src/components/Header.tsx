@@ -8,11 +8,12 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import { Fragment, useEffect, useState } from 'react'
+//import Logo from '../../public/img/givabit_logo.jpg'
 import Link from 'next/link'
-import { Fragment } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { formatWalletAddress } from '~/utils/wallet'
-import Logo from '../../public/img/givabit_logo.jpg'
+import Logo from '../../public/img/givabit_full_logo2.svg'
 import { useAuthSlice } from './Auth/slice'
 import { selectAuth } from './Auth/slice/selectors'
 
@@ -79,15 +80,36 @@ const Header: React.FC<any> = () => {
     dispatch(actions.setSigningIn(true))
   }
 
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   return (
-    <Popover className="fixed z-30 w-full bg-white shadow-md">
+    <Popover
+      className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${
+        !isScrolled && 'transition duration-700'
+      }`}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between  py-2 md:justify-start md:space-x-10">
-          <div className="flex justify-start lg:w-0 lg:flex-1">
+          <div className="flex h-12 justify-start lg:w-0 lg:flex-1">
             <Link href="/">
               <a>
-                <span className="sr-only">Your Company</span>
-                <Image src={Logo} alt="Givabit logo" />
+                <span className="sr-only">Givabit</span>
+                <Image src={Logo} alt="Givabit logo" height={50} width={170} />
               </a>
             </Link>
           </div>
@@ -104,10 +126,10 @@ const Header: React.FC<any> = () => {
                   <Popover.Button
                     className={classNames(
                       open ? 'text-gray-900' : 'text-gray-500',
-                      'group inline-flex items-center rounded-md bg-white text-lg font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-n4gMediumTeal focus:ring-offset-2'
+                      'group inline-flex items-center rounded-md text-lg font-medium transition duration-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-n4gMediumTeal focus:ring-offset-2'
                     )}
                   >
-                    <span>Solutions</span>
+                    <span>Causes</span>
                     <ChevronDownIcon
                       className={classNames(
                         open ? 'text-gray-600' : 'text-gray-400',
@@ -133,7 +155,7 @@ const Header: React.FC<any> = () => {
                             <a
                               key={item.name}
                               href={item.href}
-                              className="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
+                              className="-m-3 flex items-start rounded-lg p-3 transition duration-700 hover:bg-gray-50"
                             >
                               <item.icon
                                 className="h-6 w-6 flex-shrink-0 text-n4gMediumTeal"
@@ -153,12 +175,16 @@ const Header: React.FC<any> = () => {
               )}
             </Popover>
 
-            <a href="#" className="text-lg font-medium text-gray-500 hover:text-gray-900">
-              About
-            </a>
-            <a href="#" className="text-lg font-medium text-gray-500 hover:text-gray-900">
-              Create
-            </a>
+            <Link href="/profile/">
+              <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
+                Profile
+              </div>
+            </Link>
+            <Link href="/collection/create">
+              <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
+                Collection
+              </div>
+            </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
             {wallet ? (
@@ -230,13 +256,16 @@ const Header: React.FC<any> = () => {
             </div>
             <div className="space-y-6 py-6 px-5">
               <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                <a href="#" className="text-base font-medium text-gray-900 hover:text-gray-700">
-                  About
-                </a>
-
-                <a href="#" className="text-base font-medium text-gray-900 hover:text-gray-700">
-                  Create
-                </a>
+                <Link href="/profile/">
+                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                    Profile
+                  </div>
+                </Link>
+                <Link href="/collection/create">
+                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                    Collection
+                  </div>
+                </Link>
               </div>
               <div>
                 <a
