@@ -203,7 +203,7 @@ const Header: React.FC<any> = () => {
                   signIn()
                 }}
               >
-                Connect
+                Signin using MetaMask
               </a>
             )}
           </div>
@@ -268,12 +268,25 @@ const Header: React.FC<any> = () => {
                 </Link>
               </div>
               <div>
-                <a
-                  href="#"
-                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                >
-                  Connect
-                </a>
+                {wallet ? (
+                  <a
+                    href="#"
+                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                    onClick={() => signOut()}
+                  >
+                    {formatWalletAddress(wallet)}
+                  </a>
+                ) : (
+                  <a
+                    href="#"
+                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                    onClick={() => {
+                      signIn()
+                    }}
+                  >
+                    Signin using MetaMask
+                  </a>
+                )}
               </div>
             </div>
           </div>
