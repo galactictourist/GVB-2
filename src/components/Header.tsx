@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import {
   ArrowPathIcon,
@@ -10,7 +10,8 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import Logo from '../../public/img/givabit_logo.jpg'
+//import Logo from '../../public/img/givabit_logo.jpg'
+import Logo from '../../public/img/givabit_full_logo2.svg'
 import { useWeb3React } from '@web3-react/core'
 import { injectedConnector } from '~/config'
 import { formatWalletAddress } from '~/utils/wallet'
@@ -67,20 +68,41 @@ function classNames(...classes: string[]) {
 }
 
 const Header: React.FC<any> = () => {
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   const { account, activate } = useWeb3React()
   async function connect() {
     await activate(injectedConnector)
   }
 
   return (
-    <Popover className="fixed z-30 w-full bg-white shadow-md">
+    <Popover
+      className={`fixed z-30 w-full ${isScrolled && 'bg-n4gLightTeal'} ${
+        !isScrolled && 'shadow-md transition duration-700'
+      }`}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between  py-2 md:justify-start md:space-x-10">
-          <div className="flex justify-start lg:w-0 lg:flex-1">
+          <div className="flex h-12 justify-start lg:w-0 lg:flex-1">
             <Link href="/">
               <a>
                 <span className="sr-only">Givabit</span>
-                <Image src={Logo} alt="Givabit logo" />
+                <Image src={Logo} alt="Givabit logo" height={50} width={200} />
               </a>
             </Link>
           </div>
@@ -97,7 +119,7 @@ const Header: React.FC<any> = () => {
                   <Popover.Button
                     className={classNames(
                       open ? 'text-gray-900' : 'text-gray-500',
-                      'group inline-flex items-center rounded-md bg-white text-lg font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-n4gMediumTeal focus:ring-offset-2'
+                      'group inline-flex items-center rounded-md text-lg font-medium transition duration-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-n4gMediumTeal focus:ring-offset-2'
                     )}
                   >
                     <span>Causes</span>
@@ -126,7 +148,7 @@ const Header: React.FC<any> = () => {
                             <a
                               key={item.name}
                               href={item.href}
-                              className="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
+                              className="-m-3 flex items-start rounded-lg p-3 transition duration-700 hover:bg-gray-50"
                             >
                               <item.icon
                                 className="h-6 w-6 flex-shrink-0 text-n4gMediumTeal"
@@ -147,12 +169,12 @@ const Header: React.FC<any> = () => {
             </Popover>
 
             <Link href="/profile/">
-              <div className="text-lg font-medium text-gray-500 hover:cursor-pointer hover:text-gray-900">
+              <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Profile
               </div>
             </Link>
             <Link href="/collection/create">
-              <div className="text-lg font-medium text-gray-500 hover:cursor-pointer hover:text-gray-900">
+              <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Collection
               </div>
             </Link>
