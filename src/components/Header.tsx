@@ -1,21 +1,21 @@
-import Image from 'next/image'
-import { Fragment, useEffect, useState } from 'react'
 import { Popover, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import {
-  ArrowPathIcon,
   Bars3Icon,
   ChartBarIcon,
   CursorArrowRaysIcon,
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import Image from 'next/image'
+import { Fragment, useEffect, useState } from 'react'
 //import Logo from '../../public/img/givabit_logo.jpg'
-import Logo from '../../public/img/givabit_full_logo2.svg'
-import { useWeb3React } from '@web3-react/core'
-import { injectedConnector } from '~/config'
-import { formatWalletAddress } from '~/utils/wallet'
 import Link from 'next/link'
+import { useDispatch, useSelector } from 'react-redux'
+import { formatWalletAddress } from '~/utils/wallet'
+import Logo from '../../public/img/givabit_full_logo2.svg'
+import { useAuthSlice } from './Auth/slice'
+import { selectAuth } from './Auth/slice/selectors'
 
 const explore = [
   {
@@ -68,6 +68,18 @@ function classNames(...classes: string[]) {
 }
 
 const Header: React.FC<any> = () => {
+  const { wallet } = useSelector(selectAuth)
+  const { actions } = useAuthSlice()
+  const dispatch = useDispatch()
+
+  function signOut() {
+    dispatch(actions.signOut())
+  }
+
+  function signIn() {
+    dispatch(actions.setSigningIn(true))
+  }
+
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -84,11 +96,6 @@ const Header: React.FC<any> = () => {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
-
-  const { account, activate } = useWeb3React()
-  async function connect() {
-    await activate(injectedConnector)
-  }
 
   return (
     <Popover
@@ -180,20 +187,23 @@ const Header: React.FC<any> = () => {
             </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-            {account ? (
+            {wallet ? (
               <a
                 href="#"
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                onClick={() => signOut()}
               >
-                {formatWalletAddress(account)}
+                {formatWalletAddress(wallet)}
               </a>
             ) : (
               <a
                 href="#"
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                onClick={(e) => connect()}
+                onClick={() => {
+                  signIn()
+                }}
               >
-                Connect
+                Signin using MetaMask
               </a>
             )}
           </div>
@@ -258,12 +268,25 @@ const Header: React.FC<any> = () => {
                 </Link>
               </div>
               <div>
-                <a
-                  href="#"
-                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                >
-                  Connect
-                </a>
+                {wallet ? (
+                  <a
+                    href="#"
+                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                    onClick={() => signOut()}
+                  >
+                    {formatWalletAddress(wallet)}
+                  </a>
+                ) : (
+                  <a
+                    href="#"
+                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                    onClick={() => {
+                      signIn()
+                    }}
+                  >
+                    Signin using MetaMask
+                  </a>
+                )}
               </div>
             </div>
           </div>
