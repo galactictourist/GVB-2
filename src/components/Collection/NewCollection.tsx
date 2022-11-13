@@ -88,12 +88,7 @@ const NewCollection = () => {
                 Cause
               </label>
               <div className="mt-1">
-                <select
-                  id="country"
-                  name="country"
-                  autoComplete="country-name"
-                  className="block h-10 w-full rounded-md border-gray-300 p-1 shadow-sm sm:text-sm"
-                >
+                <select id="cause" name="cause" autoComplete="cause-name" className="n4gForm h-10">
                   <option>Education</option>
                   <option>Animals</option>
                   <option>Environment</option>

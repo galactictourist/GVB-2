@@ -2,10 +2,8 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
-import nfts from '../../../content/meta.json'
 import { NftSingleItem } from '~/components/NftList'
-import { useEffect } from 'react'
-import Image from 'next/image'
+import nfts from '../../../content/meta.json'
 
 const CollectionPage: NextPage = () => {
   const router = useRouter()
@@ -20,7 +18,7 @@ const CollectionPage: NextPage = () => {
   return (
     <>
       <Header />
-      <div className="">{showNft()}</div>
+      <div className="mx-auto max-w-2xl px-10 lg:max-w-7xl">{showNft()}</div>
       <Footer />
     </>
   )

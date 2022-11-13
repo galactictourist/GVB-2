@@ -1,7 +1,7 @@
-import Head from 'next/head'
-import Header from '../../components/Header'
-import NewCollection from '~/components/Collection/NewCollection'
 import type { NextPage } from 'next'
+import Head from 'next/head'
+import NewCollection from '~/components/Collection/NewCollection'
+import Header from '../../components/Header'
 
 const CollectionCreate: NextPage = () => {
   return (
@@ -12,7 +12,7 @@ const CollectionCreate: NextPage = () => {
       </Head>
 
       <Header />
-      <div className="px-10 sm:px-24 md:px-56">
+      <div className="mx-auto max-w-2xl px-10 lg:max-w-7xl">
         <NewCollection />
       </div>
     </>
