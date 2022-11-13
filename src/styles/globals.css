@@ -6,6 +6,6 @@
 
 @layer components {
   .n4gForm {
-    @apply block w-full rounded-md border border-solid border-gray-300 p-2 shadow-sm focus:border-n4gMediumTeal sm:text-sm;
+    @apply block w-full rounded-md border border-solid border-gray-300 p-2 shadow-sm focus:border-n4gMediumTeal focus:ring-n4gMediumTeal sm:text-sm;
   }
 }
