@@ -49,7 +49,7 @@ export class GivabitApi {
   }
 
   async getMe() {
-    const { data: result } = await this.instance.get('/user/me')
+    const { data: result } = await this.instance.get('/users/me')
     const { id, wallet } = result.data
     return { id, wallet }
   }
