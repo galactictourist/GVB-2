@@ -62,7 +62,7 @@ const NewCollection = () => {
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Collection name
               </label>
-              <div className="mt-1 focus:border-red-500">
+              <div className="mt-1">
                 <input
                   id="name"
                   name="name"
