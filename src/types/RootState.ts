@@ -1,4 +1,4 @@
-import { AuthState } from '~/components/Auth/slice/types'
+import { AdminState, AuthState, CollectionState } from '../redux/types'
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /* 
@@ -7,5 +7,7 @@ import { AuthState } from '~/components/Auth/slice/types'
 */
 export interface RootState {
   auth: AuthState
+  collection: CollectionState
+  admin: AdminState
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }

@@ -1,14 +1,14 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { givabitApi } from '~/services/givabit/api'
 import { createSlice } from '~/utils/@reduxjs/toolkit'
 import { useInjectReducer, useInjectSaga } from '~/utils/redux-injectors'
-import { AuthState } from './types'
+import { authApi } from '../../pages/api/auth.api'
+import { AuthState } from '../types'
 
 export const initialState: AuthState = {
   signingIn: false,
 }
 
-const slice = createSlice({
+const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
@@ -22,15 +22,15 @@ const slice = createSlice({
     signOut(state) {
       state.id = undefined
       state.wallet = undefined
-      givabitApi.deleteToken()
+      authApi.deleteToken()
     },
   },
 })
 
-export const { actions: authActions, reducer } = slice
+export const { actions: userActions, reducer } = authSlice
 
 export const useAuthSlice = () => {
-  useInjectReducer({ key: slice.name, reducer: slice.reducer })
-  useInjectSaga({ key: slice.name, saga: function* () {} })
-  return { actions: slice.actions }
+  useInjectReducer({ key: authSlice.name, reducer: authSlice.reducer })
+  useInjectSaga({ key: authSlice.name, saga: function* () {} })
+  return { actions: authSlice.actions }
 }

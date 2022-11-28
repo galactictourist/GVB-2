@@ -8,14 +8,13 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
-import { Fragment, useEffect, useState } from 'react'
-//import Logo from '../../public/img/givabit_logo.jpg'
 import Link from 'next/link'
+import { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { formatWalletAddress } from '~/utils/wallet'
 import Logo from '../../public/img/givabit_full_logo2.svg'
-import { useAuthSlice } from './Auth/slice'
-import { selectAuth } from './Auth/slice/selectors'
+import { selectAuth } from '../redux/selectors'
+import { useAuthSlice } from '../redux/slices/authSlice'
 
 const explore = [
   {
@@ -39,28 +38,6 @@ const explore = [
     href: '/cause/Environment',
     icon: CursorArrowRaysIcon,
   },
-
-  //  {
-  //    name: 'Human Services',
-  //    description:
-  //     'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-  //    href: '#',
-  //   icon: ArrowPathIcon,
-  //  },
-  //  {
-  //    name: 'Art & Culture',
-  //    description:
-  //      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-  //    href: '#',
-  //    icon: ChartBarIcon,
-  //  },
-  //  {
-  //    name: 'Environment',
-  //    description:
-  //      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-  //    href: '#',
-  //    icon: CursorArrowRaysIcon,
-  //  },
 ]
 
 function classNames(...classes: string[]) {

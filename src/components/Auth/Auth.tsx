@@ -2,10 +2,10 @@ import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { injectedConnector } from '~/config'
-import { givabitApi } from '~/services/givabit/api'
 import { signMessage } from '~/utils/web3'
-import { useAuthSlice } from './slice'
-import { selectAuth } from './slice/selectors'
+import { authApi } from '../../pages/api/auth.api'
+import { selectAuth } from '../../redux/selectors'
+import { useAuthSlice } from '../../redux/slices/authSlice'
 
 export const Auth = () => {
   const { actions } = useAuthSlice()
@@ -15,9 +15,9 @@ export const Auth = () => {
 
   useEffect(() => {
     ;(async () => {
-      if (givabitApi.isSignedIn()) {
+      if (authApi.isSignedIn()) {
         try {
-          const userInformation = await givabitApi.getMe()
+          const userInformation = await authApi.getMe()
           dispatch(actions.signedIn(userInformation))
         } catch (e) {
           dispatch(actions.signOut())
@@ -34,9 +34,9 @@ export const Auth = () => {
           if (!connector || !account) {
             await activate(injectedConnector, undefined, true)
           } else {
-            const nonce = await givabitApi.getNonce(account)
+            const nonce = await authApi.getNonce(account)
             const signResponse = await signMessage(connector, nonce, account)
-            const loginInfo = await givabitApi.loginUsingWallet(account, signResponse)
+            const loginInfo = await authApi.loginUsingWallet(account, signResponse)
             dispatch(actions.signedIn(loginInfo.user))
             dispatch(actions.setSigningIn(false))
           }

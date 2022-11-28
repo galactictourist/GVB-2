@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { useSelector } from 'react-redux'
 import ProfilePicture from '../../../public/img/avatar.png'
-import { selectAuth } from '../../components/Auth/slice/selectors'
+import { selectAuth } from '../../redux/selectors'
 
 // interface Props {
 //   name: string

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 
-export class GivabitApi {
+export class AuthApi {
   private instance: AxiosInstance
   private TOKEN_KEY = 'givabit-token'
 
@@ -55,4 +55,4 @@ export class GivabitApi {
   }
 }
 
-export const givabitApi = new GivabitApi(process.env.NEXT_PUBLIC_API || '')
+export const authApi = new AuthApi(process.env.NEXT_PUBLIC_API || '')
