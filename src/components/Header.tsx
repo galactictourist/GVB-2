@@ -162,6 +162,11 @@ const Header: React.FC<any> = () => {
                 Collection
               </div>
             </Link>
+            <Link href="/admin/login">
+              <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
+                Admin
+              </div>
+            </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
             {wallet ? (
@@ -241,6 +246,11 @@ const Header: React.FC<any> = () => {
                 <Link href="/collection/create">
                   <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
                     Collection
+                  </div>
+                </Link>
+                <Link href="/admin/login">
+                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                    Admin
                   </div>
                 </Link>
               </div>

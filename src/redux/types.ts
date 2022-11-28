@@ -6,6 +6,4 @@ export interface AuthState {
 
 export interface CollectionState {}
 
-export interface AdminState {
-  signingIn: boolean
-}
+export interface AdminState {}

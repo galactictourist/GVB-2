@@ -7,7 +7,8 @@ import { Provider } from 'react-redux'
 import { useIsomorphicLayoutEffect } from 'usehooks-ts'
 import Web3 from 'web3'
 import { Auth } from '~/components/Auth/Auth'
-import { configureAppStore } from '../store/configureStore'
+//import { configureAppStore } from '../store/configureStore'
+import { store } from '~/redux/store'
 import '../styles/globals.css'
 
 // @ts-ignore
@@ -17,7 +18,7 @@ function getLibrary(provider: any) {
   return new Web3(provider)
 }
 
-const store = configureAppStore()
+//const store = configureAppStore()
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

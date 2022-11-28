@@ -1,28 +1,25 @@
-import { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '~/utils/@reduxjs/toolkit'
-import { useInjectReducer, useInjectSaga } from '~/utils/redux-injectors'
-import { AdminState } from '../types'
 
-export const initialState: AdminState = {
-  signingIn: false,
-}
+export interface AdminState {}
+
+const initialState: AdminState = {}
 
 const adminSlice = createSlice({
   name: 'admin',
   initialState,
   reducers: {
-    setSigningIn(state, action: PayloadAction<boolean>) {
-      state.signingIn = action.payload
-    },
-    signedIn(state, action: PayloadAction<{ id: string; wallet?: string }>) {},
-    signOut(state) {},
+    test1(state) {},
+    testReducer1(state) {},
   },
 })
 
-export const { actions: userActions, reducer } = adminSlice
+export const { test1, testReducer1 } = adminSlice.actions
+export default adminSlice.reducer
 
-export const useAuthSlice = () => {
-  useInjectReducer({ key: adminSlice.name, reducer: adminSlice.reducer })
-  useInjectSaga({ key: adminSlice.name, saga: function* () {} })
-  return { actions: adminSlice.actions }
-}
+// export const { actions: adminActions, reducer } = adminSlice
+
+// export const useAdminSlice = () => {
+//   useInjectReducer({ key: adminSlice.name, reducer: adminSlice.reducer })
+//   useInjectSaga({ key: adminSlice.name, saga: function* () {} })
+//   return { actions: adminSlice.actions }
+// }
