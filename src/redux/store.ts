@@ -12,7 +12,7 @@ const { asPath } = Router.router || {}
 
 const reducer = combineReducers({
   router: routerReducer,
-  activities: adminReducer,
+  admin: adminReducer,
 })
 
 export const store = configureStore({

@@ -10,11 +10,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { formatWalletAddress } from '~/utils/wallet'
 import Logo from '../../public/img/givabit_full_logo2.svg'
-import { selectAuth } from '../redux/selectors'
-import { useAuthSlice } from '../redux/slices/authSlice'
 
 const explore = [
   {
@@ -45,17 +41,17 @@ function classNames(...classes: string[]) {
 }
 
 const Header: React.FC<any> = () => {
-  const { wallet } = useSelector(selectAuth)
-  const { actions } = useAuthSlice()
-  const dispatch = useDispatch()
+  // const { wallet } = useSelector(selectAuth)
+  // const { actions } = useAuthSlice()
+  // const dispatch = useDispatch()
 
-  function signOut() {
-    dispatch(actions.signOut())
-  }
+  // function signOut() {
+  //   dispatch(actions.signOut())
+  // }
 
-  function signIn() {
-    dispatch(actions.setSigningIn(true))
-  }
+  // function signIn() {
+  //   dispatch(actions.setSigningIn(true))
+  // }
 
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -169,7 +165,7 @@ const Header: React.FC<any> = () => {
             </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-            {wallet ? (
+            {/* {wallet ? (
               <a
                 href="#"
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
@@ -187,7 +183,7 @@ const Header: React.FC<any> = () => {
               >
                 Signin using MetaMask
               </a>
-            )}
+            )} */}
           </div>
         </div>
       </div>
@@ -255,7 +251,7 @@ const Header: React.FC<any> = () => {
                 </Link>
               </div>
               <div>
-                {wallet ? (
+                {/* {wallet ? (
                   <a
                     href="#"
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
@@ -273,7 +269,7 @@ const Header: React.FC<any> = () => {
                   >
                     Signin using MetaMask
                   </a>
-                )}
+                )} */}
               </div>
             </div>
           </div>

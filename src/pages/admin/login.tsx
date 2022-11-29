@@ -1,14 +1,38 @@
 import type { NextPage } from 'next'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Header from '~/components/Header'
+import { start, test1 } from '~/redux/slices/adminSlice'
 
 const AdminLogin: NextPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const submitHandler = (e: any) => {
+  const dispatch = useDispatch()
+  //const { value } = useSelector((state: RootState) => state.admin)
+
+  //console.log(value)
+
+  useEffect(() => {
+    dispatch(start())
+    dispatch(test1('mera kaffe'))
+  }, [])
+
+  // const submitHandler = (e: any) => {
+  //   e.preventDefault()
+  //   //dispatch(start())
+  //   dispatch(test1(email))
+  //   console.log(email, password)
+  // }
+
+  function submitHandler(e: any) {
     e.preventDefault()
-    console.log(email, password)
+    try {
+      true
+    } catch (e) {
+      throw e
+    }
+    return false
   }
 
   return (

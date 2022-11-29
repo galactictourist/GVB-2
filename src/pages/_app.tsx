@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import { Provider } from 'react-redux'
 import { useIsomorphicLayoutEffect } from 'usehooks-ts'
 import Web3 from 'web3'
-import { Auth } from '~/components/Auth/Auth'
+//import { Auth } from '~/components/Auth/Auth'
 //import { configureAppStore } from '../store/configureStore'
 import { store } from '~/redux/store'
 import '../styles/globals.css'
@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <HelmetProvider>
         <Web3ReactProvider getLibrary={getLibrary}>
           <React.StrictMode>
-            <Auth />
+            {/* <Auth /> */}
             <Toaster />
             <Component {...pageProps} />
           </React.StrictMode>
