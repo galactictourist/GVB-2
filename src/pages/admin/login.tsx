@@ -1,38 +1,57 @@
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { toast } from 'react-hot-toast'
+import { useDispatch, useSelector } from 'react-redux'
 import Header from '~/components/Header'
-import { start, test1 } from '~/redux/slices/adminSlice'
+import { login } from '~/redux/slices/adminSlice'
+import { RootState } from '~/redux/store'
 
 const AdminLogin: NextPage = () => {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const router = useRouter()
 
   const dispatch = useDispatch()
-  //const { value } = useSelector((state: RootState) => state.admin)
+  const { id, error, loading } = useSelector((state: RootState) => state.admin)
+  console.log()
 
-  //console.log(value)
+  const infoMessage = () => {
+    toast.success('Trying to log in', {
+      position: 'bottom-center',
+    })
+  }
+
+  const successMessage = () => {
+    toast.success(`Welcome ${id}`, {
+      position: 'bottom-center',
+    })
+  }
+
+  const errorMessage = () => {
+    toast.error(`Error ${error}`, {
+      position: 'bottom-center',
+    })
+  }
 
   useEffect(() => {
-    dispatch(start())
-    dispatch(test1('mera kaffe'))
-  }, [])
-
-  // const submitHandler = (e: any) => {
-  //   e.preventDefault()
-  //   //dispatch(start())
-  //   dispatch(test1(email))
-  //   console.log(email, password)
-  // }
-
-  function submitHandler(e: any) {
-    e.preventDefault()
-    try {
-      true
-    } catch (e) {
-      throw e
+    if (loading) infoMessage()
+    if (id && !loading) {
+      successMessage()
+      router.push('/admin/home')
     }
-    return false
+    if (error) errorMessage()
+  }, [id, error, loading])
+
+  const submitHandler = (e: any) => {
+    console.log(username)
+    dispatch(
+      login({
+        username: username,
+        password: password,
+      })
+    )
+    console.log(password)
   }
 
   return (
@@ -48,19 +67,19 @@ const AdminLogin: NextPage = () => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" action="#" method="POST">
+            <div className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="text" className="block text-sm font-medium text-gray-700">
                   Email address
                 </label>
                 <div className="mt-1">
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="username"
+                    name="username"
+                    type="text"
+                    autoComplete="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                     className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   />
@@ -88,13 +107,13 @@ const AdminLogin: NextPage = () => {
               <div>
                 <button
                   type="submit"
-                  onSubmit={submitHandler}
+                  onClick={submitHandler}
                   className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   Sign in
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

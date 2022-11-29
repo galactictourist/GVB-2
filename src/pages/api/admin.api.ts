@@ -1,36 +1,15 @@
-import axios, { AxiosInstance } from 'axios'
+import { adminClient } from './adminClient.api'
 
-export class AdminApi {
-  private instance: AxiosInstance
-  private ADMIN_KEY = 'admin-token'
+const mainClient = adminClient(process.env.NEXT_PUBLIC_API || '')
 
-  constructor(baseURL: string) {
-    this.instance = axios.create({
-      baseURL,
-    })
-    this.instance.interceptors.request.use((config) => {
-      const token = localStorage.getItem(this.ADMIN_KEY)
-      if (token && config.headers) {
-        config.headers['Authorization'] = `Bearer ${token}`
-      }
-      return config
-    })
-  }
-
-  async adminLogin(username: string, password: string) {
-    const { data: result } = await this.instance.post('/auth/admin/signin', {
-      username: username,
-      password: password,
-    })
-    const {
-      data: { accessToken },
-    } = result.data
-    localStorage.setItem(this.ADMIN_KEY, result.data.accessToken)
-    console.log(accessToken)
-    return {
-      accessToken,
+export const adminApi = {
+  async login(data: any) {
+    try {
+      const res = await mainClient.post('/admin/auth/signin', data)
+      const resBody = res.data
+      return resBody
+    } catch (err) {
+      throw err
     }
-  }
+  },
 }
-
-export const adminApi = new AdminApi(process.env.NEXT_PUBLIC_API || '')

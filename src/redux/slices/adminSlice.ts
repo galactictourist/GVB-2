@@ -1,39 +1,39 @@
 import { createSlice } from '~/utils/@reduxjs/toolkit'
 
-export interface AdminState {
-  value: string
-}
-
-const initialState: AdminState = {
-  value: 'hej',
-}
-
 const adminSlice = createSlice({
   name: 'admin',
-  initialState,
+  initialState: {
+    loading: false,
+    id: '',
+    role: '',
+    status: '',
+    username: '',
+    error: '',
+  },
   reducers: {
-    start(state) {
-      state.value = 'I am just testing this'
-      console.log('TEST33333')
+    login(state, action) {
+      state.loading = true
     },
-    test1(state, action) {
-      state.value = action.payload
-      console.log('TEST')
+    loginSuccess(state, action) {
+      const { user } = action.payload
+      const { id, role, status, username } = user
+      state.id = id
+      state.role = role
+      state.status = status
+      state.username = username
+      state.error = ''
+      state.loading = false
     },
-    testReducer1(state, action) {
-      state.value = 'Kaffe'
-      console.log('TEST2')
+    loginFailure(state, action) {
+      state.loading = false
+      state.id = ''
+      state.role = ''
+      state.status = ''
+      state.username = ''
+      state.error = action.payload.message
     },
   },
 })
 
-export const { start, test1, testReducer1 } = adminSlice.actions
+export const { login, loginSuccess, loginFailure } = adminSlice.actions
 export default adminSlice.reducer
-
-// export const { actions: adminActions, reducer } = adminSlice
-
-// export const useAdminSlice = () => {
-//   useInjectReducer({ key: adminSlice.name, reducer: adminSlice.reducer })
-//   useInjectSaga({ key: adminSlice.name, saga: function* () {} })
-//   return { actions: adminSlice.actions }
-// }

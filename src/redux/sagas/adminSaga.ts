@@ -1,9 +1,18 @@
-import { put } from 'redux-saga/effects'
-import { testReducer1 } from '../slices/adminSlice'
+import { call, put } from 'redux-saga/effects'
+import { adminApi } from '~/pages/api/admin.api'
+import { loginFailure, loginSuccess } from '../slices/adminSlice'
 
 export function* adminSaga(action: any) {
-  console.log('Hello from SAGA')
+  console.log('Hello from saga')
   console.log(action)
-  //const { value } = action.payload
-  yield put(testReducer1('hejhej'))
+  try {
+    const { data } = yield call(adminApi.login, action.payload)
+    if (data) {
+      console.log(data)
+      yield put(loginSuccess(data))
+    }
+  } catch (error) {
+    console.log(error)
+    yield put(loginFailure(error))
+  }
 }
