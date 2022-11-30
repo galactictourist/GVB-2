@@ -41,6 +41,7 @@ const AdminLogin: NextPage = () => {
       router.push('/admin/causes')
     }
     if (error) errorMessage()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, error, loading])
 
   const submitHandler = (e: any) => {
