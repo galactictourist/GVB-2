@@ -38,7 +38,7 @@ const AdminLogin: NextPage = () => {
     if (loading) infoMessage()
     if (id && !loading) {
       successMessage()
-      router.push('/admin/home')
+      router.push('/admin/causes')
     }
     if (error) errorMessage()
   }, [id, error, loading])

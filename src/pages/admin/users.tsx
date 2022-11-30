@@ -1,17 +1,17 @@
 import { NextPage } from 'next'
 import AdminContainer from '~/components/Admin/AdminContainer'
 
-const home: NextPage = () => {
+const users: NextPage = () => {
   return (
     <>
       <AdminContainer>
         <nav className="bg-white shadow"></nav>
         <div className="flex min-h-screen">
-          <div>PLACEHOLDER FOR THE DASHBOARD</div>
+          <div>PLACEHOLDER FOR THE USERS PAGE</div>
         </div>
       </AdminContainer>
     </>
   )
 }
 
-export default home
+export default users
