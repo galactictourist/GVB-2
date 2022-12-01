@@ -12,7 +12,6 @@ const collectionsSlice = createSlice({
   initialState: {
     loading: false,
     allCollections: [] as ICollection[],
-    //allCollections: '',
     error: '',
   },
   reducers: {
@@ -24,9 +23,7 @@ const collectionsSlice = createSlice({
     },
     getCollectionsSuccess(state, action) {
       state.loading = false
-      //state.allCollections.name = action.payload.name
       state.allCollections = action.payload
-      console.log(action.payload)
       state.error = ''
     },
     getCollectionsFailure(state, action) {
