@@ -1,5 +1,9 @@
 import { NextPage } from 'next'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import AdminContainer from '~/components/Admin/AdminContainer'
+import { getCollections } from '~/redux/slices/collectionsSlice'
+import { RootState } from '~/redux/store'
 
 const placeholder = [
   {
@@ -17,7 +21,19 @@ const placeholder = [
   // More people...
 ]
 
-const collections: NextPage = () => {
+const Collections: NextPage = () => {
+  //const router = useRouter()
+
+  const dispatch = useDispatch()
+  const { loading, allCollections } = useSelector((state: RootState) => state.collections)
+  console.log(loading)
+  console.log(allCollections)
+
+  useEffect(() => {
+    dispatch(getCollections())
+    //console.log(password)
+  }, [])
+
   return (
     <>
       <AdminContainer>
@@ -98,4 +114,4 @@ const collections: NextPage = () => {
   )
 }
 
-export default collections
+export default Collections
