@@ -8,6 +8,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, ReactNode, useState } from 'react'
 
@@ -94,22 +95,22 @@ const AdminContainer = ({ children }: Props) => {
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
                       {navigation.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className={classNames(
-                            router.pathname == item.href
-                              ? 'bg-indigo-800 text-white'
-                              : 'text-indigo-100 hover:bg-indigo-600',
-                            'group flex items-center rounded-md px-2 py-2 text-base font-medium'
-                          )}
-                        >
-                          <item.icon
-                            className="mr-4 h-6 w-6 flex-shrink-0 text-indigo-300"
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </a>
+                        <Link key={item.name} href={item.href}>
+                          <div
+                            className={classNames(
+                              router.pathname == item.href
+                                ? 'bg-indigo-800 text-white'
+                                : 'text-indigo-100 hover:bg-indigo-600',
+                              'group flex items-center rounded-md px-2 py-2 text-base font-medium'
+                            )}
+                          >
+                            <item.icon
+                              className="mr-3 h-6 w-6 flex-shrink-0 text-indigo-300"
+                              aria-hidden="true"
+                            />
+                            {item.name}
+                          </div>
+                        </Link>
                       ))}
                     </nav>
                   </div>
@@ -132,22 +133,22 @@ const AdminContainer = ({ children }: Props) => {
             <div className="mt-5 flex flex-1 flex-col">
               <nav className="flex-1 space-y-1 px-2 pb-4">
                 {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className={classNames(
-                      router.pathname == item.href
-                        ? 'bg-indigo-800 text-white'
-                        : 'text-indigo-100 hover:bg-indigo-600',
-                      'group flex items-center rounded-md px-2 py-2 text-base font-medium'
-                    )}
-                  >
-                    <item.icon
-                      className="mr-3 h-6 w-6 flex-shrink-0 text-indigo-300"
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </a>
+                  <Link key={item.name} href={item.href}>
+                    <div
+                      className={classNames(
+                        router.pathname == item.href
+                          ? 'bg-indigo-800 text-white'
+                          : 'text-indigo-100 hover:bg-indigo-600',
+                        'group flex items-center rounded-md px-2 py-2 text-base font-medium'
+                      )}
+                    >
+                      <item.icon
+                        className="mr-3 h-6 w-6 flex-shrink-0 text-indigo-300"
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </div>
+                  </Link>
                 ))}
               </nav>
             </div>

@@ -4,6 +4,10 @@ export interface AuthState {
   signingIn: boolean
 }
 
-export interface CollectionState {}
+export interface CollectionsState {}
 
 export interface AdminState {}
+
+export interface ICollection {
+  name: string
+}
