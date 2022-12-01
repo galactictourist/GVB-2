@@ -64,12 +64,6 @@ const Collections: NextPage = () => {
                     </th>
                     <th
                       scope="col"
-                      className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
-                    >
-                      Description
-                    </th>
-                    <th
-                      scope="col"
                       className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
                     >
                       Status
