@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '~/utils/@reduxjs/toolkit'
-import { useInjectReducer, useInjectSaga } from '~/utils/redux-injectors'
+//import { useInjectReducer, useInjectSaga } from '~/utils/redux-injectors'
 import { authApi } from '../../pages/api/auth.api'
 import { AuthState } from '../types'
 
@@ -30,7 +30,7 @@ const authSlice = createSlice({
 export const { actions: userActions, reducer } = authSlice
 
 export const useAuthSlice = () => {
-  useInjectReducer({ key: authSlice.name, reducer: authSlice.reducer })
-  useInjectSaga({ key: authSlice.name, saga: function* () {} })
+  //useInjectReducer({ key: authSlice.name, reducer: authSlice.reducer })
+  //useInjectSaga({ key: authSlice.name, saga: function* () {} })
   return { actions: authSlice.actions }
 }
