@@ -6,6 +6,7 @@ import createSagaMiddleware from 'redux-saga'
 import rootSaga from './saga'
 import adminReducer from './slices/adminSlice'
 import collectionsReducer from './slices/collectionsSlice'
+import topicsReducer from './slices/topicsSlice'
 
 const routerMiddleware = createRouterMiddleware()
 const sagaMiddleware = createSagaMiddleware()
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   router: routerReducer,
   admin: adminReducer,
   collections: collectionsReducer,
+  topics: topicsReducer,
 })
 
 export const store = configureStore({

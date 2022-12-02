@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import AdminContainer from '~/components/Admin/AdminContainer'
 
-const users: NextPage = () => {
+const Users: NextPage = () => {
   return (
     <>
       <AdminContainer>
@@ -14,4 +14,4 @@ const users: NextPage = () => {
   )
 }
 
-export default users
+export default Users

@@ -6,6 +6,8 @@ export interface AuthState {
 
 export interface CollectionsState {}
 
+export interface TopicState {}
+
 export interface AdminState {}
 
 export interface ICollection {
