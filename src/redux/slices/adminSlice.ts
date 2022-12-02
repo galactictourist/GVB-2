@@ -17,12 +17,12 @@ const adminSlice = createSlice({
     loginSuccess(state, action) {
       const { user } = action.payload
       const { id, role, status, username } = user
+      state.loading = false
       state.id = id
       state.role = role
       state.status = status
       state.username = username
       state.error = ''
-      state.loading = false
     },
     loginFailure(state, action) {
       state.loading = false
@@ -32,8 +32,30 @@ const adminSlice = createSlice({
       state.username = ''
       state.error = action.payload.message
     },
+    /**
+     * createTopic
+     */
+    createTopic(state, action) {
+      state.loading = true
+      state.error = ''
+    },
+    createTopicSuccess(state, action) {
+      state.loading = false
+      state.error = ''
+    },
+    createTopicFailure(state, action) {
+      state.loading = false
+      state.error = action.payload.error
+    },
   },
 })
 
-export const { login, loginSuccess, loginFailure } = adminSlice.actions
+export const {
+  login,
+  loginSuccess,
+  loginFailure,
+  createTopic,
+  createTopicSuccess,
+  createTopicFailure,
+} = adminSlice.actions
 export default adminSlice.reducer

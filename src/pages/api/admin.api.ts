@@ -12,4 +12,17 @@ export const adminApi = {
       throw err
     }
   },
+  async createTopic(data: any) {
+    console.log('HELLO FROM CREATE TOPIC API')
+    try {
+      const res = await mainClient.post('/admin/topics', data)
+      const resBody = res.data
+      console.log('API RESPONDE')
+      console.log(resBody)
+      return resBody
+    } catch (err) {
+      console.log('API RESPONDE ERROR')
+      throw err
+    }
+  },
 }
