@@ -47,6 +47,21 @@ const adminSlice = createSlice({
       state.loading = false
       state.error = action.payload.error
     },
+    /**
+     * updateTopic
+     */
+    updateTopic(state, action) {
+      state.loading = true
+      state.error = ''
+    },
+    updateTopicSuccess(state, action) {
+      state.loading = false
+      state.error = ''
+    },
+    updateTopicFailure(state, action) {
+      state.loading = false
+      state.error = action.payload.error
+    },
   },
 })
 
@@ -57,5 +72,8 @@ export const {
   createTopic,
   createTopicSuccess,
   createTopicFailure,
+  updateTopic,
+  updateTopicSuccess,
+  updateTopicFailure,
 } = adminSlice.actions
 export default adminSlice.reducer

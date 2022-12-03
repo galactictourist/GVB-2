@@ -13,9 +13,6 @@ export const adminClient = (baseURL: string) => {
       const cookies = await parseCookies()
       if (cookies[COOKIES.JWT]) {
         config.headers!.Authorization = `Bearer ${cookies[COOKIES.JWT]}`
-        console.log('PARSE COOKIES')
-        console.log(cookies)
-        console.log(cookies[COOKIES.JWT])
       }
       return { ...config }
     },

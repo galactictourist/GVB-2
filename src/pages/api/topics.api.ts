@@ -12,4 +12,14 @@ export const topicsApi = {
       throw err
     }
   },
+
+  async getTopicById(id: string) {
+    try {
+      const res = await mainClient.get(`/topics/${id}`)
+      const resBody = res.data
+      return resBody
+    } catch (err) {
+      throw err
+    }
+  },
 }
