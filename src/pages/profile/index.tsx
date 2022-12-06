@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import CollectionRow from '~/components/User/CollectionRow'
 import ProfileOverview from '~/components/User/ProfileOverview'
+import { UserNftList } from '~/components/UserNftList/UserNftList'
 import { getMyCollections } from '~/redux/slices/collectionsSlice'
 import { RootState } from '~/redux/store'
 import Header from '../../components/Header'
@@ -68,11 +69,10 @@ const Profile: NextPage = () => {
             />
           ))}
         </div>
-        {/* <div className="border-t">
+        <div className="border-t">
           <h2 className="py-4 text-2xl">NFTs</h2>
           <UserNftList></UserNftList>
-        </div> */}
-
+        </div>
         <div className="flex justify-end pr-2">
           <button
             className="flex h-10 w-24 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
