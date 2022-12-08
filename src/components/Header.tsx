@@ -7,15 +7,19 @@ import {
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
+import { useWeb3React } from '@web3-react/core'
 import Image from 'next/image'
-import { Fragment, useEffect, useState } from 'react'
-//import Logo from '../../public/img/givabit_logo.jpg'
 import Link from 'next/link'
+import { destroyCookie, parseCookies } from 'nookies'
+import { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { injectedConnector } from '~/config'
+import { generateNonce, signOut, verifySignature } from '~/redux/slices/authSlice'
+import { RootState } from '~/redux/store'
+import { USER_COOKIES } from '~/utils/constants'
 import { formatWalletAddress } from '~/utils/wallet'
+import { signMessage } from '~/utils/web3'
 import Logo from '../../public/img/givabit_full_logo2.svg'
-import { useAuthSlice } from './Auth/slice'
-import { selectAuth } from './Auth/slice/selectors'
 
 const explore = [
   {
@@ -39,28 +43,6 @@ const explore = [
     href: '/cause/Environment',
     icon: CursorArrowRaysIcon,
   },
-
-  //  {
-  //    name: 'Human Services',
-  //    description:
-  //     'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-  //    href: '#',
-  //   icon: ArrowPathIcon,
-  //  },
-  //  {
-  //    name: 'Art & Culture',
-  //    description:
-  //      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-  //    href: '#',
-  //    icon: ChartBarIcon,
-  //  },
-  //  {
-  //    name: 'Environment',
-  //    description:
-  //      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-  //    href: '#',
-  //    icon: CursorArrowRaysIcon,
-  //  },
 ]
 
 function classNames(...classes: string[]) {
@@ -68,20 +50,69 @@ function classNames(...classes: string[]) {
 }
 
 const Header: React.FC<any> = () => {
-  const { wallet } = useSelector(selectAuth)
-  const { actions } = useAuthSlice()
   const dispatch = useDispatch()
-
-  function signOut() {
-    dispatch(actions.signOut())
-  }
-
-  function signIn() {
-    dispatch(actions.setSigningIn(true))
-  }
+  const cookies = parseCookies()
+  const { active, account, error, connector, activate, deactivate } = useWeb3React()
+  const { nonce, wallet, loading } = useSelector((state: RootState) => state.auth)
+  const isSignedIn = cookies[USER_COOKIES.JWT] && wallet
 
   const [isScrolled, setIsScrolled] = useState(false)
 
+  const onConnect = async () => {
+    try {
+      dispatch(generateNonce({ wallet: account }))
+    } catch {
+      alert('Please install MetaMask in your browser')
+    }
+  }
+
+  // Verifying the signature once the
+  useEffect(() => {
+    ;(async () => {
+      if (!isSignedIn && nonce && !wallet) {
+        try {
+          if (!connector || !account) {
+            await activate(injectedConnector, undefined, true)
+          } else {
+            const signResponse = await signMessage(connector, nonce, account)
+            dispatch(
+              verifySignature({
+                wallet: account,
+                signature: signResponse,
+              })
+            )
+          }
+        } catch (e) {
+          //dispatch(actions.setSigningIn(false))
+        }
+      }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nonce, account])
+
+  // Get the Nonce from the BE once the Metamask account is detected
+  useEffect(() => {
+    ;(async () => {
+      try {
+        await activate(injectedConnector)
+      } catch {
+        //alert('Please install MetaMask in your browser')
+      }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const onDisconnect = async () => {
+    try {
+      destroyCookie(null, USER_COOKIES.JWT)
+      deactivate()
+      dispatch(signOut())
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
+  // Adjusting the menu bar when scrolling.
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -185,26 +216,29 @@ const Header: React.FC<any> = () => {
                 Collection
               </div>
             </Link>
+            <Link href="/admin/login">
+              <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
+                Admin
+              </div>
+            </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-            {wallet ? (
-              <a
-                href="#"
+            {isSignedIn ? (
+              <div
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                onClick={() => signOut()}
+                onClick={() => onDisconnect()}
               >
                 {formatWalletAddress(wallet)}
-              </a>
+              </div>
             ) : (
-              <a
-                href="#"
+              <div
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                 onClick={() => {
-                  signIn()
+                  onConnect()
                 }}
               >
                 Signin using MetaMask
-              </a>
+              </div>
             )}
           </div>
         </div>
@@ -266,26 +300,29 @@ const Header: React.FC<any> = () => {
                     Collection
                   </div>
                 </Link>
+                <Link href="/admin/login">
+                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                    Admin
+                  </div>
+                </Link>
               </div>
               <div>
-                {wallet ? (
-                  <a
-                    href="#"
+                {isSignedIn ? (
+                  <div
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                    onClick={() => signOut()}
+                    onClick={() => onDisconnect()}
                   >
                     {formatWalletAddress(wallet)}
-                  </a>
+                  </div>
                 ) : (
-                  <a
-                    href="#"
+                  <div
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                     onClick={() => {
-                      signIn()
+                      onConnect()
                     }}
                   >
                     Signin using MetaMask
-                  </a>
+                  </div>
                 )}
               </div>
             </div>

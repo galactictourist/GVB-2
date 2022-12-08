@@ -1,7 +1,6 @@
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
 import ProfilePicture from '../../../public/img/avatar.png'
-import { selectAuth } from '../../components/Auth/slice/selectors'
+//import { selectAuth } from '../../redux/selectors'
 
 // interface Props {
 //   name: string
@@ -9,7 +8,7 @@ import { selectAuth } from '../../components/Auth/slice/selectors'
 // }
 
 const ProfileOverview = () => {
-  const { wallet } = useSelector(selectAuth)
+  //const { wallet } = useSelector(selectAuth)
 
   //console.log(name)
 
@@ -26,7 +25,7 @@ const ProfileOverview = () => {
       </div>
       <div className="pt-8 pb-4">
         <h2 className="text-xl font-semibold">John Doe</h2>
-        <h3 className="py-2">{wallet}</h3>
+        {/* <h3 className="py-2">{wallet}</h3> */}
       </div>
     </div>
   )
