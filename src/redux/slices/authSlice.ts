@@ -21,6 +21,7 @@ const authSlice = createSlice({
     generateNonce(state, action) {
       state.loading = true
       state.isSignedIn = false
+      state.nonce = ''
       //state.wallet = action.payload.wallet
       console.log('SIGN IN SLICE')
     },
@@ -34,9 +35,13 @@ const authSlice = createSlice({
       state.loading = false
       console.log('SIGN IN FAIL')
     },
+    /**
+     * verifySignature
+     */
     verifySignature(state, action) {
       state.loading = true
       state.isSignedIn = false
+      console.log('VERIFY SINGATURE SLICE')
     },
     verifySignatureSuccess(state, action) {
       state.loading = false
@@ -51,6 +56,15 @@ const authSlice = createSlice({
       state.isSignedIn = false
       console.log('VERIFY FAIL')
     },
+    /**
+     * signOut
+     */
+    signOut(state) {
+      state.loading = false
+      state.nonce = ''
+      state.isSignedIn = false
+      state.wallet = ''
+    },
   },
 })
 
@@ -61,5 +75,6 @@ export const {
   verifySignature,
   verifySignatureSuccess,
   verifySignatureFailure,
+  signOut,
 } = authSlice.actions
 export default authSlice.reducer
