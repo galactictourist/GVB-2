@@ -1,36 +1,57 @@
-import { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '~/utils/@reduxjs/toolkit'
-//import { useInjectReducer, useInjectSaga } from '~/utils/redux-injectors'
-import { authApi } from '../../pages/api/auth.api'
-import { AuthState } from '../types'
 
-export const initialState: AuthState = {
-  signingIn: false,
+export interface AuthState {
+  id?: string
+  wallet?: string
 }
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: {
+    loading: false,
+    wallet: '',
+    nonce: '',
+    error: '',
+  },
   reducers: {
-    setSigningIn(state, action: PayloadAction<boolean>) {
-      state.signingIn = action.payload
+    /**
+     * getCollections
+     */
+    generateNonce(state, action) {
+      state.loading = true
+      //state.wallet = action.payload.wallet
+      console.log('SIGN IN SLICE')
     },
-    signedIn(state, action: PayloadAction<{ id: string; wallet?: string }>) {
-      state.id = action.payload.id
-      state.wallet = action.payload.wallet
+    generateNonceSuccess(state, action) {
+      state.loading = false
+      //state.wallet = action.payload.wallet
+      state.nonce = action.payload
+      console.log('SIGN IN SUCCESS')
     },
-    signOut(state) {
-      state.id = undefined
-      state.wallet = undefined
-      authApi.deleteToken()
+    generateNonceFailure(state, action) {
+      state.loading = false
+      console.log('SIGN IN FAIL')
+    },
+    verifySignature(state, action) {
+      state.loading = true
+    },
+    verifySignatureSuccess(state, action) {
+      state.loading = false
+      console.log('VERIFY SUCCESS')
+    },
+    verifySignatureFailure(state, action) {
+      state.loading = false
+      console.log('VERIFY FAIL')
     },
   },
 })
 
-export const { actions: userActions, reducer } = authSlice
-
-export const useAuthSlice = () => {
-  //useInjectReducer({ key: authSlice.name, reducer: authSlice.reducer })
-  //useInjectSaga({ key: authSlice.name, saga: function* () {} })
-  return { actions: authSlice.actions }
-}
+export const {
+  generateNonce,
+  generateNonceSuccess,
+  generateNonceFailure,
+  verifySignature,
+  verifySignatureSuccess,
+  verifySignatureFailure,
+} = authSlice.actions
+export default authSlice.reducer

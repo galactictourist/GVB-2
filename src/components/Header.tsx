@@ -7,10 +7,17 @@ import {
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
+import { useWeb3React } from '@web3-react/core'
 import Image from 'next/image'
 import Link from 'next/link'
+import { parseCookies } from 'nookies'
 import { Fragment, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { injectedConnector } from '~/config'
+import { generateNonce, verifySignature } from '~/redux/slices/authSlice'
+import { RootState } from '~/redux/store'
 import Logo from '../../public/img/givabit_full_logo2.svg'
+import { USER_COOKIES } from '../utils/constants'
 
 const explore = [
   {
@@ -53,8 +60,75 @@ const Header: React.FC<any> = () => {
   //   dispatch(actions.setSigningIn(true))
   // }
 
+  const dispatch = useDispatch()
+  const cookies = parseCookies()
+  const {
+    active,
+    account,
+    error,
+    connector,
+    library: provider,
+    activate,
+    deactivate,
+  } = useWeb3React()
+  const { nonce, loading } = useSelector((state: RootState) => state.auth)
+
   const [isScrolled, setIsScrolled] = useState(false)
 
+  const onConnect = async () => {
+    try {
+      // check if metamask is enabled
+      if (true) {
+        await activate(injectedConnector)
+        console.log('INJECTED CONNECTOR')
+        console.log(account)
+        console.log(connector)
+      } else {
+        alert('Please install MetaMask in your browser')
+      }
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
+  // Get the Nonce from the BE once the Metamask account is detected
+  useEffect(() => {
+    if (account && active && !cookies[USER_COOKIES.JWT]) {
+      dispatch(generateNonce({ wallet: account }))
+    } else if (account && cookies[USER_COOKIES.JWT]) {
+      //dispatch(getMe())
+    }
+  }, [account])
+
+  // Verifying the signature once the
+  useEffect(() => {
+    const personalSign = async () => {
+      try {
+        const provider = await connector?.getProvider()
+        const signResponse = await provider.request({
+          method: 'personal_sign',
+          params: [`Nonce: ${nonce}`, account],
+          from: account,
+        })
+        dispatch(verifySignature({ wallet: account, signature: signResponse }))
+      } catch (err) {
+        onDisconnect()
+      }
+    }
+
+    if (account && nonce && !cookies[USER_COOKIES.JWT]) personalSign()
+  }, [nonce])
+
+  const onDisconnect = async () => {
+    try {
+      //destroyCookie(null, COOKIES.JWT)
+      deactivate()
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
+  // Adjusting the menu bar when scrolling
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -165,6 +239,16 @@ const Header: React.FC<any> = () => {
             </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
+            <a
+              href="#"
+              className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+              onClick={() => {
+                onConnect()
+              }}
+            >
+              Signin using MetaMask
+            </a>
+            {/* <MetaMaskButton /> */}
             {/* {wallet ? (
               <a
                 href="#"
