@@ -15,7 +15,7 @@ export const authApi = {
 
   async verifySignature(data: any) {
     try {
-      const res = await mainClient.post('user/verify-signature', data)
+      const res = await mainClient.post('/auth/signin/wallet', data)
       const resBody = res.data
       return resBody
     } catch (err) {
