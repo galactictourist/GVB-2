@@ -16,8 +16,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { injectedConnector } from '~/config'
 import { generateNonce, verifySignature } from '~/redux/slices/authSlice'
 import { RootState } from '~/redux/store'
+import { USER_COOKIES } from '~/utils/constants'
+import { signMessage } from '~/utils/web3'
 import Logo from '../../public/img/givabit_full_logo2.svg'
-import { USER_COOKIES } from '../utils/constants'
 
 const explore = [
   {
@@ -67,23 +68,23 @@ const Header: React.FC<any> = () => {
     account,
     error,
     connector,
-    library: provider,
+    //provider,
     activate,
     deactivate,
   } = useWeb3React()
-  const { nonce, loading } = useSelector((state: RootState) => state.auth)
+  const { nonce, isSignedIn, wallet, loading } = useSelector((state: RootState) => state.auth)
 
   const [isScrolled, setIsScrolled] = useState(false)
 
   const onConnect = async () => {
     try {
       // check if metamask is enabled
-      if (true) {
-        await activate(injectedConnector)
+      try {
+        const test2 = await activate(injectedConnector)
         console.log('INJECTED CONNECTOR')
         console.log(account)
         console.log(connector)
-      } else {
+      } catch {
         alert('Please install MetaMask in your browser')
       }
     } catch (ex) {
@@ -93,7 +94,7 @@ const Header: React.FC<any> = () => {
 
   // Get the Nonce from the BE once the Metamask account is detected
   useEffect(() => {
-    if (account && active && !cookies[USER_COOKIES.JWT]) {
+    if (account) {
       dispatch(generateNonce({ wallet: account }))
     } else if (account && cookies[USER_COOKIES.JWT]) {
       //dispatch(getMe())
@@ -102,22 +103,58 @@ const Header: React.FC<any> = () => {
 
   // Verifying the signature once the
   useEffect(() => {
-    const personalSign = async () => {
-      try {
-        const provider = await connector?.getProvider()
-        const signResponse = await provider.request({
-          method: 'personal_sign',
-          params: [`Nonce: ${nonce}`, account],
-          from: account,
-        })
-        dispatch(verifySignature({ wallet: account, signature: signResponse }))
-      } catch (err) {
-        onDisconnect()
-      }
-    }
+    ;(async () => {
+      if (nonce) {
+        try {
+          if (!connector || !account) {
+            await activate(injectedConnector, undefined, true)
+            console.log('ACTOVATE')
+          } else {
+            console.log('Testing paramethers')
+            console.log(connector)
+            console.log(nonce)
+            console.log(account)
+            const signResponse = await signMessage(connector, nonce, account)
+            console.log('SIGNRESPONSE')
+            console.log(signResponse)
+            console.log(nonce)
 
-    if (account && nonce && !cookies[USER_COOKIES.JWT]) personalSign()
-  }, [nonce])
+            dispatch(
+              verifySignature({
+                wallet: account,
+                signature: signResponse,
+              })
+            )
+          }
+        } catch (e) {
+          //dispatch(actions.setSigningIn(false))
+        }
+      }
+    })()
+  }, [nonce, account])
+
+  // useEffect(() => {
+  //   const personalSign = async () => {
+  //     if (true) {
+  //       try {
+  //         if (!connector || !account) {
+  //           await activate(injectedConnector, undefined, true)
+  //         } else {
+  //           console.log('Testing paramethers')
+  //           console.log(connector)
+  //           console.log(nonce)
+  //           console.log(account)
+  //           const signResponse = await signMessage(connector, nonce, account)
+  //           console.log(signResponse)
+  //         }
+  //       } catch (e) {
+  //         //dispatch(actions.setSigningIn(false))
+  //       }
+  //     }
+  //   }
+
+  //   if (account && nonce && !cookies[USER_COOKIES.JWT]) personalSign()
+  // }, [nonce])
 
   const onDisconnect = async () => {
     try {

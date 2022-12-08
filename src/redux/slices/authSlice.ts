@@ -9,6 +9,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     loading: false,
+    isSignedIn: false,
     wallet: '',
     nonce: '',
     error: '',
@@ -19,6 +20,7 @@ const authSlice = createSlice({
      */
     generateNonce(state, action) {
       state.loading = true
+      state.isSignedIn = false
       //state.wallet = action.payload.wallet
       console.log('SIGN IN SLICE')
     },
@@ -34,13 +36,19 @@ const authSlice = createSlice({
     },
     verifySignature(state, action) {
       state.loading = true
+      state.isSignedIn = false
     },
     verifySignatureSuccess(state, action) {
       state.loading = false
+      state.wallet = action.payload.wallet
+      state.isSignedIn = true
+      console.log(action.payload)
+      console.log(action)
       console.log('VERIFY SUCCESS')
     },
     verifySignatureFailure(state, action) {
       state.loading = false
+      state.isSignedIn = false
       console.log('VERIFY FAIL')
     },
   },

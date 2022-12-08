@@ -16,7 +16,7 @@ export function* generateNonceSaga(action: any) {
       //yield call(setCookie, null, COOKIES.JWT, data.accessToken, { maxAge: 8640 })
       console.log('NONCE SUCCESS')
       console.log(data)
-      yield put(generateNonceSuccess(data))
+      yield put(generateNonceSuccess(data.message))
     }
   } catch (error) {
     console.log('NONCE ERROR')
