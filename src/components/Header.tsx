@@ -50,33 +50,11 @@ function classNames(...classes: string[]) {
 }
 
 const Header: React.FC<any> = () => {
-  // const { wallet } = useSelector(selectAuth)
-  // const { actions } = useAuthSlice()
-  // const dispatch = useDispatch()
-
-  // function signOut() {
-  //   dispatch(actions.signOut())
-  // }
-
-  // function signIn() {
-  //   dispatch(actions.setSigningIn(true))
-  // }
-
   const dispatch = useDispatch()
   const cookies = parseCookies()
-  const {
-    active,
-    account,
-    error,
-    connector,
-    //provider,
-    activate,
-    deactivate,
-  } = useWeb3React()
+  const { active, account, error, connector, activate, deactivate } = useWeb3React()
   const { nonce, wallet, loading } = useSelector((state: RootState) => state.auth)
   const isSignedIn = cookies[USER_COOKIES.JWT] && wallet
-  console.log('IS SIGNED IN')
-  console.log(isSignedIn)
 
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -92,20 +70,11 @@ const Header: React.FC<any> = () => {
   useEffect(() => {
     ;(async () => {
       if (!isSignedIn && nonce && !wallet) {
-        console.log('hej')
         try {
           if (!connector || !account) {
             await activate(injectedConnector, undefined, true)
-            console.log('ACTOVATE')
           } else {
-            console.log('Testing paramethers')
-            console.log(connector)
-            console.log(nonce)
-            console.log(account)
             const signResponse = await signMessage(connector, nonce, account)
-            console.log('SIGNRESPONSE')
-            console.log(signResponse)
-            console.log(nonce)
             dispatch(
               verifySignature({
                 wallet: account,
@@ -118,6 +87,7 @@ const Header: React.FC<any> = () => {
         }
       }
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nonce, account])
 
   // Get the Nonce from the BE once the Metamask account is detected
@@ -129,30 +99,8 @@ const Header: React.FC<any> = () => {
         //alert('Please install MetaMask in your browser')
       }
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  // useEffect(() => {
-  //   const personalSign = async () => {
-  //     if (!isSignedIn) {
-  //       try {
-  //         if (!connector || !account) {
-  //           await activate(injectedConnector, undefined, true)
-  //         } else {
-  //           console.log('Testing paramethers')
-  //           console.log(connector)
-  //           console.log(nonce)
-  //           console.log(account)
-  //           const signResponse = await signMessage(connector, nonce, account)
-  //           console.log(signResponse)
-  //         }
-  //       } catch (e) {
-  //         //dispatch(actions.setSigningIn(false))
-  //       }
-  //     }
-  //   }
-
-  //   if (account && nonce && !cookies[USER_COOKIES.JWT]) personalSign()
-  // }, [nonce])
 
   const onDisconnect = async () => {
     try {
@@ -164,7 +112,7 @@ const Header: React.FC<any> = () => {
     }
   }
 
-  // Adjusting the menu bar when scrolling
+  // Adjusting the menu bar when scrolling.
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -276,53 +224,22 @@ const Header: React.FC<any> = () => {
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
             {isSignedIn ? (
-              <a
-                href="#"
+              <div
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                 onClick={() => onDisconnect()}
               >
                 {formatWalletAddress(wallet)}
-              </a>
+              </div>
             ) : (
-              <a
-                href="#"
+              <div
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                 onClick={() => {
                   onConnect()
                 }}
               >
                 Signin using MetaMask
-              </a>
+              </div>
             )}
-            <a
-              href="#"
-              className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-              onClick={() => {
-                onConnect()
-              }}
-            >
-              Signin using MetaMask
-            </a>
-            {/* <MetaMaskButton /> */}
-            {/* {wallet ? (
-              <a
-                href="#"
-                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                onClick={() => signOut()}
-              >
-                {formatWalletAddress(wallet)}
-              </a>
-            ) : (
-              <a
-                href="#"
-                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                onClick={() => {
-                  signIn()
-                }}
-              >
-                Signin using MetaMask
-              </a>
-            )} */}
           </div>
         </div>
       </div>
@@ -390,25 +307,23 @@ const Header: React.FC<any> = () => {
                 </Link>
               </div>
               <div>
-                {/* {wallet ? (
-                  <a
-                    href="#"
+                {isSignedIn ? (
+                  <div
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                    onClick={() => signOut()}
+                    onClick={() => onDisconnect()}
                   >
                     {formatWalletAddress(wallet)}
-                  </a>
+                  </div>
                 ) : (
-                  <a
-                    href="#"
+                  <div
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                     onClick={() => {
-                      signIn()
+                      onConnect()
                     }}
                   >
                     Signin using MetaMask
-                  </a>
-                )} */}
+                  </div>
+                )}
               </div>
             </div>
           </div>

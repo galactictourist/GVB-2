@@ -13,7 +13,7 @@ export function* generateNonceSaga(action: any) {
   try {
     const { data } = yield call(authApi.generateNonce, action.payload)
     if (data) {
-      //yield call(setCookie, null, COOKIES.JWT, data.accessToken, { maxAge: 8640 })
+      yield call(setCookie, null, USER_COOKIES.JWT, data.accessToken, { maxAge: 8640 })
       console.log('NONCE SUCCESS')
       console.log(data)
       yield put(generateNonceSuccess(data.message))
