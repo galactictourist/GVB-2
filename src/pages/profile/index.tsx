@@ -1,8 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import CollectionRow from '~/components/Profile/CollectionRow'
-import ProfileOverview from '~/components/Profile/ProfileOverview'
+import CollectionRow from '~/components/User/CollectionRow'
+import ProfileOverview from '~/components/User/ProfileOverview'
 import Header from '../../components/Header'
 
 const collections = [
@@ -46,6 +46,11 @@ const Profile: NextPage = () => {
             />
           ))}
         </div>
+        {/* <div className="border-t">
+          <h2 className="py-4 text-2xl">NFTs</h2>
+          <UserNftList></UserNftList>
+        </div> */}
+
         <div className="flex justify-end pr-2">
           <button
             className="flex h-10 w-24 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"

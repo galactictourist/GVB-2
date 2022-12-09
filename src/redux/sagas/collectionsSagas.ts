@@ -1,9 +1,13 @@
 import { call, put } from 'redux-saga/effects'
 import { collectionsApi } from '~/pages/api/collections.api'
-import { getCollectionsFailure, getCollectionsSuccess } from '../slices/collectionsSlice'
+import {
+  createCollectionFailure,
+  createCollectionSuccess,
+  getCollectionsFailure,
+  getCollectionsSuccess,
+} from '../slices/collectionsSlice'
 
 export function* getCollectionsSaga() {
-  console.log('Hello from collections saga')
   try {
     const { data } = yield call(collectionsApi.getAll)
     if (data) {
@@ -11,5 +15,17 @@ export function* getCollectionsSaga() {
     }
   } catch (error) {
     yield put(getCollectionsFailure)
+  }
+}
+
+export function* createCollectionSaga(action: any) {
+  console.log('Hello from create collections saga')
+  try {
+    const { data } = yield call(collectionsApi.create, action.payload)
+    if (data) {
+      yield put(createCollectionSuccess)
+    }
+  } catch (error) {
+    yield put(createCollectionFailure)
   }
 }

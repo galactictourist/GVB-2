@@ -13,7 +13,7 @@ export function* generateNonceSaga(action: any) {
   try {
     const { data } = yield call(authApi.generateNonce, action.payload)
     if (data) {
-      yield call(setCookie, null, USER_COOKIES.JWT, data.accessToken, { maxAge: 8640 })
+      //yield call(setCookie, null, USER_COOKIES.JWT, data.accessToken, { maxAge: 8640 })
       console.log('NONCE SUCCESS')
       console.log(data)
       yield put(generateNonceSuccess(data.message))
@@ -29,7 +29,7 @@ export function* verifySignatureSaga(action: any) {
   try {
     const { data } = yield call(authApi.verifySignature, action.payload)
     if (data) {
-      yield call(setCookie, null, USER_COOKIES.JWT, data.token, { maxAge: 8640 })
+      yield call(setCookie, null, USER_COOKIES.JWT, data.accessToken, { maxAge: 8640 })
       yield put(verifySignatureSuccess(data.user))
     }
   } catch (error) {

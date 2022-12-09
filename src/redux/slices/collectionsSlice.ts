@@ -5,6 +5,7 @@ export interface ICollection {
   description: string
   status: string
   ownerId: string
+  id: string
 }
 
 const collectionsSlice = createSlice({
@@ -30,9 +31,28 @@ const collectionsSlice = createSlice({
       state.loading = false
       state.error = action.payload.error
     },
+    /**
+     * createCollection
+     */
+    createCollection(state, action) {
+      state.loading = true
+    },
+    createCollectionSuccess(state, action) {
+      state.loading = false
+    },
+    createCollectionFailure(state, action) {
+      state.loading = false
+      state.error = action.payload.error
+    },
   },
 })
 
-export const { getCollections, getCollectionsSuccess, getCollectionsFailure } =
-  collectionsSlice.actions
+export const {
+  getCollections,
+  getCollectionsSuccess,
+  getCollectionsFailure,
+  createCollection,
+  createCollectionSuccess,
+  createCollectionFailure,
+} = collectionsSlice.actions
 export default collectionsSlice.reducer

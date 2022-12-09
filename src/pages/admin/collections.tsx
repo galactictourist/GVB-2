@@ -81,7 +81,7 @@ const Collections: NextPage = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {allCollections.map((collection) => (
-                    <tr key={collection.name}>
+                    <tr key={collection.id}>
                       <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                         {collection.name}
                         <dl className="font-normal lg:hidden">

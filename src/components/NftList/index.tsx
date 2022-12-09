@@ -1,4 +1,4 @@
+import NftSingleItem from '../NftItem/NftSingleItem'
 import NftItem from './NftItem'
-import NftSingleItem from '../NftDetail/NftSingleItem'
 
 export { NftItem, NftSingleItem }

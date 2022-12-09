@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import AdminContainer from '~/components/Admin/AdminContainer'
@@ -13,14 +13,6 @@ const CreateCause: NextPage = () => {
   const [name, setName] = useState('')
 
   const { loading, allTopics } = useSelector((state: RootState) => state.topics)
-  //console.log(allTopics)
-  //console.log(loading)
-  //console.log(name)
-
-  useEffect(() => {
-    //dispatch(getTopics())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const successMessage = () => {
     toast.success('Collection created', {
