@@ -126,6 +126,8 @@ const CollectionCreate: NextPage = () => {
                     name="description"
                     value={description}
                     rows={3}
+                    required
+                    autoComplete="description"
                     className="n4gForm"
                     onChange={(e) => setDescription(e.target.value)}
                   />

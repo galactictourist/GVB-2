@@ -1,8 +1,12 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import CollectionRow from '~/components/User/CollectionRow'
 import ProfileOverview from '~/components/User/ProfileOverview'
+import { getMyCollections } from '~/redux/slices/collectionsSlice'
+import { RootState } from '~/redux/store'
 import Header from '../../components/Header'
 
 const collections = [
@@ -21,7 +25,24 @@ const collections = [
 ]
 
 const Profile: NextPage = () => {
+  const dispatch = useDispatch()
   const router = useRouter()
+  const { id } = useSelector((state: RootState) => state.auth)
+  const { loading, myCollections } = useSelector((state: RootState) => state.collections)
+
+  useEffect(() => {
+    if (id) {
+      dispatch(
+        getMyCollections({
+          ownerIds: id,
+        })
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
+
+  //console.log(myCollections)
+  //console.log(id)
 
   return (
     <>

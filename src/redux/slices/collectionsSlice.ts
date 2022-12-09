@@ -13,21 +13,37 @@ const collectionsSlice = createSlice({
   initialState: {
     loading: false,
     allCollections: [] as ICollection[],
+    myCollections: [] as ICollection[],
     error: '',
   },
   reducers: {
     /**
-     * getCollections
+     * getAllCollections
      */
-    getCollections(state) {
+    getAllCollections(state) {
       state.loading = true
     },
-    getCollectionsSuccess(state, action) {
+    getAllCollectionsSuccess(state, action) {
       state.loading = false
       state.allCollections = action.payload
       state.error = ''
     },
-    getCollectionsFailure(state, action) {
+    getAllCollectionsFailure(state, action) {
+      state.loading = false
+      state.error = action.payload.error
+    },
+    /**
+     * getMyCollections
+     */
+    getMyCollections(state, action) {
+      state.loading = true
+    },
+    getMyCollectionsSuccess(state, action) {
+      state.loading = false
+      state.myCollections = action.payload
+      state.error = ''
+    },
+    getMyCollectionsFailure(state, action) {
       state.loading = false
       state.error = action.payload.error
     },
@@ -48,9 +64,12 @@ const collectionsSlice = createSlice({
 })
 
 export const {
-  getCollections,
-  getCollectionsSuccess,
-  getCollectionsFailure,
+  getAllCollections,
+  getAllCollectionsSuccess,
+  getAllCollectionsFailure,
+  getMyCollections,
+  getMyCollectionsSuccess,
+  getMyCollectionsFailure,
   createCollection,
   createCollectionSuccess,
   createCollectionFailure,
