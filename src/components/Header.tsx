@@ -7,18 +7,21 @@ import {
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { useWeb3React } from '@web3-react/core'
+//import { useWeb3React } from '@web3-react/core'
 import Image from 'next/image'
 import Link from 'next/link'
 import { destroyCookie, parseCookies } from 'nookies'
 import { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { injectedConnector } from '~/config'
+//import { injectedConnector } from '~/config'
 import { generateNonce, signOut, verifySignature } from '~/redux/slices/authSlice'
 import { RootState } from '~/redux/store'
 import { USER_COOKIES } from '~/utils/constants'
 import { formatWalletAddress } from '~/utils/wallet'
-import { signMessage } from '~/utils/web3'
+//import { signMessage } from '~/utils/web3'
+import { useMetaMask } from '~/utils/ethers-react/useMetaMask'
+import { useWeb3 } from '~/utils/ethers-react/useWeb3'
+import { signMessageEthers } from '~/utils/web3'
 import Logo from '../../public/img/givabit_full_logo2.svg'
 
 const explore = [
@@ -52,7 +55,16 @@ function classNames(...classes: string[]) {
 const Header: React.FC<any> = () => {
   const dispatch = useDispatch()
   const cookies = parseCookies()
-  const { active, account, error, connector, activate, deactivate } = useWeb3React()
+  // const { active, account, error, connector, activate, deactivate } = useWeb3React()
+
+  const {
+    isInstalledWallet, // Determine whether the wallet is installed
+    isConnected, // Determine whether the wallet is connected
+    connectedAccount, // Metamask current connected account
+    connectWallet, // Connect metamask function
+  } = useMetaMask()
+  const { web3Provider } = useWeb3()
+
   const { nonce, wallet, loading } = useSelector((state: RootState) => state.auth)
   const isSignedIn = cookies[USER_COOKIES.JWT] && wallet
 
@@ -60,24 +72,28 @@ const Header: React.FC<any> = () => {
 
   const onConnect = async () => {
     try {
-      dispatch(generateNonce({ wallet: account }))
+      dispatch(generateNonce({ wallet: connectedAccount }))
     } catch {
       alert('Please install MetaMask in your browser')
     }
   }
 
-  // Verifying the signature once the
+  // Verifying the signature once the nonce is created
   useEffect(() => {
     ;(async () => {
       if (!isSignedIn && nonce && !wallet) {
         try {
-          if (!connector || !account) {
-            await activate(injectedConnector, undefined, true)
+          if (!connectedAccount) {
+            //await activate(injectedConnector, undefined, true)
+            const result = await connectWallet()
+            if (!result) {
+              console.log('Not signed in')
+            }
           } else {
-            const signResponse = await signMessage(connector, nonce, account)
+            const signResponse = await signMessageEthers(web3Provider, nonce, connectedAccount)
             dispatch(
               verifySignature({
-                wallet: account,
+                wallet: connectedAccount,
                 signature: signResponse,
               })
             )
@@ -88,13 +104,14 @@ const Header: React.FC<any> = () => {
       }
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nonce, account])
+  }, [nonce, connectedAccount])
 
   // Get the Nonce from the BE once the Metamask account is detected
   useEffect(() => {
     ;(async () => {
       try {
-        await activate(injectedConnector)
+        //await activate(injectedConnector)
+        await connectWallet()
       } catch {
         //alert('Please install MetaMask in your browser')
       }
@@ -105,7 +122,7 @@ const Header: React.FC<any> = () => {
   const onDisconnect = async () => {
     try {
       destroyCookie(null, USER_COOKIES.JWT)
-      deactivate()
+      //deactivate()
       dispatch(signOut())
     } catch (ex) {
       console.log(ex)
