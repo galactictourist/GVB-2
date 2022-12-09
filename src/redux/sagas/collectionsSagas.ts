@@ -23,9 +23,9 @@ export function* createCollectionSaga(action: any) {
   try {
     const { data } = yield call(collectionsApi.create, action.payload)
     if (data) {
-      yield put(createCollectionSuccess)
+      yield put(createCollectionSuccess(data))
     }
   } catch (error) {
-    yield put(createCollectionFailure)
+    yield put(createCollectionFailure(error))
   }
 }

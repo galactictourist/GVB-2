@@ -23,10 +23,11 @@ const CollectionCreate: NextPage = () => {
 
   const submitHandler = () => {
     if (name && description) {
+      const descr: string = description
       dispatch(
         createCollection({
           name: name,
-          description: description,
+          description: descr,
         })
       )
       router.push('/profile')
@@ -107,6 +108,7 @@ const CollectionCreate: NextPage = () => {
                     name="name"
                     type="text"
                     value={name}
+                    required
                     autoComplete="collection-name"
                     className="n4gForm h-10"
                     onChange={(e) => setName(e.target.value)}
