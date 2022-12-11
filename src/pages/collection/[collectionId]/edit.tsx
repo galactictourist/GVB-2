@@ -1,19 +1,20 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import toaster from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
-import { createCollection } from '~/redux/slices/collectionsSlice'
+import { updateCollection } from '~/redux/slices/collectionsSlice'
 import { RootState } from '~/redux/store'
 import Header from '../../../components/Header'
 
 const CollectionCreate: NextPage = () => {
   const dispatch = useDispatch()
   const router = useRouter()
+  const collectionId = router.query.collectionId
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const { loading } = useSelector((state: RootState) => state.collections)
+  const { loading, myCollections } = useSelector((state: RootState) => state.collections)
 
   const errorMessage = () => {
     toaster.error('Please include a collection name and description', {
@@ -21,13 +22,31 @@ const CollectionCreate: NextPage = () => {
     })
   }
 
-  const submitHandler = () => {
+  //const collection = myCollections.filter((collecion) => collecion.id === collectionId)
+
+  useEffect(() => {
+    //console.log('collection')
+    //console.log(collectionId)
+    const collection = myCollections.filter((collecion) => collecion.id === collectionId)[0]
+    const { name, description } = collection
+    //console.log(collection)
+
+    setName(collection.name)
+    setDescription(collection.description)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const submitHandler = (e: any) => {
     if (name && description) {
       const descr: string = description
       dispatch(
-        createCollection({
-          name: name,
-          description: descr,
+        updateCollection({
+          id: collectionId,
+          payload: {
+            name: name,
+            description: descr,
+          },
         })
       )
       router.push('/profile')
@@ -162,7 +181,7 @@ const CollectionCreate: NextPage = () => {
           </div>
           <button onClick={submitHandler}>
             <div className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
-              Create
+              Update
             </div>
           </button>
         </div>

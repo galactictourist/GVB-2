@@ -60,6 +60,19 @@ const collectionsSlice = createSlice({
       state.loading = false
       state.error = action.payload.error
     },
+    /**
+     * editCollection
+     */
+    updateCollection(state, action) {
+      state.loading = true
+    },
+    updateCollectionSuccess(state, action) {
+      state.loading = false
+    },
+    updateCollectionFailure(state, action) {
+      state.loading = false
+      state.error = action.payload.error
+    },
   },
 })
 
@@ -73,5 +86,8 @@ export const {
   createCollection,
   createCollectionSuccess,
   createCollectionFailure,
+  updateCollection,
+  updateCollectionSuccess,
+  updateCollectionFailure,
 } = collectionsSlice.actions
 export default collectionsSlice.reducer

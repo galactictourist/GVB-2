@@ -35,4 +35,17 @@ export const collectionsApi = {
       throw err
     }
   },
+
+  async update(id: string, data: any) {
+    console.log('update request')
+    try {
+      const res = await mainClient.put(`/collections/${id}`, data)
+      const resBody = res.data
+      return resBody
+    } catch (err) {
+      console.log('API RESPONSE ERROR WHEN UPDATE COLLECTION')
+      console.log(err)
+      throw err
+    }
+  },
 }

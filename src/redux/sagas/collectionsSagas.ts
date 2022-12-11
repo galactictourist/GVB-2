@@ -7,6 +7,8 @@ import {
   getAllCollectionsSuccess,
   getMyCollectionsFailure,
   getMyCollectionsSuccess,
+  updateCollectionFailure,
+  updateCollectionSuccess,
 } from '../slices/collectionsSlice'
 
 export function* getAllCollectionsSaga() {
@@ -37,5 +39,22 @@ export function* createCollectionSaga(action: any) {
     }
   } catch (error) {
     yield put(createCollectionFailure(error))
+  }
+}
+
+export function* updateCollectionSaga(action: any) {
+  console.log('Update collections saga')
+  try {
+    const { id, payload } = action.payload
+    const { data } = yield call(collectionsApi.update, id, payload)
+    console.log('Update collections saga return data')
+    console.log(data)
+    if (data) {
+      yield put(updateCollectionSuccess(data))
+    }
+  } catch (error) {
+    console.log('Update error')
+    console.log(error)
+    yield put(updateCollectionFailure(error))
   }
 }

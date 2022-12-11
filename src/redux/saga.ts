@@ -6,12 +6,18 @@ import {
   createCollectionSaga,
   getAllCollectionsSaga,
   getMyCollectionsSaga,
+  updateCollectionSaga,
 } from './sagas/collectionsSagas'
 import { getTopicByIDSaga, getTopicsSaga } from './sagas/topicsSaga'
 
 import { createTopic, login, updateTopic } from './slices/adminSlice'
 import { generateNonce, verifySignature } from './slices/authSlice'
-import { createCollection, getAllCollections, getMyCollections } from './slices/collectionsSlice'
+import {
+  createCollection,
+  getAllCollections,
+  getMyCollections,
+  updateCollection,
+} from './slices/collectionsSlice'
 import { getTopicById, getTopics } from './slices/topicsSlice'
 
 function* rootSaga() {
@@ -21,6 +27,7 @@ function* rootSaga() {
     takeLatest(getAllCollections.type, getAllCollectionsSaga),
     takeLatest(getMyCollections.type, getMyCollectionsSaga),
     takeLatest(createCollection.type, createCollectionSaga),
+    takeLatest(updateCollection.type, updateCollectionSaga),
     takeLatest(getTopics.type, getTopicsSaga),
     takeLatest(getTopicById.type, getTopicByIDSaga),
     takeLatest(updateTopic.type, updateTopicsSaga),
