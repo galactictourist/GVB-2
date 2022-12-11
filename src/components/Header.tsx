@@ -71,11 +71,15 @@ const Header: React.FC<any> = () => {
   const [isScrolled, setIsScrolled] = useState(false)
 
   const onConnect = async () => {
-    try {
-      dispatch(generateNonce({ wallet: connectedAccount }))
-    } catch {
-      alert('Please install MetaMask in your browser')
-    }
+    if (isInstalledWallet) {
+      try {
+        console.log('WALLET')
+        console.log(wallet)
+        dispatch(generateNonce({ wallet: connectedAccount }))
+      } catch (error) {
+        alert(error)
+      }
+    } else alert('Please install Metamask in your browser')
   }
 
   // Verifying the signature once the nonce is created

@@ -39,7 +39,7 @@ const Profile: NextPage = () => {
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [])
 
   //console.log(myCollections)
   //console.log(id)
@@ -57,13 +57,14 @@ const Profile: NextPage = () => {
         <ProfileOverview />
         <div className="border-t">
           <h2 className="py-4 text-2xl">Current collections</h2>
-          {collections.map((collection) => (
+          {myCollections.map((collection) => (
             <CollectionRow
+              id={collection.id}
               key={collection.name}
               name={collection.name}
               description={collection.description}
-              cause={collection.cause}
-              image={collection.image}
+              cause="Cause A"
+              image="/img/1.png"
             />
           ))}
         </div>

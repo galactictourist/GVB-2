@@ -6,7 +6,7 @@ import toaster from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { createCollection } from '~/redux/slices/collectionsSlice'
 import { RootState } from '~/redux/store'
-import Header from '../../components/Header'
+import Header from '../../../components/Header'
 
 const CollectionCreate: NextPage = () => {
   const dispatch = useDispatch()
@@ -40,7 +40,7 @@ const CollectionCreate: NextPage = () => {
     <>
       <Head>
         <title>GivaBit | Collection </title>
-        <meta name="description" content="Create your own NFT collection" />
+        <meta name="description" content="Edit your own NFT collection" />
       </Head>
 
       <Header />
@@ -49,7 +49,7 @@ const CollectionCreate: NextPage = () => {
         <div className="space-y-8">
           <div>
             <div>
-              <h3 className="text-lg font-medium leading-6 text-gray-900">Create collection</h3>
+              <h3 className="text-lg font-medium leading-6 text-gray-900">Edit collection</h3>
               <p className="mt-1 text-sm text-gray-500">
                 This information will displayed publicly related to your collection
               </p>
