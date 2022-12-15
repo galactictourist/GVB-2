@@ -12,6 +12,7 @@ const authSlice = createSlice({
     isSignedIn: false,
     wallet: '',
     nonce: '',
+    id: '',
     error: '',
   },
   reducers: {
@@ -41,11 +42,13 @@ const authSlice = createSlice({
     verifySignature(state, action) {
       state.loading = true
       state.isSignedIn = false
+      state.id = ''
       console.log('VERIFY SINGATURE SLICE')
     },
     verifySignatureSuccess(state, action) {
       state.loading = false
       state.wallet = action.payload.wallet
+      state.id = action.payload.id
       state.isSignedIn = true
       console.log(action.payload)
       console.log(action)
@@ -64,6 +67,7 @@ const authSlice = createSlice({
       state.nonce = ''
       state.isSignedIn = false
       state.wallet = ''
+      state.id = ''
     },
   },
 })

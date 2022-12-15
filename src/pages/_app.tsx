@@ -1,4 +1,4 @@
-import { Web3ReactProvider } from '@web3-react/core'
+//import { Web3ReactProvider } from '@web3-react/core'
 import type { AppProps } from 'next/app'
 import * as React from 'react'
 import { HelmetProvider } from 'react-helmet-async'
@@ -9,6 +9,7 @@ import Web3 from 'web3'
 //import { Auth } from '~/components/Auth/Auth'
 //import { configureAppStore } from '../store/configureStore'
 import { store } from '~/redux/store'
+import { Web3ContextProvider } from '~/utils/ethers-react/Web3ContextProvider'
 import '../styles/globals.css'
 
 // @ts-ignore
@@ -24,13 +25,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <HelmetProvider>
-        <Web3ReactProvider getLibrary={getLibrary}>
+        {/* <Web3ReactProvider getLibrary={getLibrary}> */}
+        <Web3ContextProvider>
           <React.StrictMode>
             {/* <Auth /> */}
             <Toaster />
             <Component {...pageProps} />
           </React.StrictMode>
-        </Web3ReactProvider>
+        </Web3ContextProvider>
+        {/* </Web3ReactProvider> */}
       </HelmetProvider>
     </Provider>
   )
