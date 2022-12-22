@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import CollectionOverview from '~/components/Collection/CollectionOverview'
 import Header from '~/components/Header'
+import SellNftDialog from '~/components/NftDetail/Create/NftCreate'
 import { RootState } from '~/redux/store'
 
 const CollectionNfts: NextPage = () => {
@@ -24,6 +25,7 @@ const CollectionNfts: NextPage = () => {
       <div className="mx-auto max-w-2xl px-10 pt-32 lg:max-w-7xl">
         <CollectionOverview id={collection.id} />
       </div>
+      <SellNftDialog />
     </>
   )
 }
