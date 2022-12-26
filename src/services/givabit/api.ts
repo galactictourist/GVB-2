@@ -1,6 +1,9 @@
 import axios, { AxiosInstance } from 'axios'
 import { parseCookies } from 'nookies'
+import { CountryEntity } from '~/types/entity'
+import { CharityEntity } from '~/types/entity/charities.entity'
 import { NftEntity } from '~/types/entity/nft.entity'
+import { TopicEntity } from '~/types/entity/topic.entity'
 import { USER_COOKIES } from '~/utils/constants'
 
 export class GivabitApi {
@@ -67,6 +70,27 @@ export class GivabitApi {
         page: result.meta.pagination.page,
         maxPage: result.meta.pagination.maxPage,
       },
+    }
+  }
+
+  async getCountries() {
+    const { data: result } = await this.instance.get('/countries')
+    return {
+      data: result.data as CountryEntity[],
+    }
+  }
+
+  async getTopics() {
+    const { data: result } = await this.instance.get('/topics')
+    return {
+      data: result.data as TopicEntity[],
+    }
+  }
+
+  async getCharities() {
+    const { data: result } = await this.instance.get('/charities')
+    return {
+      data: result.data as CharityEntity[],
     }
   }
 
