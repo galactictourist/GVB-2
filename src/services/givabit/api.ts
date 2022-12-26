@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
+import { BigNumberish } from 'ethers'
 import { parseCookies } from 'nookies'
 import { CountryEntity } from '~/types/entity'
 import { CharityEntity } from '~/types/entity/charities.entity'
@@ -91,6 +92,30 @@ export class GivabitApi {
     const { data: result } = await this.instance.get('/charities')
     return {
       data: result.data as CharityEntity[],
+    }
+  }
+
+  async sellNfts(info: {
+    nfts: string[]
+    countryCode: string
+    topicId: string
+    charityId: string
+    price: number
+    network: string
+    currency: string
+  }) {
+    const { data: result } = await this.instance.post('/marketplace/sale', info)
+    return {
+      data: result.data,
+    }
+  }
+
+  async mint(nftId: string, nonce: BigNumberish) {
+    const { data: result } = await this.instance.post(`/nfts/${nftId}/mint`, {
+      nonce: nonce.toString(),
+    })
+    return {
+      data: result.data,
     }
   }
 

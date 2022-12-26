@@ -1,5 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { givabitApi } from '~/services/givabit/api'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { CharityList } from '../Form/CharityList'
 import { CountryList } from '../Form/CountryList'
@@ -17,6 +18,19 @@ export default function SellNftDialog({ nfts }: Props) {
   }, [nfts])
 
   const cancelButtonRef = useRef(null)
+
+  const submit = async () => {
+    const sale = await givabitApi.sellNfts({
+      nfts: nfts.map((nft) => nft.id),
+      countryCode: 'VN',
+      charityId: 'be67c2c4-8620-41c0-9d1a-63f40521229e',
+      topicId: 'b1422b18-0bba-4054-9baf-eed8a19b3623',
+      network: 'POLYGON_TESTNET',
+      currency: 'NATIVE_CURRENCY',
+      price: 12.3,
+    })
+    // sale
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -155,7 +169,7 @@ export default function SellNftDialog({ nfts }: Props) {
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                    onClick={() => setOpen(false)}
+                    onClick={submit}
                   >
                     Sell
                   </button>

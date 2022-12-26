@@ -1,12 +1,19 @@
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/20/solid'
+import { Contract, providers } from 'ethers'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
+import { useWeb3 } from '~/lib/ethers-react/useWeb3'
 import { givabitApi } from '~/services/givabit/api'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { SimplePagination } from '../Pagination/SimplePagination'
+import { marketAbi } from './abi'
 import SellNftDialog from './SellNftDialog'
 
 export function UserNftList() {
+  const { connectedAccount, connectWallect } = useMetaMask()
+  const { web3Provider } = useWeb3()
+
   const [total, totalSetter] = useState(0)
   const [limit, limitSetter] = useState(20)
   const [page, pageSetter] = useState(1)
@@ -30,6 +37,28 @@ export function UserNftList() {
 
   const changePage = (page: number) => {
     navPageSetter(page)
+  }
+
+  const mint = async (nftId: string) => {
+    const result = await givabitApi.mint(nftId, 0)
+    console.log('result', result.data.data, result.data.signature)
+    if (connectedAccount) {
+      const connected = await connectWallect()
+      if (connected) {
+        const contract = new Contract(
+          '0x2978606902693E7114e45e65CE25504611D5E24C',
+          marketAbi,
+          web3Provider.getSigner()
+          // new providers.Web3Provider(library.currentProvider)
+          // new providers.Web3Provider(connector as any)
+        )
+        const receipt = (await contract.addSingleItem(result.data.data, result.data.signature, {
+          gasLimit: 10000000,
+        })) as providers.TransactionResponse
+        await receipt.wait()
+        console.log('receipt', receipt)
+      }
+    }
   }
 
   return (
@@ -70,10 +99,14 @@ export function UserNftList() {
                 <div className="flex w-0 flex-1">
                   <a
                     href={`#`}
+                    onClick={(e) => {
+                      mint(nft.id)
+                      e.preventDefault()
+                    }}
                     className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
                   >
                     <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                    <span className="ml-3">Details</span>
+                    <span className="ml-3">Mint</span>
                   </a>
                 </div>
                 <div className="-ml-px flex w-0 flex-1">
