@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 //import { injectedConnector } from '~/config'
 import { generateNonce, signOut, verifySignature } from '~/redux/slices/authSlice'
 import { RootState } from '~/redux/store'
+import { classNames } from '~/utils'
 import { USER_COOKIES } from '~/utils/constants'
 import { formatWalletAddress } from '~/utils/wallet'
 //import { signMessage } from '~/utils/web3'
@@ -47,10 +48,6 @@ const explore = [
     icon: CursorArrowRaysIcon,
   },
 ]
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
 
 const Header: React.FC<any> = () => {
   const dispatch = useDispatch()

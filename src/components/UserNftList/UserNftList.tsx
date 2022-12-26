@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { givabitApi } from '~/services/givabit/api'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { SimplePagination } from '../Pagination/SimplePagination'
+import SellNftDialog from './SellNftDialog'
 
 export function UserNftList() {
   const [total, totalSetter] = useState(0)
@@ -11,6 +12,7 @@ export function UserNftList() {
   const [page, pageSetter] = useState(1)
   const [navPage, navPageSetter] = useState(1)
   const [nfts, nftsSetter] = useState<NftEntity[] | undefined>(undefined)
+  const [sellingNfts, sellingNftsSetter] = useState<NftEntity[]>([])
 
   const fetch = async (page: number, limit: number) => {
     const nfts = await givabitApi.nftSearchMine(page, limit)
@@ -32,6 +34,7 @@ export function UserNftList() {
 
   return (
     <>
+      <SellNftDialog nfts={sellingNfts} />
       <SimplePagination
         page={page}
         count={nfts?.length}
@@ -76,6 +79,10 @@ export function UserNftList() {
                 <div className="-ml-px flex w-0 flex-1">
                   <a
                     href={`#`}
+                    onClick={(e) => {
+                      sellingNftsSetter([nft])
+                      e.preventDefault()
+                    }}
                     className="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
                   >
                     <PhoneIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
