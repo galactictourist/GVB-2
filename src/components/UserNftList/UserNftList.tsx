@@ -1,5 +1,5 @@
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/20/solid'
-import { Contract, providers } from 'ethers'
+import { BigNumber, Contract, providers } from 'ethers'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
@@ -8,6 +8,7 @@ import { givabitApi } from '~/services/givabit/api'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { SimplePagination } from '../Pagination/SimplePagination'
 import { marketAbi } from './abi'
+import { nftAbi } from './erc721'
 import SellNftDialog from './SellNftDialog'
 
 export function UserNftList() {
@@ -40,20 +41,60 @@ export function UserNftList() {
   }
 
   const mint = async (nftId: string) => {
-    const result = await givabitApi.mint(nftId, 0)
+    const result = await givabitApi.mint(nftId)
     console.log('result', result.data.data, result.data.signature)
     if (connectedAccount) {
       const connected = await connectWallect()
       if (connected) {
-        const contract = new Contract(
-          '0x2978606902693E7114e45e65CE25504611D5E24C',
+        console.log(await web3Provider.getSigner().getChainId())
+        const nftContractAddress = '0x91d4Ad404E2363ae7FFDf7C8909dFEB24B1727f9'
+        const marketContractAddress = '0xC540ae1D4c0013034B42720172e19c7803e94826'
+        const contractMp = new Contract(
+          // '0x219495d9af748fb11227a4a69141c01fea844218',
+          marketContractAddress,
           marketAbi,
           web3Provider.getSigner()
           // new providers.Web3Provider(library.currentProvider)
           // new providers.Web3Provider(connector as any)
         )
-        const receipt = (await contract.addSingleItem(result.data.data, result.data.signature, {
-          gasLimit: 10000000,
+        const contractNft = new Contract(
+          nftContractAddress,
+          nftAbi,
+          web3Provider.getSigner()
+          // new providers.Web3Provider(library.currentProvider)
+          // new providers.Web3Provider(connector as any)
+        )
+        const nftEntity = result.data.data
+        const data = {
+          account: nftEntity.account,
+          collection: nftEntity.collection,
+          tokenId: BigNumber.from(nftEntity.tokenId),
+          royaltyFee: BigNumber.from(nftEntity.royaltyFee),
+          tokenURI: nftEntity.tokenURI,
+          deadline: BigNumber.from(nftEntity.deadline),
+          nonce: BigNumber.from(nftEntity.nonce),
+        }
+        // const signature =
+        //   '0x73d7acb54b4e4218c3ad1a80785ee7eed24e8f4cd653cec9ac9aec7e6c38993953a1aad5c71cd91f3384a7bfbcc829e3a22c491b4ef934402b5f2297dc9791d01b'
+        let signature = String(result.data.signature)
+        // signature = signature.slice(2)
+        console.log('data', data)
+        console.log('signature', signature)
+        const result1 = await contractMp.checkSignatureMint(nftEntity, signature)
+        console.log('result1', result1)
+
+        const result12 = await contractNft.MARKETPLACE_ROLE()
+        console.log('result12', result12)
+
+        // 0x0ea61da3a8a09ad801432653699f8c1860b1ae9d2ea4a141fadfd63227717bc8
+        // 0x0ea61da3a8a09ad801432653699f8c1860b1ae9d2ea4a141fadfd63227717bc8
+
+        const result2 = await contractNft.hasRole(result12, marketContractAddress)
+        console.log('result2', result2)
+
+        const receipt = (await contractMp.addSingleItem2(data, signature, {
+          gasLimit: 1000000,
+          gasPrice: 13000000000,
         })) as providers.TransactionResponse
         await receipt.wait()
         console.log('receipt', receipt)

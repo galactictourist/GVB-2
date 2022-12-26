@@ -110,9 +110,9 @@ export class GivabitApi {
     }
   }
 
-  async mint(nftId: string, nonce: BigNumberish) {
+  async mint(nftId: string, nonce?: BigNumberish) {
     const { data: result } = await this.instance.post(`/nfts/${nftId}/mint`, {
-      nonce: nonce.toString(),
+      nonce: nonce?.toString(),
     })
     return {
       data: result.data,
