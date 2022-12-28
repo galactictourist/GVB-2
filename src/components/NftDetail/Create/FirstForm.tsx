@@ -1,9 +1,12 @@
+import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
 import { FormWrapper } from './FormWrapper'
 
 type UserData = {
   firstName: string
   lastName: string
   age: string
+  image: File
 }
 
 type UserFormProps = UserData & {
@@ -11,6 +14,22 @@ type UserFormProps = UserData & {
 }
 
 export function FirstForm({ firstName, lastName, age, updateFields }: UserFormProps) {
+  const [image, setImage] = useState<File>()
+  const [preview, setPreview] = useState<string>()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (image) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPreview(reader.result as string)
+      }
+      reader.readAsDataURL(image)
+    } else {
+      setPreview(undefined)
+    }
+  }, [image])
+
   return (
     <FormWrapper title="User Details" page={1} pages={3}>
       <div className="mt-6 flex justify-center">
@@ -19,6 +38,30 @@ export function FirstForm({ firstName, lastName, age, updateFields }: UserFormPr
             Select NFT image
           </label>
           <div className="px mt-1 h-64 w-64 rounded-md border-2 border-dashed border-gray-300 px-6 pt-16 pb-6">
+            {preview ? (
+              <Image
+                src={preview}
+                alt="nft image"
+                height="300"
+                width="300"
+                onClick={() => setImage(undefined)}
+              />
+            ) : (
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                onChange={(event) => {
+                  const file = event.target.files![0]
+                  if (file && file.type.substring(0, 5) === 'image') {
+                    setImage(file)
+                  } else {
+                    setImage(undefined)
+                  }
+                }}
+              />
+            )}
+
             <div className="mt-4 space-y-1 text-center">
               <svg
                 className="mx-auto h-12 w-12 text-gray-400"

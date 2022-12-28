@@ -21,7 +21,7 @@ type FormData = {
   zip: string
   email: string
   password: string
-  image: string
+  image: any
 }
 
 const INITIAL_DATA: FormData = {
