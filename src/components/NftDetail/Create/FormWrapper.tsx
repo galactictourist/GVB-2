@@ -29,12 +29,17 @@ const steps = [
     name: 'Metadata',
     description: 'The NFTs attributes',
   },
+  {
+    id: 4,
+    name: 'Confirm',
+    description: 'Check data and mint',
+  },
 ]
 
 export function FormWrapper({ page, title, children }: FormWrapperProps) {
   return (
     <>
-      <h2 style={{ textAlign: 'center', margin: 0, marginBottom: '2rem' }}>{title}</h2>
+      {/* <h2 style={{ textAlign: 'center', margin: 0, marginBottom: '2rem' }}>{title}</h2> */}
       <div className="lg:border-t lg:border-b lg:border-gray-200">
         <nav className="mx-auto max-w-7xl " aria-label="Progress">
           <ol
@@ -157,16 +162,7 @@ export function FormWrapper({ page, title, children }: FormWrapperProps) {
           </ol>
         </nav>
       </div>
-      {/* <div
-        style={{
-          display: 'grid',
-          gap: '1rem .5rem',
-          justifyContent: 'flex-start',
-          gridTemplateColumns: 'auto minmax(auto, 400px)',
-        }}
-      > */}
       {children}
-      {/* </div> */}
     </>
   )
 }

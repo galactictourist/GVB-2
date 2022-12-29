@@ -6,34 +6,27 @@ import { FormEvent, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Header from '~/components/Header'
 import { FirstForm } from '~/components/NftDetail/Create/FirstForm'
+import { FourthForm } from '~/components/NftDetail/Create/FourthForm'
 import { SecondForm } from '~/components/NftDetail/Create/SecondForm'
 import { ThirdForm } from '~/components/NftDetail/Create/ThirdForm'
 import { useMultistepForm } from '~/components/NftDetail/Create/useMultiStepForm'
 import { RootState } from '~/redux/store'
 
 type FormData = {
-  firstName: string
-  lastName: string
-  age: string
-  street: string
-  city: string
-  state: string
-  zip: string
-  email: string
-  password: string
+  name: string
+  description: string
+  external_url: string
+  youtube_url: string
+  animation_url: string
   image: any
 }
 
 const INITIAL_DATA: FormData = {
-  firstName: '',
-  lastName: '',
-  age: '',
-  street: '',
-  city: '',
-  state: '',
-  zip: '',
-  email: '',
-  password: '',
+  name: '',
+  description: '',
+  external_url: '',
+  youtube_url: '',
+  animation_url: '',
   image: '',
 }
 
@@ -53,13 +46,15 @@ const CollectionNfts: NextPage = () => {
     <FirstForm {...data} updateFields={updateFields} key="first" />,
     <SecondForm {...data} updateFields={updateFields} key="second" />,
     <ThirdForm {...data} updateFields={updateFields} key="third" />,
+    <FourthForm {...data} key="fourth" />,
   ])
 
   function onSubmit(e: FormEvent) {
     e.preventDefault()
 
     if (!isLastStep) return next()
-    alert('Successful account creation')
+    console.log(data)
+    alert('Successful NFT creation')
   }
 
   return (
@@ -76,22 +71,22 @@ const CollectionNfts: NextPage = () => {
       </div>
 
       <div className="mx-auto max-w-2xl p-4 px-10 text-xl lg:max-w-7xl ">
-        Create NFT
+        {/* Create NFT */}
         <div>
           <form onSubmit={onSubmit}>
-            <div>
-              {currentStepIndex + 1} / {steps.length}
-            </div>
+            <div>{/* {currentStepIndex + 1} / {steps.length} */}</div>
             {step}
-            <div className="flex justify-between">
+            <div className="mt-6 flex justify-between">
               {!isFirstStep ? (
                 <button
                   type="button"
                   onClick={back}
                   className="inline-flex rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                  <span className="sr-only">Previous</span>
-                  <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                  <div className="flex">
+                    <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                    <span className="">Previous</span>
+                  </div>
                 </button>
               ) : (
                 <> </>
@@ -100,8 +95,10 @@ const CollectionNfts: NextPage = () => {
                 type="submit"
                 className="rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               >
-                <span className="sr-only">{isLastStep ? 'Finish' : 'Next'}</span>
-                <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                <div className="flex">
+                  <span className="">{isLastStep ? 'Finish' : 'Next'}</span>
+                  <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                </div>
               </button>
             </div>
           </form>

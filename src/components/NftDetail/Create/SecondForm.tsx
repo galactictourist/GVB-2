@@ -1,48 +1,54 @@
 import { FormWrapper } from './FormWrapper'
 
-type AddressData = {
-  street: string
-  city: string
-  state: string
-  zip: string
+type DescriptionData = {
+  name: string
+  description: string
 }
 
-type AddressFormProps = AddressData & {
-  updateFields: (fields: Partial<AddressData>) => void
+type DescriptionFormProps = DescriptionData & {
+  updateFields: (fields: Partial<DescriptionData>) => void
 }
 
-export function SecondForm({ street, city, state, zip, updateFields }: AddressFormProps) {
+export function SecondForm({ name, description, updateFields }: DescriptionFormProps) {
   return (
-    <FormWrapper title="Address" page={2} pages={3}>
-      <label>Street</label>
-      <input
-        autoFocus
-        required
-        type="text"
-        value={street}
-        onChange={(e) => updateFields({ street: e.target.value })}
-      />
-      <label>City</label>
-      <input
-        required
-        type="text"
-        value={city}
-        onChange={(e) => updateFields({ city: e.target.value })}
-      />
-      <label>State</label>
-      <input
-        required
-        type="text"
-        value={state}
-        onChange={(e) => updateFields({ state: e.target.value })}
-      />
-      <label>Zip</label>
-      <input
-        required
-        type="text"
-        value={zip}
-        onChange={(e) => updateFields({ zip: e.target.value })}
-      />
+    <FormWrapper title="Description" page={2} pages={3}>
+      <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div className="sm:col-span-6 md:col-span-4">
+          <label htmlFor="name" className="block text-base font-medium text-gray-700">
+            NFT name
+          </label>
+          <div className="mt-1">
+            <input
+              id="name"
+              name="name"
+              type="text"
+              value={name}
+              required
+              autoComplete="name"
+              className="n4gForm h-10"
+              onChange={(e) => updateFields({ name: e.target.value })}
+            />
+          </div>
+        </div>
+
+        <div className="sm:col-span-6">
+          <label htmlFor="description" className="block text-base font-medium text-gray-700">
+            NFT Description
+          </label>
+          <div className="mt-2">
+            <textarea
+              id="description"
+              name="description"
+              value={description}
+              rows={3}
+              required
+              autoComplete="description"
+              className="n4gForm"
+              onChange={(e) => updateFields({ description: e.target.value })}
+            />
+          </div>
+        </div>
+      </div>
     </FormWrapper>
   )
 }
