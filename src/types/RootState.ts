@@ -1,4 +1,4 @@
-import { AdminState, AuthState, CollectionsState, TopicState } from '../redux/types'
+import { AdminState, AuthState, CollectionsState, StorageState, TopicState } from '../redux/types'
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /* 
@@ -8,6 +8,7 @@ import { AdminState, AuthState, CollectionsState, TopicState } from '../redux/ty
 export interface RootState {
   auth: AuthState
   collections: CollectionsState
+  storage: StorageState
   topics: TopicState
   admin: AdminState
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly

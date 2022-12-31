@@ -3,13 +3,14 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Header from '~/components/Header'
 import { FirstForm } from '~/components/NftDetail/Create/FirstForm'
 import { FourthForm } from '~/components/NftDetail/Create/FourthForm'
 import { SecondForm } from '~/components/NftDetail/Create/SecondForm'
 import { ThirdForm } from '~/components/NftDetail/Create/ThirdForm'
 import { useMultistepForm } from '~/components/NftDetail/Create/useMultiStepForm'
+import { postImage } from '~/redux/slices/storageSlice'
 import { RootState } from '~/redux/store'
 
 type FormData = {
@@ -36,6 +37,8 @@ const CollectionNfts: NextPage = () => {
   const { loading, myCollections } = useSelector((state: RootState) => state.collections)
   //const collection = myCollections.filter((collection) => collection.id === collectionId)[0]
 
+  const dispatch = useDispatch()
+
   const [data, setData] = useState(INITIAL_DATA)
   function updateFields(fields: Partial<FormData>) {
     setData((prev) => {
@@ -54,6 +57,9 @@ const CollectionNfts: NextPage = () => {
 
     if (!isLastStep) return next()
     console.log(data)
+    console.log(data.image)
+
+    dispatch(postImage(data.image))
     alert('Successful NFT creation')
   }
 
