@@ -4,13 +4,14 @@ import { FormWrapper } from './FormWrapper'
 
 type ImageData = {
   image: File
+  imageString: string
 }
 
 type ImageFormProps = ImageData & {
   updateFields: (fields: Partial<ImageData>) => void
 }
 
-export function FirstForm({ image, updateFields }: ImageFormProps) {
+export function FirstForm({ image, imageString, updateFields }: ImageFormProps) {
   //const [image, setImage] = useState<File>()
   const [preview, setPreview] = useState<string>()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -20,6 +21,7 @@ export function FirstForm({ image, updateFields }: ImageFormProps) {
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreview(reader.result as string)
+        console.log(preview)
       }
       reader.readAsDataURL(image)
     } else {
@@ -27,12 +29,19 @@ export function FirstForm({ image, updateFields }: ImageFormProps) {
     }
   }, [image])
 
+  useEffect(() => {
+    updateFields({ imageString: preview })
+    console.log('IMAGE STRING')
+    console.log(preview)
+  }, [preview])
+
   return (
     <FormWrapper title="Image" page={1} pages={3}>
       <div className="mt-6 flex justify-center">
         <div className="">
           <label htmlFor="cover-photo" className="text-mf block p-2 font-medium text-gray-700">
             Select NFT image
+            {/* {preview} */}
           </label>
           {preview ? (
             <Image

@@ -20,6 +20,7 @@ type FormData = {
   youtube_url: string
   animation_url: string
   image: any
+  imageString: string
 }
 
 const INITIAL_DATA: FormData = {
@@ -29,6 +30,7 @@ const INITIAL_DATA: FormData = {
   youtube_url: '',
   animation_url: '',
   image: '',
+  imageString: '',
 }
 
 const CollectionNfts: NextPage = () => {
@@ -56,10 +58,13 @@ const CollectionNfts: NextPage = () => {
     e.preventDefault()
 
     if (!isLastStep) return next()
-    console.log(data)
-    console.log(data.image)
 
-    dispatch(postImage(data.image))
+    console.log('DATA TO BE POSTED')
+    console.log(data)
+    console.log('IMAGE STRING')
+    console.log(data.imageString)
+
+    dispatch(postImage(data.imageString))
     alert('Successful NFT creation')
   }
 
