@@ -27,12 +27,14 @@ export function FirstForm({ image, imageString, updateFields }: ImageFormProps) 
     } else {
       setPreview(undefined)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [image])
 
   useEffect(() => {
     updateFields({ imageString: preview })
     console.log('IMAGE STRING')
     console.log(preview)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview])
 
   return (
