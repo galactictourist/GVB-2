@@ -110,6 +110,41 @@ export class GivabitApi {
     }
   }
 
+  async signingNftSale(info: {
+    nftId: string
+    countryCode: string
+    topicId: string
+    charityId: string
+    charityShare: number
+    price: number
+    network: string
+    currency: string
+    quantity: number
+    expiryInMinutes: number
+  }) {
+    const cookies = await parseCookies()
+    const { data: result } = await this.instance.post('/sales/signing', info, {
+      headers: {
+        Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+      },
+    })
+    return {
+      data: result.data,
+    }
+  }
+
+  async createSale(sale: { clientSignature: string; saleData: string; serverSignature: string }) {
+    const cookies = await parseCookies()
+    const { data: result } = await this.instance.post('/sales', sale, {
+      headers: {
+        Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+      },
+    })
+    return {
+      data: result.data,
+    }
+  }
+
   async mint(nftId: string, nonce?: BigNumberish) {
     const { data: result } = await this.instance.post(`/nfts/${nftId}/mint`, {
       nonce: nonce?.toString(),

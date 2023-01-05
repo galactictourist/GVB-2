@@ -8,8 +8,8 @@ import { useIsomorphicLayoutEffect } from 'usehooks-ts'
 import Web3 from 'web3'
 //import { Auth } from '~/components/Auth/Auth'
 //import { configureAppStore } from '../store/configureStore'
+import { Web3ContextProvider } from '~/lib/ethers-react/Web3ContextProvider'
 import { store } from '~/redux/store'
-import { Web3ContextProvider } from '~/utils/ethers-react/Web3ContextProvider'
 import '../styles/globals.css'
 
 // @ts-ignore

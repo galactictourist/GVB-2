@@ -1,7 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
+import { useWeb3 } from '~/lib/ethers-react/useWeb3'
 import { givabitApi } from '~/services/givabit/api'
 import { NftEntity } from '~/types/entity/nft.entity'
+import { signTypedData } from '~/utils/web3'
 import { CharityList } from '../Form/CharityList'
 import { CountryList } from '../Form/CountryList'
 import { TopicList } from '../Form/TopicList'
@@ -11,6 +14,8 @@ interface Props {
 }
 
 export default function SellNftDialog({ nfts }: Props) {
+  const { connectedAccount, connectWallect } = useMetaMask()
+  const { web3Provider } = useWeb3()
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -20,16 +25,35 @@ export default function SellNftDialog({ nfts }: Props) {
   const cancelButtonRef = useRef(null)
 
   const submit = async () => {
-    const sale = await givabitApi.sellNfts({
-      nfts: nfts.map((nft) => nft.id),
-      countryCode: 'VN',
-      charityId: 'be67c2c4-8620-41c0-9d1a-63f40521229e',
-      topicId: 'b1422b18-0bba-4054-9baf-eed8a19b3623',
-      network: 'POLYGON_TESTNET',
+    const sale = await givabitApi.signingNftSale({
+      nftId: nfts[0].id,
+      countryCode: 'KY',
+      charityId: 'ead87736-b0a7-4b36-b52f-232c6e948815',
+      topicId: '0db06dd2-011d-4d6b-8fcd-4f6c9d0292f3',
+      network: 'POLYGON_MUMBAI',
+      charityShare: 1000,
+      expiryInMinutes: 30,
       currency: 'NATIVE_CURRENCY',
+      quantity: 1,
       price: 12.3,
     })
     // sale
+    if (connectedAccount) {
+      const connected = await connectWallect()
+      if (connected) {
+        const typedData = JSON.parse(sale.data.signingData)
+        console.log('typedData', typedData)
+        console.log(await web3Provider.getSigner().getChainId())
+        const signResponse = await signTypedData(web3Provider, typedData, connectedAccount)
+        console.log('signResponse', signResponse)
+        const result = await givabitApi.createSale({
+          clientSignature: signResponse,
+          serverSignature: sale.data.serverSignature,
+          saleData: sale.data.saleData,
+        })
+        console.log('result', result)
+      }
+    }
   }
 
   return (

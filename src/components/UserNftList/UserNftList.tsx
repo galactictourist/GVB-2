@@ -127,6 +127,7 @@ export function UserNftList() {
                   className="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
                   src={nft.imageUrl}
                   alt=""
+                  layout="fill"
                 />
               )}
               <h3 className="mt-6 text-sm font-medium text-gray-900">{nft.name}</h3>

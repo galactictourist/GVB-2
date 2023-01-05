@@ -15,6 +15,20 @@ export async function signMessageEthers(
   account: string
 ) {
   const signer = provider.getSigner(account)
-  const signResponse = signer.signMessage(message)
+  const signResponse = await signer.signMessage(message)
+  return signResponse
+}
+
+export async function signTypedData(
+  provider: ethers.providers.Web3Provider,
+  typedData: any,
+  account: string
+) {
+  const signer = provider.getSigner(account)
+  const signResponse = await signer._signTypedData(
+    typedData.domain,
+    typedData.types,
+    typedData.value
+  )
   return signResponse
 }
