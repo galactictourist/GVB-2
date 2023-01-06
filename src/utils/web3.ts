@@ -1,6 +1,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ethers } from 'ethers'
 import Web3 from 'web3'
+import { TypedData } from '~/types/web3'
 
 export async function signMessage(connector: AbstractConnector, message: string, account: string) {
   const provider = await connector.getProvider()
@@ -21,14 +22,14 @@ export async function signMessageEthers(
 
 export async function signTypedData(
   provider: ethers.providers.Web3Provider,
-  typedData: any,
+  typedData: TypedData<any>,
   account: string
 ) {
   const signer = provider.getSigner(account)
   const signResponse = await signer._signTypedData(
     typedData.domain,
     typedData.types,
-    typedData.value
+    typedData.message
   )
   return signResponse
 }

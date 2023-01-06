@@ -32,7 +32,7 @@ export default function SellNftDialog({ nfts }: Props) {
       topicId: '0db06dd2-011d-4d6b-8fcd-4f6c9d0292f3',
       network: 'POLYGON_MUMBAI',
       charityShare: 1000,
-      expiryInMinutes: 300,
+      expiryInMinutes: 30 * 24 * 60,
       currency: 'NATIVE_CURRENCY',
       quantity: 1,
       price: 0.00000321,
