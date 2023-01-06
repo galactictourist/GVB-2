@@ -75,7 +75,37 @@ export class GivabitApi {
     }
   }
 
-  async saleSearch(filters: { nftIds?: string[] }, page: number, limit: number) {
+  async nftSearch(filter: { ids?: string[] }, page: number, limit: number) {
+    const cookies = await parseCookies()
+    const { data: result } = await this.instance.post(
+      '/nfts/_search',
+      {
+        pagination: {
+          page,
+          limit,
+        },
+        filter: {
+          ids: filter.ids,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+        },
+      }
+    )
+    return {
+      data: result.data as NftEntity[],
+      pagination: {
+        total: result.meta.pagination.total,
+        limit: result.meta.pagination.limit,
+        page: result.meta.pagination.page,
+        maxPage: result.meta.pagination.maxPage,
+      },
+    }
+  }
+
+  async saleSearch(filter: { nftIds?: string[] }, page: number, limit: number) {
     const cookies = await parseCookies()
     const { data: result } = await this.instance.post(
       '/sales/_search',
@@ -84,8 +114,8 @@ export class GivabitApi {
           page,
           limit,
         },
-        filters: {
-          nftIds: filters.nftIds,
+        filter: {
+          nftIds: filter.nftIds,
         },
       },
       {

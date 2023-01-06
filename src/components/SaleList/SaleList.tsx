@@ -20,6 +20,12 @@ export function SaleList() {
 
   const fetch = async (page: number, limit: number) => {
     const sales = await givabitApi.saleSearch({}, page, limit)
+    const nftIds = sales.data.map((sale) => sale.nftId)
+    const nfts = await givabitApi.nftSearch({ ids: nftIds }, 1, nftIds.length)
+    sales.data.forEach((sale) => {
+      sale.nft = nfts.data.find((nft) => nft.id === sale.nftId)
+      console.log('sale.nft', sale.nft)
+    })
     salesSetter(sales.data)
     pageSetter(sales.pagination.page)
     limitSetter(sales.pagination.limit)
@@ -92,9 +98,13 @@ export function SaleList() {
                   layout="fill"
                 />
               )} */}
-              <h3 className="mt-6 text-sm font-medium text-gray-900">
-                {+sale.price} {sale.currency} {sale.network}
-              </h3>
+              <h3 className="mt-6 text-sm font-medium text-gray-900">{sale.nft?.name}</h3>
+              <dl className="mt-1 flex flex-grow flex-col justify-between">
+                <dt className="sr-only">Price</dt>
+                <dd className="text-sm text-gray-500">
+                  {+sale.price} {sale.currency} {sale.network}
+                </dd>
+              </dl>
               <dl className="mt-1 flex flex-grow flex-col justify-between">
                 <dt className="sr-only">Charity wallet</dt>
                 <dd className="text-sm text-gray-500">{sale.charityWallet}</dd>

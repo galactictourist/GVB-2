@@ -1,6 +1,7 @@
 import { BigNumberish } from 'ethers'
 import { TypedData } from '../web3'
 import { BaseEntity } from './base.entity'
+import { NftEntity } from './nft.entity'
 
 export interface SaleContractData extends Record<string, any> {
   nftContract: string
@@ -20,6 +21,7 @@ export interface SaleContractData extends Record<string, any> {
 
 export interface SaleEntity extends BaseEntity {
   nftId: string
+  nft?: NftEntity
   charityId: string
   charityShare: number
   charityWallet: string
