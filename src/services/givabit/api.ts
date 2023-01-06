@@ -75,7 +75,7 @@ export class GivabitApi {
     }
   }
 
-  async saleSearch(filters: { nftIds: string[] }, page: number, limit: number) {
+  async saleSearch(filters: { nftIds?: string[] }, page: number, limit: number) {
     const cookies = await parseCookies()
     const { data: result } = await this.instance.post(
       '/sales/_search',
