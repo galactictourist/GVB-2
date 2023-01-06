@@ -4,6 +4,7 @@ import { parseCookies } from 'nookies'
 import { CountryEntity } from '~/types/entity'
 import { CharityEntity } from '~/types/entity/charities.entity'
 import { NftEntity } from '~/types/entity/nft.entity'
+import { SaleEntity } from '~/types/entity/sale.entity'
 import { TopicEntity } from '~/types/entity/topic.entity'
 import { USER_COOKIES } from '~/utils/constants'
 
@@ -65,6 +66,36 @@ export class GivabitApi {
     )
     return {
       data: result.data as NftEntity[],
+      pagination: {
+        total: result.meta.pagination.total,
+        limit: result.meta.pagination.limit,
+        page: result.meta.pagination.page,
+        maxPage: result.meta.pagination.maxPage,
+      },
+    }
+  }
+
+  async saleSearch(filters: { nftIds: string[] }, page: number, limit: number) {
+    const cookies = await parseCookies()
+    const { data: result } = await this.instance.post(
+      '/sales/_search',
+      {
+        pagination: {
+          page,
+          limit,
+        },
+        filters: {
+          nftIds: filters.nftIds,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+        },
+      }
+    )
+    return {
+      data: result.data as SaleEntity[],
       pagination: {
         total: result.meta.pagination.total,
         limit: result.meta.pagination.limit,

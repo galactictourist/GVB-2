@@ -1,21 +1,8 @@
 export const marketAbi = [
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'owner',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'verifyRoleAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'adminWallet_',
-        type: 'address',
-      },
+      { internalType: 'address', name: 'owner', type: 'address' },
+      { internalType: 'address', name: 'adminWallet_', type: 'address' },
     ],
     stateMutability: 'nonpayable',
     type: 'constructor',
@@ -24,115 +11,20 @@ export const marketAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: 'address',
-        name: 'collection',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'from',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256[]',
-        name: 'tokenIds',
-        type: 'uint256[]',
-      },
-      {
-        indexed: false,
-        internalType: 'string[]',
-        name: 'tokenURIs',
-        type: 'string[]',
-      },
-      {
-        indexed: false,
-        internalType: 'uint96',
-        name: 'royaltyFee',
-        type: 'uint96',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'artistAddress',
-        type: 'address',
-      },
-    ],
-    name: 'AddedMultiplePrimaryItems',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'collection',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'from',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'string',
-        name: 'tokenURI',
-        type: 'string',
-      },
-      {
-        indexed: false,
-        internalType: 'uint96',
-        name: 'royaltyFee',
-        type: 'uint96',
-      },
-    ],
-    name: 'AddedSingleItem',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         components: [
           {
             internalType: 'address',
-            name: 'account',
+            name: 'nftContract',
             type: 'address',
           },
-          {
-            internalType: 'address',
-            name: 'collection',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'seller',
-            type: 'address',
-          },
+          { internalType: 'address', name: 'seller', type: 'address' },
+          { internalType: 'bool', name: 'isMinted', type: 'bool' },
+          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+          { internalType: 'string', name: 'tokenURI', type: 'string' },
+          { internalType: 'uint256', name: 'quantity', type: 'uint256' },
           {
             internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'itemPrice',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'additionalPrice',
+            name: 'itemAmount',
             type: 'uint256',
           },
           {
@@ -142,27 +34,51 @@ export const marketAbi = [
           },
           {
             internalType: 'uint96',
-            name: 'charityFee',
+            name: 'charityShare',
             type: 'uint96',
           },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'nonce',
-            type: 'uint256',
-          },
+          { internalType: 'uint96', name: 'royaltyFee', type: 'uint96' },
+          { internalType: 'uint256', name: 'deadline', type: 'uint256' },
+          { internalType: 'uint256', name: 'salt', type: 'uint256' },
         ],
         indexed: false,
-        internalType: 'struct Domain.BuyItem',
+        internalType: 'struct OrderItem',
         name: 'item',
         type: 'tuple',
       },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'additionalAmount',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes32',
+        name: 'orderHash',
+        type: 'bytes32',
+      },
     ],
     name: 'BoughtItem',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bytes32',
+        name: 'orderHash',
+        type: 'bytes32',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'OrderCancelled',
     type: 'event',
   },
   {
@@ -272,7 +188,7 @@ export const marketAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'collectionAddress',
+        name: 'nftContract',
         type: 'address',
       },
       {
@@ -282,7 +198,7 @@ export const marketAbi = [
         type: 'bool',
       },
     ],
-    name: 'SetCollectionAddress',
+    name: 'SetNftContractAddress',
     type: 'event',
   },
   {
@@ -304,19 +220,6 @@ export const marketAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'verifyRoleAddress',
-        type: 'address',
-      },
-    ],
-    name: 'SetVerifyRole',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'address',
         name: 'account',
         type: 'address',
       },
@@ -330,13 +233,13 @@ export const marketAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'collection',
+        name: 'nftContract',
         type: 'address',
       },
       {
         indexed: false,
         internalType: 'address',
-        name: 'from',
+        name: 'owner',
         type: 'address',
       },
       {
@@ -358,239 +261,95 @@ export const marketAbi = [
   {
     inputs: [],
     name: 'DEFAULT_ADMIN_ROLE',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'VERIFY_ROLE',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32',
-      },
-    ],
+    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'collection',
-        type: 'address',
+        components: [
+          {
+            components: [
+              {
+                internalType: 'address',
+                name: 'nftContract',
+                type: 'address',
+              },
+              {
+                internalType: 'address',
+                name: 'seller',
+                type: 'address',
+              },
+              { internalType: 'bool', name: 'isMinted', type: 'bool' },
+              {
+                internalType: 'uint256',
+                name: 'tokenId',
+                type: 'uint256',
+              },
+              {
+                internalType: 'string',
+                name: 'tokenURI',
+                type: 'string',
+              },
+              {
+                internalType: 'uint256',
+                name: 'quantity',
+                type: 'uint256',
+              },
+              {
+                internalType: 'uint256',
+                name: 'itemAmount',
+                type: 'uint256',
+              },
+              {
+                internalType: 'address',
+                name: 'charityAddress',
+                type: 'address',
+              },
+              {
+                internalType: 'uint96',
+                name: 'charityShare',
+                type: 'uint96',
+              },
+              {
+                internalType: 'uint96',
+                name: 'royaltyFee',
+                type: 'uint96',
+              },
+              {
+                internalType: 'uint256',
+                name: 'deadline',
+                type: 'uint256',
+              },
+              { internalType: 'uint256', name: 'salt', type: 'uint256' },
+            ],
+            internalType: 'struct OrderItem',
+            name: 'orderItem',
+            type: 'tuple',
+          },
+          {
+            internalType: 'uint256',
+            name: 'additionalAmount',
+            type: 'uint256',
+          },
+          { internalType: 'bytes', name: 'signature', type: 'bytes' },
+        ],
+        internalType: 'struct Order[]',
+        name: 'orders',
+        type: 'tuple[]',
       },
-      {
-        internalType: 'uint256[]',
-        name: 'tokenIds',
-        type: 'uint256[]',
-      },
-      {
-        internalType: 'uint96',
-        name: 'royaltyFee',
-        type: 'uint96',
-      },
+    ],
+    name: 'buyItems',
+    outputs: [
+      { internalType: 'bool[]', name: 'ordersResult', type: 'bool[]' },
       {
         internalType: 'string[]',
-        name: 'tokenURIs',
+        name: 'ordersStatus',
         type: 'string[]',
       },
-      {
-        internalType: 'address',
-        name: 'artistAddress',
-        type: 'address',
-      },
+      { internalType: 'bytes32[]', name: 'ordersHash', type: 'bytes32[]' },
     ],
-    name: 'addPrimaryMultipleItems',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'account',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'collection',
-            type: 'address',
-          },
-          {
-            internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint96',
-            name: 'royaltyFee',
-            type: 'uint96',
-          },
-          {
-            internalType: 'string',
-            name: 'tokenURI',
-            type: 'string',
-          },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'nonce',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct Domain.AddSingleItem',
-        name: 'item',
-        type: 'tuple',
-      },
-      {
-        internalType: 'bytes',
-        name: 'signature',
-        type: 'bytes',
-      },
-    ],
-    name: 'addSingleItem',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'account',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'collection',
-            type: 'address',
-          },
-          {
-            internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint96',
-            name: 'royaltyFee',
-            type: 'uint96',
-          },
-          {
-            internalType: 'string',
-            name: 'tokenURI',
-            type: 'string',
-          },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'nonce',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct Domain.AddSingleItem',
-        name: 'item',
-        type: 'tuple',
-      },
-      {
-        internalType: 'bytes',
-        name: 'signature',
-        type: 'bytes',
-      },
-    ],
-    name: 'addSingleItem2',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'account',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'collection',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'seller',
-            type: 'address',
-          },
-          {
-            internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'itemPrice',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'additionalPrice',
-            type: 'uint256',
-          },
-          {
-            internalType: 'address',
-            name: 'charityAddress',
-            type: 'address',
-          },
-          {
-            internalType: 'uint96',
-            name: 'charityFee',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'nonce',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct Domain.BuyItem',
-        name: 'item',
-        type: 'tuple',
-      },
-      {
-        internalType: 'bytes',
-        name: 'signature',
-        type: 'bytes',
-      },
-    ],
-    name: 'buyItem',
-    outputs: [],
     stateMutability: 'payable',
     type: 'function',
   },
@@ -600,32 +359,17 @@ export const marketAbi = [
         components: [
           {
             internalType: 'address',
-            name: 'account',
+            name: 'nftContract',
             type: 'address',
           },
-          {
-            internalType: 'address',
-            name: 'collection',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'seller',
-            type: 'address',
-          },
+          { internalType: 'address', name: 'seller', type: 'address' },
+          { internalType: 'bool', name: 'isMinted', type: 'bool' },
+          { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+          { internalType: 'string', name: 'tokenURI', type: 'string' },
+          { internalType: 'uint256', name: 'quantity', type: 'uint256' },
           {
             internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'itemPrice',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'additionalPrice',
+            name: 'itemAmount',
             type: 'uint256',
           },
           {
@@ -635,252 +379,44 @@ export const marketAbi = [
           },
           {
             internalType: 'uint96',
-            name: 'charityFee',
+            name: 'charityShare',
             type: 'uint96',
           },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'nonce',
-            type: 'uint256',
-          },
+          { internalType: 'uint96', name: 'royaltyFee', type: 'uint96' },
+          { internalType: 'uint256', name: 'deadline', type: 'uint256' },
+          { internalType: 'uint256', name: 'salt', type: 'uint256' },
         ],
-        internalType: 'struct Domain.BuyItem',
-        name: 'item',
-        type: 'tuple',
-      },
-      {
-        internalType: 'bytes',
-        name: 'signature',
-        type: 'bytes',
+        internalType: 'struct OrderItem[]',
+        name: 'orderItems',
+        type: 'tuple[]',
       },
     ],
-    name: 'buyItem2',
-    outputs: [],
-    stateMutability: 'payable',
+    name: 'cancelOrders',
+    outputs: [
+      { internalType: 'bool[]', name: 'cancelResults', type: 'bool[]' },
+      { internalType: 'string[]', name: 'cancelStatus', type: 'string[]' },
+    ],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'account',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'collection',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'seller',
-            type: 'address',
-          },
-          {
-            internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'itemPrice',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'additionalPrice',
-            type: 'uint256',
-          },
-          {
-            internalType: 'address',
-            name: 'charityAddress',
-            type: 'address',
-          },
-          {
-            internalType: 'uint96',
-            name: 'charityFee',
-            type: 'uint96',
-          },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'nonce',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct Domain.BuyItem',
-        name: 'item',
-        type: 'tuple',
-      },
-      {
-        internalType: 'bytes',
-        name: 'signature',
-        type: 'bytes',
-      },
-    ],
-    name: 'checkSignatureBuy',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: 'gbNftContracts',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'account',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'collection',
-            type: 'address',
-          },
-          {
-            internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint96',
-            name: 'royaltyFee',
-            type: 'uint96',
-          },
-          {
-            internalType: 'string',
-            name: 'tokenURI',
-            type: 'string',
-          },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'nonce',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct Domain.AddSingleItem',
-        name: 'item',
-        type: 'tuple',
-      },
-      {
-        internalType: 'bytes',
-        name: 'signature',
-        type: 'bytes',
-      },
-    ],
-    name: 'checkSignatureMint',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'gbCollection',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32',
-      },
-    ],
+    inputs: [{ internalType: 'bytes32', name: 'role', type: 'bytes32' }],
     name: 'getRoleAdmin',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32',
-      },
-    ],
+    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
+      { internalType: 'bytes32', name: 'role', type: 'bytes32' },
+      { internalType: 'address', name: 'account', type: 'address' },
     ],
     name: 'grantRole',
     outputs: [],
@@ -889,78 +425,25 @@ export const marketAbi = [
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
+      { internalType: 'bytes32', name: 'role', type: 'bytes32' },
+      { internalType: 'address', name: 'account', type: 'address' },
     ],
     name: 'hasRole',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    name: 'itemInfo',
-    outputs: [
-      {
-        internalType: 'address',
-        name: 'royaltyAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'uint96',
-        name: 'royaltyFee',
-        type: 'uint96',
-      },
-      {
-        internalType: 'bool',
-        name: 'isPrimaryCollection',
-        type: 'bool',
-      },
-    ],
+    inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+    name: 'orderCancelled',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'nonces',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+    name: 'orderProcessed',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -974,41 +457,21 @@ export const marketAbi = [
   {
     inputs: [],
     name: 'paused',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'platformFee',
-    outputs: [
-      {
-        internalType: 'uint96',
-        name: '',
-        type: 'uint96',
-      },
-    ],
+    outputs: [{ internalType: 'uint96', name: '', type: 'uint96' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
+      { internalType: 'bytes32', name: 'role', type: 'bytes32' },
+      { internalType: 'address', name: 'account', type: 'address' },
     ],
     name: 'renounceRole',
     outputs: [],
@@ -1017,16 +480,8 @@ export const marketAbi = [
   },
   {
     inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'role',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
+      { internalType: 'bytes32', name: 'role', type: 'bytes32' },
+      { internalType: 'address', name: 'account', type: 'address' },
     ],
     name: 'revokeRole',
     outputs: [],
@@ -1034,13 +489,7 @@ export const marketAbi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'adminWallet_',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'adminWallet_', type: 'address' }],
     name: 'setAdminWallet',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -1050,62 +499,27 @@ export const marketAbi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'collectionAddress',
+        name: 'nftContractAddress',
         type: 'address',
       },
-      {
-        internalType: 'bool',
-        name: 'isCollection',
-        type: 'bool',
-      },
+      { internalType: 'bool', name: 'isEnabled', type: 'bool' },
     ],
-    name: 'setGBCollectionAddress',
+    name: 'setNftContractAddress',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint96',
-        name: 'platformFee_',
-        type: 'uint96',
-      },
-    ],
+    inputs: [{ internalType: 'uint96', name: 'platformFee_', type: 'uint96' }],
     name: 'setPlatformFee',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'verifyRoleAddress',
-        type: 'address',
-      },
-    ],
-    name: 'setVerifyRole',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes4',
-        name: 'interfaceId',
-        type: 'bytes4',
-      },
-    ],
+    inputs: [{ internalType: 'bytes4', name: 'interfaceId', type: 'bytes4' }],
     name: 'supportsInterface',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -1118,48 +532,9 @@ export const marketAbi = [
   },
   {
     inputs: [
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'account',
-            type: 'address',
-          },
-          {
-            internalType: 'address',
-            name: 'collection',
-            type: 'address',
-          },
-          {
-            internalType: 'uint256',
-            name: 'tokenId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'string',
-            name: 'tokenURI',
-            type: 'string',
-          },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'nonce',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct Domain.UpdateTokenURI',
-        name: 'tokenUriInfo',
-        type: 'tuple',
-      },
-      {
-        internalType: 'bytes',
-        name: 'signature',
-        type: 'bytes',
-      },
+      { internalType: 'address', name: 'nftContract', type: 'address' },
+      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { internalType: 'string', name: 'tokenURI', type: 'string' },
     ],
     name: 'updateTokenURI',
     outputs: [],

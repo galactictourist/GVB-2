@@ -35,7 +35,7 @@ export default function SellNftDialog({ nfts }: Props) {
       expiryInMinutes: 30,
       currency: 'NATIVE_CURRENCY',
       quantity: 1,
-      price: 12.3,
+      price: 0.00000321,
     })
     // sale
     if (connectedAccount) {

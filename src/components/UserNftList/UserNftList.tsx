@@ -1,11 +1,13 @@
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/20/solid'
-import { BigNumber, Contract, providers } from 'ethers'
+import { BigNumber, Contract, providers, utils } from 'ethers'
+import { defaultAbiCoder } from 'ethers/lib/utils'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
 import { useWeb3 } from '~/lib/ethers-react/useWeb3'
 import { givabitApi } from '~/services/givabit/api'
 import { NftEntity } from '~/types/entity/nft.entity'
+import { SaleEntity } from '~/types/entity/sale.entity'
 import { SimplePagination } from '../Pagination/SimplePagination'
 import { marketAbi } from './abi'
 import { nftAbi } from './erc721'
@@ -21,6 +23,7 @@ export function UserNftList() {
   const [navPage, navPageSetter] = useState(1)
   const [nfts, nftsSetter] = useState<NftEntity[] | undefined>(undefined)
   const [sellingNfts, sellingNftsSetter] = useState<NftEntity[]>([])
+  const [sales, salesSetter] = useState<SaleEntity[]>([])
 
   const fetch = async (page: number, limit: number) => {
     const nfts = await givabitApi.nftSearchMine(page, limit)
@@ -30,14 +33,118 @@ export function UserNftList() {
     totalSetter(nfts.pagination.total)
   }
 
+  const fetchSales = async (nftIds: string[], page: number, limit: number) => {
+    const sales = await givabitApi.saleSearch({ nftIds }, 1, nftIds.length)
+    salesSetter(sales.data)
+  }
+
   useEffect(() => {
     ;(async () => {
       fetch(navPage, limit)
     })()
   }, [navPage, limit])
 
+  useEffect(() => {
+    ;(async () => {
+      if (nfts) {
+        fetchSales(
+          nfts.map((nft) => nft.id),
+          navPage,
+          limit
+        )
+      }
+    })()
+  }, [nfts])
+
   const changePage = (page: number) => {
     navPageSetter(page)
+  }
+
+  const cancel = async (nft: any) => {
+    console.log('nft', nft)
+    const sale = sales.find((sale) => sale.nftId === nft.id)
+    if (sale) {
+      console.log('sale', sale)
+      const item = sale.signedData.value
+      const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
+      console.log(
+        'keccak256("MARKETPLACE_ROLE")',
+        utils.keccak256(utils.toUtf8Bytes('MARKETPLACE_ROLE'))
+      )
+      // utils.solidityKeccak256()
+      console.log(
+        "defaultAbiCoder.encode('MARKETPLACE_ROLE')",
+        defaultAbiCoder.encode(['string'], ['MARKETPLACE_ROLE'])
+      )
+      // ethers.utils.AbiCoder.
+
+      const ORDER_ITEM_TYPEHASH = utils.keccak256(
+        utils.toUtf8Bytes(
+          'OrderItem(address nftContract,address seller,bool isMinted,uint256 tokenId,string tokenURI, uint256 quantity,uint256 itemPrice,address charityAddress,uint96 charityShare,uint96 royaltyFee,uint256 deadline,uint256 salt)'
+        )
+      )
+
+      const hash = utils.keccak256(
+        utils.defaultAbiCoder.encode(
+          [
+            'bytes32',
+            'address',
+            'address',
+            'bool',
+            'uint256',
+            'bytes32',
+            'uint256',
+            'uint256',
+            'address',
+            'uint96',
+            'uint96',
+            'uint256',
+            'uint256',
+          ],
+          [
+            ORDER_ITEM_TYPEHASH,
+            item.nftContract,
+            item.seller,
+            item.isMinted,
+            item.tokenId,
+            utils.keccak256(utils.toUtf8Bytes(item.tokenURI)),
+            item.quantity,
+            item.itemAmount,
+            item.charityAddress,
+            item.charityShare,
+            item.royaltyFee,
+            item.deadline,
+            item.salt,
+          ]
+        )
+      )
+      console.log('hash', hash)
+
+      // return keccak256(
+      //   abi.encode(
+      //     ORDER_ITEM_TYPEHASH,
+      //     item.nftContract,
+      //     item.seller,
+      //     item.isMinted,
+      //     item.tokenId,
+      //     keccak256(bytes(item.tokenURI)),
+      //     item.quantity,
+      //     item.itemAmount,
+      //     item.charityAddress,
+      //     item.charityShare,
+      //     item.royaltyFee,
+      //     item.deadline,
+      //     item.salt
+      //   )
+      // );
+      const contractMp = new Contract(marketContractAddress, marketAbi, web3Provider.getSigner())
+      const txResponse = (await contractMp.cancelOrders([
+        sale.signedData.value,
+      ])) as providers.TransactionResponse
+      console.log('txResponse', new Date(), txResponse)
+      const txReceipt = await txResponse.wait()
+      console.log('txReceipt', new Date(), txReceipt)
+    }
   }
 
   const mint = async (nftId: string) => {
@@ -139,7 +246,20 @@ export function UserNftList() {
             <div>
               <div className="-mt-px flex divide-x divide-gray-200">
                 <div className="flex w-0 flex-1">
-                  <a
+                  {sales.find((sale) => sale.nftId === nft.id) && (
+                    <a
+                      href={`#`}
+                      onClick={(e) => {
+                        cancel(nft)
+                        e.preventDefault()
+                      }}
+                      className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
+                    >
+                      <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      <span className="ml-3">Cancel</span>
+                    </a>
+                  )}
+                  {/* <a
                     href={`#`}
                     onClick={(e) => {
                       mint(nft.id)
@@ -149,7 +269,7 @@ export function UserNftList() {
                   >
                     <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     <span className="ml-3">Mint</span>
-                  </a>
+                  </a> */}
                 </div>
                 <div className="-ml-px flex w-0 flex-1">
                   <a
