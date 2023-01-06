@@ -1,5 +1,5 @@
 import { PhoneIcon } from '@heroicons/react/20/solid'
-import { Contract, providers } from 'ethers'
+import { BigNumber, Contract, providers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
 import { useWeb3 } from '~/lib/ethers-react/useWeb3'
@@ -60,8 +60,8 @@ export function SaleList() {
           ],
           {
             gasLimit: 1000000,
-            gasPrice: 13000000000,
-            value: sale.signedData.value.itemAmount,
+            // gasPrice: 13000000000,
+            value: BigNumber.from(sale.signedData.value.itemPrice).toString(),
           }
         )) as providers.TransactionResponse
         console.log('buy txResponse', txResponse)
@@ -98,7 +98,9 @@ export function SaleList() {
                   layout="fill"
                 />
               )} */}
-              <h3 className="mt-6 text-sm font-medium text-gray-900">{sale.nft?.name}</h3>
+              <h3 className="mt-6 text-sm font-medium text-gray-900">
+                [{sale.nft?.tokenId}] {sale.nft?.name}
+              </h3>
               <dl className="mt-1 flex flex-grow flex-col justify-between">
                 <dt className="sr-only">Price</dt>
                 <dd className="text-sm text-gray-500">
@@ -112,6 +114,10 @@ export function SaleList() {
               <dl className="mt-1 flex flex-grow flex-col justify-between">
                 <dt className="sr-only">Charity share</dt>
                 <dd className="text-sm text-gray-500">{sale.charityShare}</dd>
+              </dl>
+              <dl className="mt-1 flex flex-grow flex-col justify-between">
+                <dt className="sr-only">ID</dt>
+                <dd className="text-sm text-gray-500">{sale.nftId}</dd>
               </dl>
             </div>
             <div>
