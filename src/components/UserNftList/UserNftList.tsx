@@ -65,7 +65,7 @@ export function UserNftList() {
     const sale = sales.find((sale) => sale.nftId === nft.id)
     if (sale) {
       console.log('sale', sale)
-      const item = sale.signedData.value
+      const item = sale.signedData.message
       const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
       console.log(
         'keccak256("MARKETPLACE_ROLE")',
@@ -139,7 +139,7 @@ export function UserNftList() {
       // );
       const contractMp = new Contract(marketContractAddress, marketAbi, web3Provider.getSigner())
       const txResponse = (await contractMp.cancelOrders([
-        sale.signedData.value,
+        sale.signedData.message,
       ])) as providers.TransactionResponse
       console.log('txResponse', new Date(), txResponse)
       const txReceipt = await txResponse.wait()

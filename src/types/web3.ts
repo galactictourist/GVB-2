@@ -4,5 +4,5 @@ export interface TypedData<T extends Record<string, any>> {
   domain: TypedDataDomain
   primaryType?: string
   types: Record<string, Array<TypedDataField>>
-  value: T
+  message: T
 }

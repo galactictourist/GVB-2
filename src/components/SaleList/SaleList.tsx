@@ -55,13 +55,13 @@ export function SaleList() {
             {
               signature: sale.signature,
               additionalAmount: 0,
-              orderItem: sale.signedData.value,
+              orderItem: sale.signedData.message,
             },
           ],
           {
             gasLimit: 1000000,
             // gasPrice: 13000000000,
-            value: BigNumber.from(sale.signedData.value.itemPrice).toString(),
+            value: BigNumber.from(sale.signedData.message.itemPrice).toString(),
           }
         )) as providers.TransactionResponse
         console.log('buy txResponse', txResponse)
