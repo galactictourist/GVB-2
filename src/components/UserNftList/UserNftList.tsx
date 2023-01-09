@@ -34,7 +34,7 @@ export function UserNftList() {
   }
 
   const fetchSales = async (nftIds: string[], page: number, limit: number) => {
-    const sales = await givabitApi.saleSearch({ nftIds }, 1, nftIds.length)
+    const sales = await givabitApi.saleSearchMine({ nftIds }, 1, nftIds.length)
     salesSetter(sales.data)
   }
 

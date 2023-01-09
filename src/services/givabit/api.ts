@@ -106,9 +106,30 @@ export class GivabitApi {
   }
 
   async saleSearch(filter: { nftIds?: string[] }, page: number, limit: number) {
+    const { data: result } = await this.instance.post('/sales/_search', {
+      pagination: {
+        page,
+        limit,
+      },
+      filter: {
+        nftIds: filter.nftIds,
+      },
+    })
+    return {
+      data: result.data as SaleEntity[],
+      pagination: {
+        total: result.meta.pagination.total,
+        limit: result.meta.pagination.limit,
+        page: result.meta.pagination.page,
+        maxPage: result.meta.pagination.maxPage,
+      },
+    }
+  }
+
+  async saleSearchMine(filter: { nftIds?: string[] }, page: number, limit: number) {
     const cookies = await parseCookies()
     const { data: result } = await this.instance.post(
-      '/sales/_search',
+      '/sales/_search/mine',
       {
         pagination: {
           page,
