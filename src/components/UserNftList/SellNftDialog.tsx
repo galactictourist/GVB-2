@@ -1,4 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
+import { Contract, providers } from 'ethers'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
 import { useWeb3 } from '~/lib/ethers-react/useWeb3'
@@ -8,6 +9,7 @@ import { signTypedData } from '~/utils/web3'
 import { CharityList } from '../Form/CharityList'
 import { CountryList } from '../Form/CountryList'
 import { TopicList } from '../Form/TopicList'
+import { nftAbi } from './erc721'
 
 interface Props {
   nfts: NftEntity[]
@@ -45,6 +47,45 @@ export default function SellNftDialog({ nfts }: Props) {
         const typedData = JSON.parse(sale.data.signingData)
         console.log('typedData', typedData)
         console.log(await web3Provider.getSigner().getChainId())
+        const nftContract = new Contract(
+          typedData.message.nftContract,
+          nftAbi,
+          web3Provider.getSigner()
+        )
+        console.log('typedData.message.tokenId', typedData.message.tokenId)
+        // if (typedData.message.isMinted)
+        // const isApproved = (await nftContract.getApproved(
+        //   typedData.message.tokenId
+        // )) as providers.TransactionResponse
+        // console.log('isApproved', isApproved)
+        // if (!isApproved) {
+        // const txResponse = (await nftContract.approve(
+        //   typedData.domain.verifyingContract,
+        //   typedData.message.tokenId,
+        //   {
+        //     from: connectedAccount,
+        //   }
+        // )) as providers.TransactionResponse
+        // const txReceipt = await txResponse.wait()
+        // }
+        // OR
+        const approvedAll = await nftContract.isApprovedForAll(
+          connectedAccount,
+          typedData.domain.verifyingContract
+        )
+        console.log('approvedAll', approvedAll)
+        if (!approvedAll) {
+          const txResponse = (await nftContract.setApprovalForAll(
+            typedData.domain.verifyingContract,
+            true,
+            {
+              from: connectedAccount,
+            }
+          )) as providers.TransactionResponse
+          const txReceipt = await txResponse.wait()
+          console.log('approved successful', txReceipt)
+        }
+
         const signResponse = await signTypedData(web3Provider, typedData, connectedAccount)
         console.log('signResponse', signResponse)
         const result = await givabitApi.createSale({
