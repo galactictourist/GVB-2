@@ -64,7 +64,7 @@ const CollectionNfts: NextPage = () => {
     console.log('IMAGE STRING')
     console.log(data.imageString)
 
-    dispatch(postImage(data.imageString))
+    dispatch(postImage({ file: data.image }))
     alert('Successful NFT creation')
   }
 

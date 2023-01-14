@@ -6,11 +6,15 @@ export const storageApi = {
   async postImage(data: any) {
     console.log('POST IMAGE API')
     console.log(data)
+
+    console.log(mainClient)
     try {
+      mainClient.defaults.headers['Content-Type'] = 'multipart/form-data'
       const res = await mainClient.post('/storage/nft/image', data)
       const resBody = res.data
       return resBody
     } catch (err) {
+      console.log(err)
       throw err
     }
   },
