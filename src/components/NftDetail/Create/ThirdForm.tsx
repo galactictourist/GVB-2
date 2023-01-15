@@ -27,7 +27,7 @@ export function ThirdForm({
             <input
               id="external_url"
               name="external_url"
-              type="text"
+              type="url"
               value={external_url}
               className="n4gForm h-10"
               onChange={(e) => updateFields({ external_url: e.target.value })}
@@ -43,6 +43,7 @@ export function ThirdForm({
             <input
               id="animation_url"
               name="animation_url"
+              type="url"
               value={animation_url}
               className="n4gForm"
               onChange={(e) => updateFields({ animation_url: e.target.value })}
@@ -57,6 +58,7 @@ export function ThirdForm({
             <input
               id="youtube_url"
               name="youtube_url"
+              type="url"
               value={youtube_url}
               className="n4gForm"
               onChange={(e) => updateFields({ youtube_url: e.target.value })}
