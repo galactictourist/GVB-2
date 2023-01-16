@@ -7,6 +7,7 @@ import rootSaga from './saga'
 import adminReducer from './slices/adminSlice'
 import authReducer from './slices/authSlice'
 import collectionsReducer from './slices/collectionsSlice'
+import storageReducer from './slices/storageSlice'
 import topicsReducer from './slices/topicsSlice'
 
 const routerMiddleware = createRouterMiddleware()
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   admin: adminReducer,
   auth: authReducer,
   collections: collectionsReducer,
+  storage: storageReducer,
   topics: topicsReducer,
 })
 

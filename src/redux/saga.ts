@@ -8,6 +8,7 @@ import {
   getMyCollectionsSaga,
   updateCollectionSaga,
 } from './sagas/collectionsSagas'
+import { postImageSaga } from './sagas/storageSaga'
 import { getTopicByIDSaga, getTopicsSaga } from './sagas/topicsSaga'
 
 import { createTopic, login, updateTopic } from './slices/adminSlice'
@@ -18,6 +19,7 @@ import {
   getMyCollections,
   updateCollection,
 } from './slices/collectionsSlice'
+import { postImage } from './slices/storageSlice'
 import { getTopicById, getTopics } from './slices/topicsSlice'
 
 function* rootSaga() {
@@ -28,6 +30,7 @@ function* rootSaga() {
     takeLatest(getMyCollections.type, getMyCollectionsSaga),
     takeLatest(createCollection.type, createCollectionSaga),
     takeLatest(updateCollection.type, updateCollectionSaga),
+    takeLatest(postImage.type, postImageSaga),
     takeLatest(getTopics.type, getTopicsSaga),
     takeLatest(getTopicById.type, getTopicByIDSaga),
     takeLatest(updateTopic.type, updateTopicsSaga),
