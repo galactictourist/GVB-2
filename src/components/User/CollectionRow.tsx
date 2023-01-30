@@ -27,9 +27,15 @@ const CollectionRow = ({ id, name, description, cause, image }: Props) => {
           <h4 className="pt-2">{description}</h4>
           <h4 className="pt-2 uppercase text-gray-500">{cause}</h4>
         </div>
+        <div className="mt-auto pt-4"></div>
         <div className="mt-auto pt-4">
+          <Link href={`/collection/${id}/nfts`}>
+            <button className="flex h-10 w-24 items-center justify-center rounded-md border border-transparent bg-n4gLightTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
+              NFTs
+            </button>
+          </Link>
           <Link href={`/collection/${id}/edit`}>
-            <button className="flex h-10 w-24 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
+            <button className="mt-2 flex h-10 w-24 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
               Edit
             </button>
           </Link>
