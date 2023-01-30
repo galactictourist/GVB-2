@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function SellNftDialog({ nfts }: Props) {
-  const { connectedAccount, connectWallect } = useMetaMask()
+  const { connectedAccount, connectWallet } = useMetaMask()
   const { web3Provider } = useWeb3()
   const [open, setOpen] = useState(false)
 
@@ -42,7 +42,7 @@ export default function SellNftDialog({ nfts }: Props) {
     })
     // sale
     if (connectedAccount) {
-      const connected = await connectWallect()
+      const connected = await connectWallet()
       if (connected) {
         const typedData = JSON.parse(sale.data.signingData)
         console.log('typedData', typedData)

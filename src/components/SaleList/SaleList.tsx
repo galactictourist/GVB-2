@@ -9,7 +9,7 @@ import { SimplePagination } from '../Pagination/SimplePagination'
 import { marketAbi } from '../UserNftList/abi'
 
 export function SaleList() {
-  const { connectedAccount, connectWallect } = useMetaMask()
+  const { connectedAccount, connectWallet } = useMetaMask()
   const { web3Provider } = useWeb3()
 
   const [total, totalSetter] = useState(0)
@@ -44,7 +44,7 @@ export function SaleList() {
 
   const buy = async (sale: SaleEntity) => {
     if (connectedAccount) {
-      const connected = await connectWallect()
+      const connected = await connectWallet()
       if (connected) {
         const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
         console.log('sale', sale)

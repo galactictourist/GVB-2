@@ -14,7 +14,7 @@ import { nftAbi } from './erc721'
 import SellNftDialog from './SellNftDialog'
 
 export function UserNftList() {
-  const { connectedAccount, connectWallect } = useMetaMask()
+  const { connectedAccount, connectWallet } = useMetaMask()
   const { web3Provider } = useWeb3()
 
   const [total, totalSetter] = useState(0)
@@ -151,7 +151,7 @@ export function UserNftList() {
     const result = await givabitApi.mint(nftId)
     console.log('result', result.data.data, result.data.signature)
     if (connectedAccount) {
-      const connected = await connectWallect()
+      const connected = await connectWallet()
       if (connected) {
         console.log(await web3Provider.getSigner().getChainId())
         const nftContractAddress = '0x91d4Ad404E2363ae7FFDf7C8909dFEB24B1727f9'

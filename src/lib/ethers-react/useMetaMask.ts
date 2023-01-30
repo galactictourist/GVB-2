@@ -32,7 +32,7 @@ export const useMetaMask = () => {
       if (!isInstalledWallet) {
         return false
       }
-      window.ethereum.on('accountsChanged', (...args: unknown[]) => {
+      window.ethereum?.on('accountsChanged', (...args: unknown[]) => {
         const accounts = args[0] as string[]
         if (accounts && accounts.length) {
           setConnectedAccount(accounts[0])
@@ -52,7 +52,7 @@ export const useMetaMask = () => {
       if (!isInstalledWallet) {
         return false
       }
-      window.ethereum.on('chainChanged', (...args: unknown[]) => {
+      window.ethereum?.on('chainChanged', (...args: unknown[]) => {
         const chainId = args[0] as string
         console.log('chainChanged:', parseInt(chainId))
         // window.location.reload()
@@ -69,7 +69,7 @@ export const useMetaMask = () => {
       if (!isInstalledWallet) {
         return false
       }
-      const accounts = (await window.ethereum.request({
+      const accounts = (await window.ethereum?.request({
         method: 'eth_accounts',
       })) as string[]
       if (accounts && accounts.length) {
@@ -85,12 +85,12 @@ export const useMetaMask = () => {
   }
 
   // connect wallect
-  const connectWallect = async () => {
+  const connectWallet = async () => {
     try {
       if (!isInstalledWallet) {
         return false
       }
-      const accounts = (await window.ethereum.request({
+      const accounts = (await window.ethereum?.request({
         method: 'eth_requestAccounts',
       })) as string[]
       if (accounts && accounts.length) {
@@ -119,6 +119,6 @@ export const useMetaMask = () => {
     connectedAccount,
     checkIfWalletIsInstalled,
     checkIfWalletIsConnected,
-    connectWallect,
+    connectWallet,
   }
 }
