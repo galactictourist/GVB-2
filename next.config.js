@@ -3,8 +3,15 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: [],
-  }
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'n4g-staging.sgp1.digitaloceanspaces.com',
+        port: '',
+        pathname: '/dev/media/**',
+      },
+    ],
+  },
 }
 
 module.exports = nextConfig

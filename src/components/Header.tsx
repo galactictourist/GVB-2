@@ -7,20 +7,18 @@ import {
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-//import { useWeb3React } from '@web3-react/core'
 import Image from 'next/image'
 import Link from 'next/link'
 import { destroyCookie, parseCookies } from 'nookies'
 import { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-//import { injectedConnector } from '~/config'
+import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
+import { useWeb3 } from '~/lib/ethers-react/useWeb3'
 import { generateNonce, signOut, verifySignature } from '~/redux/slices/authSlice'
 import { RootState } from '~/redux/store'
+import { classNames } from '~/utils'
 import { USER_COOKIES } from '~/utils/constants'
 import { formatWalletAddress } from '~/utils/wallet'
-//import { signMessage } from '~/utils/web3'
-import { useMetaMask } from '~/utils/ethers-react/useMetaMask'
-import { useWeb3 } from '~/utils/ethers-react/useWeb3'
 import { signMessageEthers } from '~/utils/web3'
 import Logo from '../../public/img/givabit_full_logo2.svg'
 
@@ -47,10 +45,6 @@ const explore = [
     icon: CursorArrowRaysIcon,
   },
 ]
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
 
 const Header: React.FC<any> = () => {
   const dispatch = useDispatch()
@@ -235,6 +229,11 @@ const Header: React.FC<any> = () => {
             <Link href="/collection/create">
               <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Collection
+              </div>
+            </Link>
+            <Link href="/sales">
+              <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
+                Sales
               </div>
             </Link>
             <Link href="/admin/login">

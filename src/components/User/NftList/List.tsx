@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useWeb3 } from '~/utils/ethers-react/useWeb3'
 //import { givabitApi } from '~/services/givabit/api'
 //import { NftEntity } from '~/types/entity/nft.entity'
 //import { useAuthSlice } from '../Auth/slice'
@@ -14,7 +13,6 @@ export function UserNftList() {
   const dispatch = useDispatch()
   //const { signingIn } = useSelector(selectAuth)
   //const { connectedAccount, connectWallect } = useMetaMask()
-  const { web3Provider } = useWeb3()
 
   const [total, totalSetter] = useState(0)
   const [limit, limitSetter] = useState(20)

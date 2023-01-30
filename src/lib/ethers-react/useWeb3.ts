@@ -27,7 +27,6 @@ export const useWeb3 = () => {
 
   useEffect(() => {
     connectedAccount && provider && getBalance()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectedAccount, provider])
 
   return {
