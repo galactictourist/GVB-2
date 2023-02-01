@@ -15,3 +15,6 @@ export interface AdminState {}
 export interface ICollection {
   name: string
 }
+
+// export interface NftState {}
+// Using state from ./types/entity/nft.entity.ts in RootState.ts

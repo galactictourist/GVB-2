@@ -8,7 +8,7 @@ export function* postImageSaga(action: any) {
     if (data) {
       console.log('POST IMAGE SUCCESS')
       console.log(data)
-      yield put(postImageSuccess)
+      yield put(postImageSuccess(data))
     }
   } catch (error) {
     yield put(postImageFailure(error))

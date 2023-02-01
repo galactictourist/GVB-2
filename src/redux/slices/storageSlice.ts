@@ -4,6 +4,7 @@ const storageSlice = createSlice({
   name: 'storage',
   initialState: {
     loading: false,
+    imageStorageId: '',
     error: '',
   },
   reducers: {
@@ -15,6 +16,7 @@ const storageSlice = createSlice({
     },
     postImageSuccess(state, action) {
       state.loading = false
+      state.imageStorageId = action.payload.id
       state.error = ''
     },
     postImageFailure(state, action) {

@@ -8,6 +8,7 @@ import {
   getMyCollectionsSaga,
   updateCollectionSaga,
 } from './sagas/collectionsSagas'
+import { createNftSaga } from './sagas/nftSaga'
 import { postImageSaga } from './sagas/storageSaga'
 import { getTopicByIDSaga, getTopicsSaga } from './sagas/topicsSaga'
 
@@ -19,6 +20,7 @@ import {
   getMyCollections,
   updateCollection,
 } from './slices/collectionsSlice'
+import { createNft } from './slices/nftSlice'
 import { postImage } from './slices/storageSlice'
 import { getTopicById, getTopics } from './slices/topicsSlice'
 
@@ -36,6 +38,7 @@ function* rootSaga() {
     takeLatest(updateTopic.type, updateTopicsSaga),
     takeLatest(generateNonce.type, generateNonceSaga),
     takeLatest(verifySignature.type, verifySignatureSaga),
+    takeLatest(createNft.type, createNftSaga),
   ])
 }
 

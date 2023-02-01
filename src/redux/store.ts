@@ -7,6 +7,7 @@ import rootSaga from './saga'
 import adminReducer from './slices/adminSlice'
 import authReducer from './slices/authSlice'
 import collectionsReducer from './slices/collectionsSlice'
+import nftReducer from './slices/nftSlice'
 import storageReducer from './slices/storageSlice'
 import topicsReducer from './slices/topicsSlice'
 
@@ -21,6 +22,7 @@ const reducer = combineReducers({
   collections: collectionsReducer,
   storage: storageReducer,
   topics: topicsReducer,
+  nft: nftReducer,
 })
 
 export const store = configureStore({
