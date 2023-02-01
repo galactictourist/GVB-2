@@ -10,7 +10,7 @@ const nftSlice = createSlice({
     /**
      * createNft
      */
-    createNft(state) {
+    createNft(state, action) {
       state.loading = true
     },
     createNftSuccess(state, action) {

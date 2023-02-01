@@ -8,8 +8,9 @@ export const nftApi = {
     console.log(data)
     console.log(mainClient)
     try {
-      const res = await mainClient.post('/collections', data)
+      const res = await mainClient.post('/nfts', data)
       const resBody = res.data
+      console.log(resBody)
       return resBody
     } catch (err) {
       throw err

@@ -2,7 +2,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import Header from '~/components/Header'
 import { FirstForm } from '~/components/NftDetail/Create/FirstForm'
@@ -10,6 +11,7 @@ import { FourthForm } from '~/components/NftDetail/Create/FourthForm'
 import { SecondForm } from '~/components/NftDetail/Create/SecondForm'
 import { ThirdForm } from '~/components/NftDetail/Create/ThirdForm'
 import { useMultistepForm } from '~/components/NftDetail/Create/useMultiStepForm'
+import { createNft } from '~/redux/slices/nftSlice'
 import { postImage } from '~/redux/slices/storageSlice'
 import { RootState } from '~/redux/store'
 
@@ -37,6 +39,7 @@ const CollectionNfts: NextPage = () => {
   const router = useRouter()
   const collectionId = router.query.collectionId
   const { loading, myCollections } = useSelector((state: RootState) => state.collections)
+  const { imageStorageId } = useSelector((state: RootState) => state.storage)
   //const collection = myCollections.filter((collection) => collection.id === collectionId)[0]
 
   const dispatch = useDispatch()
@@ -47,6 +50,13 @@ const CollectionNfts: NextPage = () => {
       return { ...prev, ...fields }
     })
   }
+
+  const successMessage = () => {
+    toast.success('NFT successfully created', {
+      position: 'bottom-center',
+    })
+  }
+
   const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultistepForm([
     <FirstForm {...data} updateFields={updateFields} key="first" />,
     <SecondForm {...data} updateFields={updateFields} key="second" />,
@@ -59,14 +69,39 @@ const CollectionNfts: NextPage = () => {
 
     if (!isLastStep) return next()
 
-    console.log('DATA TO BE POSTED')
-    console.log(data)
-    console.log('IMAGE STRING')
-    console.log(data.imageString)
+    // console.log('DATA TO BE POSTED')
+    // console.log(data)
+    // console.log('IMAGE STRING')
+    // console.log(data.imageString)
 
     dispatch(postImage({ file: data.image }))
-    alert('Successful NFT creation')
   }
+
+  useEffect(() => {
+    console.log('CREATE NFT')
+    console.log(imageStorageId)
+    console.log(data)
+
+    if (imageStorageId) {
+      dispatch(
+        createNft({
+          name: data.name,
+          description: data.description,
+          network: 'POLYGON_MUMBAI',
+          metadata: {
+            external_url: data.external_url,
+            youtube_url: data.youtube_url,
+            animation_url: data.animation_url,
+          },
+          imageStorageId: imageStorageId,
+        })
+      )
+      setData(INITIAL_DATA)
+      router.push('/profile')
+      successMessage()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageStorageId])
 
   return (
     <>
