@@ -12,7 +12,6 @@ type ImageFormProps = ImageData & {
 }
 
 export function FirstForm({ image, imageString, updateFields }: ImageFormProps) {
-  //const [image, setImage] = useState<File>()
   const [preview, setPreview] = useState<string>()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -21,7 +20,7 @@ export function FirstForm({ image, imageString, updateFields }: ImageFormProps) 
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreview(reader.result as string)
-        console.log(preview)
+        //console.log(preview)
       }
       reader.readAsDataURL(image)
     } else {
@@ -32,8 +31,6 @@ export function FirstForm({ image, imageString, updateFields }: ImageFormProps) 
 
   useEffect(() => {
     updateFields({ imageString: preview })
-    console.log('IMAGE STRING')
-    console.log(preview)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview])
 
@@ -63,11 +60,10 @@ export function FirstForm({ image, imageString, updateFields }: ImageFormProps) 
                 const file = event.target.files![0]
                 if (file && file.type.substring(0, 5) === 'image') {
                   updateFields({ image: file })
-                  console.log(image)
-                  console.log(file)
+                  //console.log(image)
+                  //console.log(file)
                 } else {
                   updateFields({ image: undefined })
-                  console.log('hej')
                 }
               }}
             />

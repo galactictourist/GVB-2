@@ -40,7 +40,6 @@ const CollectionNfts: NextPage = () => {
   const collectionId = router.query.collectionId
   const { loading, myCollections } = useSelector((state: RootState) => state.collections)
   const { imageStorageId } = useSelector((state: RootState) => state.storage)
-  //const collection = myCollections.filter((collection) => collection.id === collectionId)[0]
 
   const dispatch = useDispatch()
 
@@ -69,18 +68,13 @@ const CollectionNfts: NextPage = () => {
 
     if (!isLastStep) return next()
 
-    // console.log('DATA TO BE POSTED')
-    // console.log(data)
-    // console.log('IMAGE STRING')
-    // console.log(data.imageString)
-
     dispatch(postImage({ file: data.image }))
   }
 
   useEffect(() => {
-    console.log('CREATE NFT')
-    console.log(imageStorageId)
-    console.log(data)
+    // console.log('CREATE NFT')
+    // console.log(imageStorageId)
+    // console.log(data)
 
     if (imageStorageId) {
       dispatch(
