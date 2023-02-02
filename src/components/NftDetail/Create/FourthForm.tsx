@@ -31,7 +31,7 @@ MetaData) {
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreview(reader.result as string)
-        console.log(preview)
+        //console.log(preview)
       }
       reader.readAsDataURL(image)
     } else {

@@ -1,4 +1,5 @@
 import { AdminState, AuthState, CollectionsState, StorageState, TopicState } from '../redux/types'
+import { NftEntity } from './entity/nft.entity'
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /* 
@@ -11,5 +12,6 @@ export interface RootState {
   storage: StorageState
   topics: TopicState
   admin: AdminState
+  nft: NftEntity
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }
