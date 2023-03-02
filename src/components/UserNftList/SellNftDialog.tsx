@@ -1,11 +1,11 @@
+import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { Dialog, Transition } from '@headlessui/react'
-import { Contract, providers } from 'ethers'
+import { signTypedData } from '@wagmi/core'
+import { Contract } from 'ethers'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
-import { useWeb3 } from '~/lib/ethers-react/useWeb3'
+import { useAccount, useSigner } from 'wagmi'
 import { givabitApi } from '~/services/givabit/api'
 import { NftEntity } from '~/types/entity/nft.entity'
-import { signTypedData } from '~/utils/web3'
 import { CharityList } from '../Form/CharityList'
 import { CountryList } from '../Form/CountryList'
 import { TopicList } from '../Form/TopicList'
@@ -16,9 +16,9 @@ interface Props {
 }
 
 export default function SellNftDialog({ nfts }: Props) {
-  const { connectedAccount, connectWallet } = useMetaMask()
-  const { web3Provider } = useWeb3()
   const [open, setOpen] = useState(false)
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   useEffect(() => {
     setOpen(nfts.length ? true : false)
@@ -41,60 +41,56 @@ export default function SellNftDialog({ nfts }: Props) {
       // price: 0.0,
     })
     // sale
-    if (connectedAccount) {
-      const connected = await connectWallet()
-      if (connected) {
-        const typedData = JSON.parse(sale.data.signingData)
-        console.log('typedData', typedData)
-        console.log(await web3Provider.getSigner().getChainId())
-        const nftContract = new Contract(
-          typedData.message.nftContract,
-          nftAbi,
-          web3Provider.getSigner()
-        )
-        console.log('typedData.message.tokenId', typedData.message.tokenId)
-        // if (typedData.message.isMinted)
-        // const isApproved = (await nftContract.getApproved(
-        //   typedData.message.tokenId
-        // )) as providers.TransactionResponse
-        // console.log('isApproved', isApproved)
-        // if (!isApproved) {
-        // const txResponse = (await nftContract.approve(
-        //   typedData.domain.verifyingContract,
-        //   typedData.message.tokenId,
-        //   {
-        //     from: connectedAccount,
-        //   }
-        // )) as providers.TransactionResponse
-        // const txReceipt = await txResponse.wait()
-        // }
-        // OR
-        const approvedAll = await nftContract.isApprovedForAll(
-          connectedAccount,
-          typedData.domain.verifyingContract
-        )
-        console.log('approvedAll', approvedAll)
-        if (!approvedAll) {
-          const txResponse = (await nftContract.setApprovalForAll(
-            typedData.domain.verifyingContract,
-            true,
-            {
-              from: connectedAccount,
-            }
-          )) as providers.TransactionResponse
-          const txReceipt = await txResponse.wait()
-          console.log('approved successful', txReceipt)
-        }
-
-        const signResponse = await signTypedData(web3Provider, typedData, connectedAccount)
-        console.log('signResponse', signResponse)
-        const result = await givabitApi.createSale({
-          clientSignature: signResponse,
-          serverSignature: sale.data.serverSignature,
-          saleData: sale.data.saleData,
-        })
-        console.log('result', result)
+    if (address && signer) {
+      const typedData = JSON.parse(sale.data.signingData)
+      console.log('typedData', typedData)
+      const nftContract = new Contract(typedData.message.nftContract, nftAbi, signer)
+      console.log('typedData.message.tokenId', typedData.message.tokenId)
+      // if (typedData.message.isMinted)
+      // const isApproved = (await nftContract.getApproved(
+      //   typedData.message.tokenId
+      // )) as providers.TransactionResponse
+      // console.log('isApproved', isApproved)
+      // if (!isApproved) {
+      // const txResponse = (await nftContract.approve(
+      //   typedData.domain.verifyingContract,
+      //   typedData.message.tokenId,
+      //   {
+      //     from: address,
+      //   }
+      // )) as providers.TransactionResponse
+      // const txReceipt = await txResponse.wait()
+      // }
+      // OR
+      const approvedAll = await nftContract.isApprovedForAll(
+        address,
+        typedData.domain.verifyingContract
+      )
+      console.log('approvedAll', approvedAll)
+      if (!approvedAll) {
+        const txResponse = (await nftContract.setApprovalForAll(
+          typedData.domain.verifyingContract,
+          true,
+          {
+            from: address,
+          }
+        )) as TransactionResponse
+        const txReceipt = await txResponse.wait()
+        console.log('approved successful', txReceipt)
       }
+
+      const signResponse = await signTypedData({
+        domain: typedData.domain,
+        types: typedData.types,
+        value: typedData.message,
+      })
+      console.log('signResponse', signResponse)
+      const result = await givabitApi.createSale({
+        clientSignature: signResponse,
+        serverSignature: sale.data.serverSignature,
+        saleData: sale.data.saleData,
+      })
+      console.log('result', result)
     }
   }
 

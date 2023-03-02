@@ -1,7 +1,6 @@
 import { all, takeLatest } from 'redux-saga/effects'
 
 import { adminSaga, createTopicsSaga, updateTopicsSaga } from './sagas/adminSaga'
-import { generateNonceSaga, verifySignatureSaga } from './sagas/authSaga'
 import {
   createCollectionSaga,
   getAllCollectionsSaga,
@@ -13,7 +12,7 @@ import { postImageSaga } from './sagas/storageSaga'
 import { getTopicByIDSaga, getTopicsSaga } from './sagas/topicsSaga'
 
 import { createTopic, login, updateTopic } from './slices/adminSlice'
-import { generateNonce, verifySignature } from './slices/authSlice'
+import { verifySignature } from './slices/authSlice'
 import {
   createCollection,
   getAllCollections,
@@ -36,9 +35,8 @@ function* rootSaga() {
     takeLatest(getTopics.type, getTopicsSaga),
     takeLatest(getTopicById.type, getTopicByIDSaga),
     takeLatest(updateTopic.type, updateTopicsSaga),
-    takeLatest(generateNonce.type, generateNonceSaga),
-    takeLatest(verifySignature.type, verifySignatureSaga),
     takeLatest(createNft.type, createNftSaga),
+    takeLatest(verifySignature.type, verifySignature),
   ])
 }
 
