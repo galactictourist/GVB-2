@@ -1,4 +1,4 @@
-import { Popover, Transition } from '@headlessui/react'
+import { Menu, Popover, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import {
   Bars3Icon,
@@ -7,19 +7,21 @@ import {
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
+import { signMessage } from '@wagmi/core'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
-import { destroyCookie, parseCookies } from 'nookies'
 import { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
-import { useWeb3 } from '~/lib/ethers-react/useWeb3'
-import { generateNonce, signOut, verifySignature } from '~/redux/slices/authSlice'
-import { RootState } from '~/redux/store'
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { useHandleCreateNonce } from '~/handlers/useHandleCreateNonce'
+import { useHandleVerifySignature } from '~/handlers/useHandleVerifySignature'
+import { metamaskConnector } from '~/providers/Web3ContextProvider'
+import { verifySignature } from '~/redux/slices/authSlice'
+import { RootState } from '~/types'
 import { classNames } from '~/utils'
-import { USER_COOKIES } from '~/utils/constants'
+import { CHAIN_ID } from '~/utils/constants'
 import { formatWalletAddress } from '~/utils/wallet'
-import { signMessageEthers } from '~/utils/web3'
 import Logo from '../../public/img/givabit_full_logo2.svg'
 
 const explore = [
@@ -46,86 +48,53 @@ const explore = [
   },
 ]
 
-const Header: React.FC<any> = () => {
+const HeaderNoSSR: React.FC<any> = () => {
   const dispatch = useDispatch()
-  const cookies = parseCookies()
-  // const { active, account, error, connector, activate, deactivate } = useWeb3React()
+  const { wallet } = useSelector((state: RootState) => state.auth)
 
-  const {
-    isInstalledWallet, // Determine whether the wallet is installed
-    isConnected, // Determine whether the wallet is connected
-    connectedAccount, // Metamask current connected account
-    connectWallet, // Connect metamask function
-  } = useMetaMask()
-  const { web3Provider } = useWeb3()
+  const handleCreateNonce = useHandleCreateNonce()
+  const handleVerifySignature = useHandleVerifySignature()
 
-  const { nonce, wallet, loading } = useSelector((state: RootState) => state.auth)
-  const isSignedIn = cookies[USER_COOKIES.JWT] && wallet
+  const { address, status } = useAccount()
+  const { connect } = useConnect({
+    chainId: CHAIN_ID,
+    connector: metamaskConnector,
+  })
+  const { disconnect } = useDisconnect()
 
   const [isScrolled, setIsScrolled] = useState(false)
 
-  const onConnect = async () => {
-    if (isInstalledWallet) {
-      try {
-        console.log('WALLET')
-        console.log(wallet)
-        dispatch(generateNonce({ wallet: connectedAccount }))
-      } catch (error) {
-        alert(error)
-      }
-    } else alert('Please install Metamask in your browser')
-  }
-
-  // Verifying the signature once the nonce is created
   useEffect(() => {
-    ;(async () => {
-      if (!isSignedIn && nonce && !wallet) {
-        try {
-          if (!connectedAccount) {
-            //await activate(injectedConnector, undefined, true)
-            const result = await connectWallet()
-            if (!result) {
-              console.log('Not signed in')
+    const signNonce = async () => {
+      if (address && status == 'connected') {
+        if (wallet == address) {
+          return
+        }
+
+        const { nonce } = await handleCreateNonce.mutateAsync({ address })
+
+        const signature = await signMessage({
+          message: nonce,
+        })
+        if (signature) {
+          handleVerifySignature.mutate(
+            {
+              address,
+              signature,
+            },
+            {
+              onSuccess(data, variables, context) {
+                console.log(data)
+                dispatch(verifySignature(data))
+              },
             }
-          } else {
-            const signResponse = await signMessageEthers(web3Provider, nonce, connectedAccount)
-            dispatch(
-              verifySignature({
-                wallet: connectedAccount,
-                signature: signResponse,
-              })
-            )
-          }
-        } catch (e) {
-          //dispatch(actions.setSigningIn(false))
+          )
         }
       }
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nonce, connectedAccount])
-
-  // Get the Nonce from the BE once the Metamask account is detected
-  useEffect(() => {
-    ;(async () => {
-      try {
-        //await activate(injectedConnector)
-        await connectWallet()
-      } catch {
-        //alert('Please install MetaMask in your browser')
-      }
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const onDisconnect = async () => {
-    try {
-      destroyCookie(null, USER_COOKIES.JWT)
-      //deactivate()
-      dispatch(signOut())
-    } catch (ex) {
-      console.log(ex)
     }
-  }
+
+    signNonce()
+  }, [address, status, wallet])
 
   // Adjusting the menu bar when scrolling.
   useEffect(() => {
@@ -243,22 +212,59 @@ const Header: React.FC<any> = () => {
             </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-            {isSignedIn ? (
-              <div
-                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                onClick={() => onDisconnect()}
-              >
-                {formatWalletAddress(wallet)}
-              </div>
+            {address ? (
+              <Menu as="div" className="relative inline-block">
+                <div>
+                  <Menu.Button>
+                    <div className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
+                      {formatWalletAddress(address)}
+                      <ChevronDownIcon
+                        className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute right-0 mt-2 flex flex-col gap-4 rounded-md bg-white px-4 py-2 shadow-lg">
+                    <Menu.Item>
+                      <button type="button" className="flex gap-2" onClick={() => disconnect()}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                          />
+                        </svg>
+                        Disconnect
+                      </button>
+                    </Menu.Item>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
             ) : (
-              <div
+              <button
+                type="button"
                 className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                onClick={() => {
-                  onConnect()
-                }}
+                onClick={() => connect()}
               >
-                Signin using MetaMask
-              </div>
+                Connect Wallet
+              </button>
             )}
           </div>
         </div>
@@ -327,22 +333,23 @@ const Header: React.FC<any> = () => {
                 </Link>
               </div>
               <div>
-                {isSignedIn ? (
+                {address ? (
                   <div
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                    onClick={() => onDisconnect()}
+                    onClick={() => disconnect()}
                   >
-                    {formatWalletAddress(wallet)}
+                    {formatWalletAddress(address)}
                   </div>
                 ) : (
-                  <div
+                  <button
+                    type="button"
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                     onClick={() => {
-                      onConnect()
+                      connect()
                     }}
                   >
-                    Signin using MetaMask
-                  </div>
+                    Connect Wallet
+                  </button>
                 )}
               </div>
             </div>
@@ -352,5 +359,9 @@ const Header: React.FC<any> = () => {
     </Popover>
   )
 }
+
+const Header = dynamic(() => Promise.resolve(HeaderNoSSR), {
+  ssr: false,
+})
 
 export default Header

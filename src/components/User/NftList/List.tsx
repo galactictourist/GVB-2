@@ -11,8 +11,6 @@ import { useDispatch } from 'react-redux'
 export function UserNftList() {
   //const { actions } = useAuthSlice()
   const dispatch = useDispatch()
-  //const { signingIn } = useSelector(selectAuth)
-  //const { connectedAccount, connectWallect } = useMetaMask()
 
   const [total, totalSetter] = useState(0)
   const [limit, limitSetter] = useState(20)

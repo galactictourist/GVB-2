@@ -1,17 +1,10 @@
 import { PhoneIcon } from '@heroicons/react/20/solid'
-import { BigNumber, Contract, providers } from 'ethers'
 import { useEffect, useState } from 'react'
-import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
-import { useWeb3 } from '~/lib/ethers-react/useWeb3'
 import { givabitApi } from '~/services/givabit/api'
 import { SaleEntity } from '~/types/entity/sale.entity'
 import { SimplePagination } from '../Pagination/SimplePagination'
-import { marketAbi } from '../UserNftList/abi'
 
 export function SaleList() {
-  const { connectedAccount, connectWallet } = useMetaMask()
-  const { web3Provider } = useWeb3()
-
   const [total, totalSetter] = useState(0)
   const [limit, limitSetter] = useState(20)
   const [page, pageSetter] = useState(1)
@@ -43,6 +36,7 @@ export function SaleList() {
   }
 
   const buy = async (sale: SaleEntity) => {
+    /*
     if (connectedAccount) {
       const connected = await connectWallet()
       if (connected) {
@@ -69,6 +63,7 @@ export function SaleList() {
         console.log('buy txReceipt', txReceipt)
       }
     }
+    */
   }
 
   return (

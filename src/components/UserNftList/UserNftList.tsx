@@ -1,22 +1,13 @@
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/20/solid'
-import { BigNumber, Contract, providers, utils } from 'ethers'
-import { defaultAbiCoder } from 'ethers/lib/utils'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { useMetaMask } from '~/lib/ethers-react/useMetaMask'
-import { useWeb3 } from '~/lib/ethers-react/useWeb3'
 import { givabitApi } from '~/services/givabit/api'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { SaleEntity } from '~/types/entity/sale.entity'
 import { SimplePagination } from '../Pagination/SimplePagination'
-import { marketAbi } from './abi'
-import { nftAbi } from './erc721'
 import SellNftDialog from './SellNftDialog'
 
 export function UserNftList() {
-  const { connectedAccount, connectWallet } = useMetaMask()
-  const { web3Provider } = useWeb3()
-
   const [total, totalSetter] = useState(0)
   const [limit, limitSetter] = useState(20)
   const [page, pageSetter] = useState(1)
@@ -61,6 +52,7 @@ export function UserNftList() {
   }
 
   const cancel = async (nft: any) => {
+    /*
     console.log('nft', nft)
     const sale = sales.find((sale) => sale.nftId === nft.id)
     if (sale) {
@@ -145,9 +137,11 @@ export function UserNftList() {
       const txReceipt = await txResponse.wait()
       console.log('txReceipt', new Date(), txReceipt)
     }
+    */
   }
 
   const mint = async (nftId: string) => {
+    /*
     const result = await givabitApi.mint(nftId)
     console.log('result', result.data.data, result.data.signature)
     if (connectedAccount) {
@@ -207,6 +201,7 @@ export function UserNftList() {
         console.log('receipt', receipt)
       }
     }
+    */
   }
 
   return (
