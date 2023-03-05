@@ -87,6 +87,7 @@ const CollectionNfts: NextPage = () => {
             youtube_url: data.youtube_url,
             animation_url: data.animation_url,
           },
+          royalty: 1,
           imageStorageId: imageStorageId,
         })
       )

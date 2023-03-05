@@ -63,6 +63,7 @@ const HeaderNoSSR: React.FC<any> = () => {
   const { disconnect } = useDisconnect()
 
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isSigning, setIsSigning] = useState(false)
 
   useEffect(() => {
     const signNonce = async () => {
@@ -71,24 +72,34 @@ const HeaderNoSSR: React.FC<any> = () => {
           return
         }
 
-        const { nonce } = await handleCreateNonce.mutateAsync({ address })
+        setIsSigning(true)
 
-        const signature = await signMessage({
-          message: nonce,
-        })
-        if (signature) {
-          handleVerifySignature.mutate(
-            {
-              address,
-              signature,
-            },
-            {
-              onSuccess(data, variables, context) {
-                console.log(data)
-                dispatch(verifySignature(data))
+        try {
+          const { nonce } = await handleCreateNonce.mutateAsync({ address })
+
+          const signature = await signMessage({
+            message: nonce,
+          })
+          if (signature) {
+            handleVerifySignature.mutate(
+              {
+                address,
+                signature,
               },
-            }
-          )
+              {
+                onSuccess(data, variables, context) {
+                  dispatch(verifySignature(data))
+                  setIsSigning(false)
+                },
+                onError(error) {
+                  setIsSigning(false)
+                },
+              }
+            )
+          }
+        } catch (ex) {
+          console.log(ex)
+          setIsSigning(false)
         }
       }
     }
@@ -217,7 +228,7 @@ const HeaderNoSSR: React.FC<any> = () => {
                 <div>
                   <Menu.Button>
                     <div className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
-                      {formatWalletAddress(address)}
+                      {isSigning ? 'Signing...' : formatWalletAddress(address)}
                       <ChevronDownIcon
                         className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
                         aria-hidden="true"

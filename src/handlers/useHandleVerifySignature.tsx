@@ -27,7 +27,10 @@ export const useHandleVerifySignature = () => {
 
       const id = resp.data.user.id
       const wallet = resp.data.user.wallet
-      setCookie(null, USER_COOKIES.JWT, resp.data.accessToken, { maxAge: 8640 })
+      const accessToken = resp.data.accessToken
+
+      setCookie(null, USER_COOKIES.JWT, accessToken, { maxAge: 8640 })
+      setCookie(null, USER_COOKIES.WALLET_ADDRESS, wallet, { maxAge: 8640 })
 
       return {
         id,

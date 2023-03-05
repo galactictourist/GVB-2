@@ -12,6 +12,7 @@ const CollectionCreate: NextPage = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const [name, setName] = useState('')
+  const [address, setAddress] = useState('')
   const [description, setDescription] = useState('')
   const { loading } = useSelector((state: RootState) => state.collections)
 
@@ -28,6 +29,7 @@ const CollectionCreate: NextPage = () => {
         createCollection({
           name: name,
           description: descr,
+          address: address,
         })
       )
       router.push('/profile')
@@ -112,6 +114,24 @@ const CollectionCreate: NextPage = () => {
                     autoComplete="collection-name"
                     className="n4gForm h-10"
                     onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-6 md:col-span-4">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Collection address
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="address"
+                    name="address"
+                    type="text"
+                    value={address}
+                    required
+                    autoComplete="collection-name"
+                    className="n4gForm h-10"
+                    onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
               </div>
