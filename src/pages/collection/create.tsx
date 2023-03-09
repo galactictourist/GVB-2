@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
+import { getAllCauses } from '~/redux/slices/causesSlice'
 import { createCollection } from '~/redux/slices/collectionsSlice'
 import { RootState } from '~/redux/store'
 import Header from '../../components/Header'
@@ -13,6 +14,10 @@ const CollectionCreate: NextPage = () => {
   const router = useRouter()
   const { causes } = useSelector((state: RootState) => state.causes)
   const [preview, setPreview] = useState<string>()
+
+  useEffect(() => {
+    dispatch(getAllCauses())
+  }, [])
 
   const {
     register,
