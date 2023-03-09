@@ -6,6 +6,7 @@ import createSagaMiddleware from 'redux-saga'
 import rootSaga from './saga'
 import adminReducer from './slices/adminSlice'
 import authReducer from './slices/authSlice'
+import causesReducer from './slices/causesSlice'
 import collectionsReducer from './slices/collectionsSlice'
 import nftReducer from './slices/nftSlice'
 import storageReducer from './slices/storageSlice'
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   admin: adminReducer,
   auth: authReducer,
   collections: collectionsReducer,
+  causes: causesReducer,
   storage: storageReducer,
   topics: topicsReducer,
   nft: nftReducer,

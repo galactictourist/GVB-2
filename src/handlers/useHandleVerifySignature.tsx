@@ -39,11 +39,11 @@ export const useHandleVerifySignature = () => {
     },
     {
       onSuccess: async () => {
-        toast.success('Verify signature succeded')
+        toast.success('Wallet login succeded')
       },
       onError: (e: Error) => {
         toast.error(e.message)
-        console.log('Verify signature failed', e)
+        console.log('Wallet login failed', e)
       },
     }
   )

@@ -1,6 +1,7 @@
 import { all, takeLatest } from 'redux-saga/effects'
 
 import { adminSaga, createTopicsSaga, updateTopicsSaga } from './sagas/adminSaga'
+import { getAllCausesSaga } from './sagas/causesSaga'
 import {
   createCollectionSaga,
   getAllCollectionsSaga,
@@ -13,6 +14,7 @@ import { getTopicByIDSaga, getTopicsSaga } from './sagas/topicsSaga'
 
 import { createTopic, login, updateTopic } from './slices/adminSlice'
 import { verifySignature } from './slices/authSlice'
+import { getAllCauses } from './slices/causesSlice'
 import {
   createCollection,
   getAllCollections,
@@ -27,6 +29,7 @@ function* rootSaga() {
   yield all([
     takeLatest(login.type, adminSaga),
     takeLatest(createTopic.type, createTopicsSaga),
+    takeLatest(getAllCauses.type, getAllCausesSaga),
     takeLatest(getAllCollections.type, getAllCollectionsSaga),
     takeLatest(getMyCollections.type, getMyCollectionsSaga),
     takeLatest(createCollection.type, createCollectionSaga),

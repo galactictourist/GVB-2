@@ -1,8 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
-import toaster from 'react-hot-toast'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { createCollection } from '~/redux/slices/collectionsSlice'
 import { RootState } from '~/redux/store'
@@ -11,31 +11,38 @@ import Header from '../../components/Header'
 const CollectionCreate: NextPage = () => {
   const dispatch = useDispatch()
   const router = useRouter()
-  const [name, setName] = useState('')
-  const [address, setAddress] = useState('')
-  const [description, setDescription] = useState('')
-  const { loading } = useSelector((state: RootState) => state.collections)
+  const { causes } = useSelector((state: RootState) => state.causes)
+  const [preview, setPreview] = useState<string>()
 
-  const errorMessage = () => {
-    toaster.error('Please include a collection name and description', {
-      position: 'bottom-center',
-    })
-  }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
+  const files = watch('file')
 
-  const submitHandler = () => {
-    if (name && description) {
-      const descr: string = description
-      dispatch(
-        createCollection({
-          name: name,
-          description: descr,
-          address: address,
-        })
-      )
-      router.push('/profile')
-    } else {
-      errorMessage()
+  useEffect(() => {
+    if (files && files.length > 0) {
+      const file = files[0]
+      setPreview(URL.createObjectURL(file))
     }
+  }, [files])
+
+  const onSumbit = (data: any) => {
+    const formData = new FormData()
+
+    if (data.file.length > 0) {
+      formData.append('file', data.file[0])
+    }
+
+    formData.append('name', data.name)
+    formData.append('description', data.description)
+    formData.append('contract_address', data.contract_address)
+    formData.append('cause', data.cause)
+
+    dispatch(createCollection(formData))
+    router.push('/profile')
   }
 
   return (
@@ -48,7 +55,7 @@ const CollectionCreate: NextPage = () => {
       <Header />
 
       <div className="mx-auto max-w-2xl px-10 pt-24 lg:max-w-7xl">
-        <div className="space-y-8">
+        <form className="space-y-8" onSubmit={handleSubmit(onSumbit)}>
           <div>
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">Create collection</h3>
@@ -62,22 +69,30 @@ const CollectionCreate: NextPage = () => {
                 <label htmlFor="cover-photo" className="block text-sm font-medium text-gray-700">
                   Cover photo
                 </label>
-                <div className="px mt-1 h-48 w-48 rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+                <div className="px relative mt-1 h-48 w-48 rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
                   <div className="mt-4 space-y-1 text-center">
-                    <svg
-                      className="mx-auto h-12 w-12 text-gray-400"
-                      stroke="currentColor"
-                      fill="none"
-                      viewBox="0 0 48 48"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                    {preview ? (
+                      <img
+                        src={preview}
+                        alt="Preview Image"
+                        className="-z-1 absolute inset-0 z-[-1]"
                       />
-                    </svg>
+                    ) : (
+                      <svg
+                        className="mx-auto h-12 w-12 text-gray-400"
+                        stroke="currentColor"
+                        fill="none"
+                        viewBox="0 0 48 48"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    )}
                     <div className="text-sm text-gray-600">
                       <label
                         htmlFor="file-upload"
@@ -85,19 +100,17 @@ const CollectionCreate: NextPage = () => {
                       >
                         <span>Upload a file</span>
                         <input
-                          id="file-upload"
-                          name="file-upload"
                           type="file"
+                          id="file-upload"
+                          multiple={false}
                           className="sr-only"
+                          {...register('file')}
                         />
                       </label>
                     </div>
-                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                    {!preview && <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>}
                   </div>
                 </div>
-                <p className="mt-2 text-sm text-gray-500">
-                  This image will represent your collection.
-                </p>
               </div>
 
               <div className="sm:col-span-6 md:col-span-4">
@@ -105,16 +118,7 @@ const CollectionCreate: NextPage = () => {
                   Collection name
                 </label>
                 <div className="mt-1">
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={name}
-                    required
-                    autoComplete="collection-name"
-                    className="n4gForm h-10"
-                    onChange={(e) => setName(e.target.value)}
-                  />
+                  <input required type="text" className="n4gForm h-10" {...register('name')} />
                 </div>
               </div>
 
@@ -123,16 +127,7 @@ const CollectionCreate: NextPage = () => {
                   Collection address
                 </label>
                 <div className="mt-1">
-                  <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    value={address}
-                    required
-                    autoComplete="collection-name"
-                    className="n4gForm h-10"
-                    onChange={(e) => setAddress(e.target.value)}
-                  />
+                  <input type="text" className="n4gForm h-10" {...register('contract_address')} />
                 </div>
               </div>
 
@@ -141,16 +136,7 @@ const CollectionCreate: NextPage = () => {
                   Description
                 </label>
                 <div className="mt-2">
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={description}
-                    rows={3}
-                    required
-                    autoComplete="description"
-                    className="n4gForm"
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
+                  <textarea required rows={3} className="n4gForm" {...register('description')} />
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
                   How would you describe this collection?
@@ -162,15 +148,12 @@ const CollectionCreate: NextPage = () => {
                   Cause
                 </label>
                 <div className="mt-1">
-                  <select
-                    id="cause"
-                    name="cause"
-                    autoComplete="cause-name"
-                    className="n4gForm h-10"
-                  >
-                    <option>Education</option>
-                    <option>Animals</option>
-                    <option>Environment</option>
+                  <select className="n4gForm h-10" {...register('cause')}>
+                    {causes.map((cause, idx) => (
+                      <option key={idx} value={cause.id}>
+                        {cause.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
@@ -180,12 +163,12 @@ const CollectionCreate: NextPage = () => {
               </div>
             </div>
           </div>
-          <button onClick={submitHandler}>
+          <button type="submit">
             <div className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
               Create
             </div>
           </button>
-        </div>
+        </form>
       </div>
     </>
   )
