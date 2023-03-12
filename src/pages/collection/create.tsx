@@ -43,8 +43,8 @@ const CollectionCreate: NextPage = () => {
 
     formData.append('name', data.name)
     formData.append('description', data.description)
-    formData.append('contract_address', data.contract_address)
-    formData.append('cause', data.cause)
+    formData.append('contractAddress', data.contract_address)
+    formData.append('topicId', data.cause)
 
     dispatch(createCollection(formData))
     router.push('/profile')
