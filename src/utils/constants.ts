@@ -1,5 +1,9 @@
 import { polygonMumbai } from 'wagmi/chains'
 
+export const COOKIES = {
+  JWT: 'admin_snmjwt',
+}
+
 export const USER_COOKIES = {
   JWT: 'user_snmjwt',
   WALLET_ADDRESS: 'user_givabit_wallet',

@@ -8,7 +8,7 @@ import {
   loginFailure,
   loginSuccess,
   updateTopicFailure,
-  updateTopicSuccess,
+  updateTopicSuccess
 } from '../slices/adminSlice'
 
 export function* adminSaga(action: any) {
