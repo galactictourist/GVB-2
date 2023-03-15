@@ -9,7 +9,12 @@ const nextConfig = {
         hostname: 'n4g-staging.sgp1.digitaloceanspaces.com',
         port: '',
         pathname: '**',
-        //pathname: '/dev/media/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.ipfs.nftstorage.link',
+        port: '',
+        pathname: '**',
       },
     ],
   },

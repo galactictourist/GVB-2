@@ -5,8 +5,9 @@ export const COOKIES = {
 }
 
 export const USER_COOKIES = {
-  JWT: 'user_snmjwt',
+  ID: 'user_givabit_id',
   WALLET_ADDRESS: 'user_givabit_wallet',
+  JWT: 'user_snmjwt',
 }
 
 export const CHAIN_ID = polygonMumbai.id

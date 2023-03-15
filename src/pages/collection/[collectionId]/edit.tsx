@@ -1,58 +1,95 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import toaster from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateCollection } from '~/redux/slices/collectionsSlice'
-import { RootState } from '~/redux/store'
-import Header from '../../../components/Header'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
+import { useSelector } from 'react-redux'
+import Header from '~/components/Header'
+import { useHandleUpdateCollection } from '~/handlers/useHandleUpdateCollection'
+import { useAllCauses } from '~/hooks/useAllCauses'
+import { useCollection } from '~/hooks/useCollection'
+import { RootState } from '~/types'
 
-const CollectionCreate: NextPage = () => {
-  const dispatch = useDispatch()
+export default function EditCollection() {
   const router = useRouter()
-  const collectionId = router.query.collectionId
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const { loading, myCollections } = useSelector((state: RootState) => state.collections)
+  const { collectionId } = router.query
 
-  const errorMessage = () => {
-    toaster.error('Please include a collection name and description', {
-      position: 'bottom-center',
-    })
-  }
+  const { id: userId } = useSelector((state: RootState) => state.auth)
+  const [preview, setPreview] = useState<string>()
 
-  //const collection = myCollections.filter((collecion) => collecion.id === collectionId)
+  const { data: causes } = useAllCauses()
+  const { data: collection, isLoading } = useCollection({
+    id: collectionId as string,
+  })
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm()
+  const files = watch('file')
+
+  const handleUpdateCollection = useHandleUpdateCollection()
 
   useEffect(() => {
-    //console.log('collection')
-    //console.log(collectionId)
-    const collection = myCollections.filter((collecion) => collecion.id === collectionId)[0]
-    const { name, description } = collection
-    //console.log(collection)
-
-    setName(collection.name)
-    setDescription(collection.description)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const submitHandler = (e: any) => {
-    if (name && description) {
-      const descr: string = description
-      dispatch(
-        updateCollection({
-          id: collectionId,
-          payload: {
-            name: name,
-            description: descr,
-          },
-        })
-      )
-      router.push('/profile')
-    } else {
-      errorMessage()
+    if (!userId) {
+      router.push('/')
     }
+  }, [userId])
+
+  useEffect(() => {
+    if (collection) {
+      setValue('name', collection.name)
+      setValue('description', collection.description)
+      setValue('cause', collection.topicId)
+      setPreview(collection.imageUrl)
+    }
+  }, [collection])
+
+  useEffect(() => {
+    if (files && files.length > 0) {
+      const file = files[0]
+      setPreview(URL.createObjectURL(file))
+    }
+  }, [files])
+
+  const onSumbit = (data: any) => {
+    const formData = new FormData()
+
+    if (data.file.length > 0) {
+      formData.append('file', data.file[0])
+    }
+
+    formData.append('name', data.name)
+    formData.append('description', data.description)
+    formData.append('topicId', data.cause)
+
+    const toastId = toast.loading('Update collection in progress...')
+
+    handleUpdateCollection.mutate(
+      {
+        id: collectionId as string,
+        data: formData,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Update collection successed.', {
+            id: toastId,
+          })
+          router.push('/profile')
+        },
+        onError(error: any) {
+          console.log(error)
+          const errorMsg = error.message ?? 'Update collection failed.'
+          toast.error(errorMsg, {
+            id: toastId,
+          })
+        },
+      }
+    )
   }
 
   return (
@@ -65,129 +102,126 @@ const CollectionCreate: NextPage = () => {
       <Header />
 
       <div className="mx-auto max-w-2xl px-10 pt-24 lg:max-w-7xl">
-        <div className="space-y-8">
-          <div>
+        {isLoading ? (
+          <p className="py-4 text-center text-xl text-gray-900">Loading...</p>
+        ) : (
+          <form className="space-y-8" onSubmit={handleSubmit(onSumbit)}>
             <div>
-              <h3 className="text-lg font-medium leading-6 text-gray-900">Edit collection</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                This information will displayed publicly related to your collection
-              </p>
-            </div>
+              <div>
+                <h3 className="text-lg font-medium leading-6 text-gray-900">Edit collection</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  This information will displayed publicly related to your collection
+                </p>
+              </div>
 
-            <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-              <div className="sm:col-span-6">
-                <label htmlFor="cover-photo" className="block text-sm font-medium text-gray-700">
-                  Cover photo
-                </label>
-                <div className="px mt-1 h-48 w-48 rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-                  <div className="mt-4 space-y-1 text-center">
-                    <svg
-                      className="mx-auto h-12 w-12 text-gray-400"
-                      stroke="currentColor"
-                      fill="none"
-                      viewBox="0 0 48 48"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <div className="text-sm text-gray-600">
-                      <label
-                        htmlFor="file-upload"
-                        className="cursor-pointer rounded-md bg-white font-medium text-n4gDarkTeal focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
-                      >
-                        <span>Upload a file</span>
-                        <input
-                          id="file-upload"
-                          name="file-upload"
-                          type="file"
-                          className="sr-only"
-                        />
-                      </label>
+              <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                <div className="sm:col-span-6">
+                  <label htmlFor="cover-photo" className="block text-sm font-medium text-gray-700">
+                    Cover photo
+                  </label>
+                  <div className="px relative mt-1 h-48 w-48 rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+                    <div className="mt-4 space-y-1 text-center">
+                      {preview ? (
+                        <img src={preview} alt="Preview Image" className="h-full object-cover" />
+                      ) : (
+                        <svg
+                          className="mx-auto h-12 w-12 text-gray-400"
+                          stroke="currentColor"
+                          fill="none"
+                          viewBox="0 0 48 48"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      )}
+                      <div className="text-sm text-gray-600">
+                        <label
+                          htmlFor="file-upload"
+                          className="z-[100] cursor-pointer rounded-md bg-white font-medium text-n4gDarkTeal focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+                        >
+                          <span>Upload a file</span>
+                          <input
+                            type="file"
+                            id="file-upload"
+                            multiple={false}
+                            className="sr-only"
+                            {...register('file')}
+                          />
+                        </label>
+                      </div>
+                      {!preview && (
+                        <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                      )}
                     </div>
-                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                   </div>
                 </div>
-                <p className="mt-2 text-sm text-gray-500">
-                  This image will represent your collection.
-                </p>
-              </div>
 
-              <div className="sm:col-span-6 md:col-span-4">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Collection name
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={name}
-                    required
-                    autoComplete="collection-name"
-                    className="n4gForm h-10"
-                    onChange={(e) => setName(e.target.value)}
-                  />
+                <div className="sm:col-span-6 md:col-span-4">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    Collection name
+                  </label>
+                  <div className="mt-1">
+                    <input required type="text" className="n4gForm h-10" {...register('name')} />
+                  </div>
                 </div>
-              </div>
 
-              <div className="sm:col-span-6">
-                <label htmlFor="about" className="block text-sm font-medium text-gray-700">
-                  Description
-                </label>
-                <div className="mt-2">
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={description}
-                    rows={3}
-                    required
-                    autoComplete="description"
-                    className="n4gForm"
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
+                <div className="sm:col-span-6">
+                  <label htmlFor="about" className="block text-sm font-medium text-gray-700">
+                    Description
+                  </label>
+                  <div className="mt-2">
+                    <textarea required rows={3} className="n4gForm" {...register('description')} />
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500">
+                    How would you describe this collection?
+                  </p>
                 </div>
-                <p className="mt-2 text-sm text-gray-500">
-                  How would you describe this collection?
-                </p>
-              </div>
 
-              <div className="sm:col-span-6 md:col-span-4">
-                <label htmlFor="country" className="block text-sm font-medium text-gray-700">
-                  Cause
-                </label>
-                <div className="mt-1">
-                  <select
-                    id="cause"
-                    name="cause"
-                    autoComplete="cause-name"
-                    className="n4gForm h-10"
-                  >
-                    <option>Education</option>
-                    <option>Animals</option>
-                    <option>Environment</option>
-                  </select>
+                <div className="sm:col-span-6 md:col-span-4">
+                  <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                    Cause
+                  </label>
+                  <div className="mt-1">
+                    <select className="n4gForm h-10" {...register('cause')}>
+                      {causes &&
+                        causes.map((cause, idx) => (
+                          <option key={idx} value={cause.id}>
+                            {cause.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Each NFT collection will be listed under a specific cause. This does not limit
+                    which charities that will benefit from the sales of your NFTs
+                  </p>
                 </div>
-                <p className="mt-2 text-sm text-gray-500">
-                  Each NFT collection will be listed under a specific cause. This does not limit
-                  which charities that will benefit from the sales of your NFTs
-                </p>
               </div>
             </div>
-          </div>
-          <button onClick={submitHandler}>
-            <div className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
-              Update
+            <div className="flex gap-4">
+              <button
+                type="submit"
+                className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+              >
+                Update
+              </button>
+              <Link href={'/profile'}>
+                <button
+                  className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                  type="button"
+                >
+                  Back
+                </button>
+              </Link>
             </div>
-          </button>
-        </div>
+          </form>
+        )}
       </div>
     </>
   )
 }
-
-export default CollectionCreate

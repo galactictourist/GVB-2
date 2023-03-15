@@ -17,7 +17,7 @@ import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { useHandleCreateNonce } from '~/handlers/useHandleCreateNonce'
 import { useHandleVerifySignature } from '~/handlers/useHandleVerifySignature'
 import { metamaskConnector } from '~/providers/Web3ContextProvider'
-import { verifySignature } from '~/redux/slices/authSlice'
+import { signOut, verifySignature } from '~/redux/slices/authSlice'
 import { RootState } from '~/types'
 import { classNames } from '~/utils'
 import { CHAIN_ID } from '~/utils/constants'
@@ -104,7 +104,11 @@ const HeaderNoSSR: React.FC<any> = () => {
       }
     }
 
-    signNonce()
+    if (address) {
+      signNonce()
+    } else if (wallet) {
+      connect()
+    }
   }, [address, status, wallet])
 
   // Adjusting the menu bar when scrolling.
@@ -122,6 +126,11 @@ const HeaderNoSSR: React.FC<any> = () => {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
+  const handleDisconnect = () => {
+    disconnect()
+    dispatch(signOut())
+  }
 
   return (
     <Popover
@@ -247,7 +256,11 @@ const HeaderNoSSR: React.FC<any> = () => {
                 >
                   <Menu.Items className="absolute right-0 mt-2 flex flex-col gap-4 rounded-md bg-white px-4 py-2 shadow-lg">
                     <Menu.Item>
-                      <button type="button" className="flex gap-2" onClick={() => disconnect()}>
+                      <button
+                        type="button"
+                        className="flex gap-2"
+                        onClick={() => handleDisconnect()}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -345,10 +358,7 @@ const HeaderNoSSR: React.FC<any> = () => {
               </div>
               <div>
                 {address ? (
-                  <div
-                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                    onClick={() => disconnect()}
-                  >
+                  <div className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
                     {formatWalletAddress(address)}
                   </div>
                 ) : (

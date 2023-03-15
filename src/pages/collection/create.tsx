@@ -1,23 +1,29 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllCauses } from '~/redux/slices/causesSlice'
-import { createCollection } from '~/redux/slices/collectionsSlice'
-import { RootState } from '~/redux/store'
+import { toast } from 'react-hot-toast'
+import { useSelector } from 'react-redux'
+import { useHandleCreateCollection } from '~/handlers/useHandleCreateCollection'
+import { useAllCauses } from '~/hooks/useAllCauses'
+import { RootState } from '~/types'
 import Header from '../../components/Header'
 
-const CollectionCreate: NextPage = () => {
-  const dispatch = useDispatch()
+export default function CreateCollection() {
   const router = useRouter()
-  const { causes } = useSelector((state: RootState) => state.causes)
+  const { id: userId } = useSelector((state: RootState) => state.auth)
   const [preview, setPreview] = useState<string>()
+  const [isLoading, setLoading] = useState<boolean>(false)
+
+  const { data: causes } = useAllCauses()
+  const handleCreateCollection = useHandleCreateCollection()
 
   useEffect(() => {
-    dispatch(getAllCauses())
-  }, [])
+    if (!userId) {
+      router.push('/')
+    }
+  }, [userId])
 
   const {
     register,
@@ -46,8 +52,31 @@ const CollectionCreate: NextPage = () => {
     formData.append('contractAddress', data.contract_address)
     formData.append('topicId', data.cause)
 
-    dispatch(createCollection(formData))
-    router.push('/profile')
+    setLoading(true)
+    const toastId = toast.loading('Create collection in progress...')
+
+    handleCreateCollection.mutate(
+      {
+        data: formData,
+      },
+      {
+        onSuccess: () => {
+          setLoading(false)
+          toast.success('Create collection successed.', {
+            id: toastId,
+          })
+          router.push('/profile')
+        },
+        onError(error: any) {
+          console.log(error)
+          setLoading(false)
+          const errorMsg = error.message ?? 'Create collection failed.'
+          toast.error(errorMsg, {
+            id: toastId,
+          })
+        },
+      }
+    )
   }
 
   return (
@@ -77,11 +106,7 @@ const CollectionCreate: NextPage = () => {
                 <div className="px relative mt-1 h-48 w-48 rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
                   <div className="mt-4 space-y-1 text-center">
                     {preview ? (
-                      <img
-                        src={preview}
-                        alt="Preview Image"
-                        className="-z-1 absolute inset-0 z-[-1]"
-                      />
+                      <img src={preview} alt="Preview Image" className="h-full object-cover" />
                     ) : (
                       <svg
                         className="mx-auto h-12 w-12 text-gray-400"
@@ -101,7 +126,7 @@ const CollectionCreate: NextPage = () => {
                     <div className="text-sm text-gray-600">
                       <label
                         htmlFor="file-upload"
-                        className="cursor-pointer rounded-md bg-white font-medium text-n4gDarkTeal focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+                        className="z-[100] cursor-pointer rounded-md bg-white font-medium text-n4gDarkTeal focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                       >
                         <span>Upload a file</span>
                         <input
@@ -154,11 +179,12 @@ const CollectionCreate: NextPage = () => {
                 </label>
                 <div className="mt-1">
                   <select className="n4gForm h-10" {...register('cause')}>
-                    {causes.map((cause, idx) => (
-                      <option key={idx} value={cause.id}>
-                        {cause.name}
-                      </option>
-                    ))}
+                    {causes &&
+                      causes.map((cause, idx) => (
+                        <option key={idx} value={cause.id}>
+                          {cause.name}
+                        </option>
+                      ))}
                   </select>
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
@@ -168,15 +194,25 @@ const CollectionCreate: NextPage = () => {
               </div>
             </div>
           </div>
-          <button type="submit">
-            <div className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+              disabled={isLoading}
+            >
               Create
-            </div>
-          </button>
+            </button>
+            <Link href={'/profile'}>
+              <button
+                className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                type="button"
+              >
+                Back
+              </button>
+            </Link>
+          </div>
         </form>
       </div>
     </>
   )
 }
-
-export default CollectionCreate

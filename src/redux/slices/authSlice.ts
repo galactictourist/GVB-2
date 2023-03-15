@@ -12,7 +12,7 @@ const cookies = parseCookies()
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    id: '',
+    id: cookies[USER_COOKIES.ID] ?? '',
     wallet: cookies[USER_COOKIES.WALLET_ADDRESS] ?? '',
   },
   reducers: {

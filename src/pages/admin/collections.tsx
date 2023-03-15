@@ -1,39 +1,14 @@
 import { NextPage } from 'next'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import AdminContainer from '~/components/Admin/AdminContainer'
-import { getAllCollections } from '~/redux/slices/collectionsSlice'
-import { RootState } from '~/redux/store'
-
-// const placeholder = [
-//   {
-//     name: 'My first collection',
-//     description: 'Animals',
-//     status: 'PUBLISHED',
-//     ownerId: 'John Doe',
-//   },
-//   {
-//     name: 'Another collection',
-//     description: 'Environment',
-//     status: '100',
-//     ownerId: 'Jane Doe',
-//   },
-//   // More people...
-// ]
+import { useAllCollections } from '~/hooks/useAllCollections'
 
 const Collections: NextPage = () => {
-  const dispatch = useDispatch()
-  const { loading, allCollections } = useSelector((state: RootState) => state.collections)
-
-  useEffect(() => {
-    dispatch(getAllCollections())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { data: collections, isLoading } = useAllCollections()
 
   return (
     <>
       <AdminContainer>
-        {loading ? (
+        {isLoading ? (
           <div>LOADING</div>
         ) : (
           <div className="px-4 sm:px-6 lg:px-8">
@@ -79,33 +54,36 @@ const Collections: NextPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {allCollections.map((collection) => (
-                    <tr key={collection.id}>
-                      <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                        {collection.name}
-                        <dl className="font-normal lg:hidden">
-                          <dt className="sr-only">Description</dt>
-                          <dd className="mt-1 truncate text-gray-700">{collection.description}</dd>
-                          <dt className="sr-only sm:hidden">Status</dt>
-                          <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                            {collection.name}
-                          </dd>
-                        </dl>
-                      </td>
-                      <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                        {collection.description}
-                      </td>
-                      <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                        {collection.status}
-                      </td>
-                      <td className="px-3 py-4 text-sm text-gray-500">{collection.ownerId}</td>
-                      <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                          Details<span className="sr-only">, {collection.name}</span>
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
+                  {collections &&
+                    collections.map((collection) => (
+                      <tr key={collection.id}>
+                        <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+                          {collection.name}
+                          <dl className="font-normal lg:hidden">
+                            <dt className="sr-only">Description</dt>
+                            <dd className="mt-1 truncate text-gray-700">
+                              {collection.description}
+                            </dd>
+                            <dt className="sr-only sm:hidden">Status</dt>
+                            <dd className="mt-1 truncate text-gray-500 sm:hidden">
+                              {collection.name}
+                            </dd>
+                          </dl>
+                        </td>
+                        <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
+                          {collection.description}
+                        </td>
+                        <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                          {collection.status}
+                        </td>
+                        <td className="px-3 py-4 text-sm text-gray-500">{collection.ownerId}</td>
+                        <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                          <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                            Details<span className="sr-only">, {collection.name}</span>
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
