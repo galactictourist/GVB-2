@@ -121,7 +121,7 @@ const CollectionAddPage: NextPage = () => {
 
       <Header />
 
-      <div className="mx-auto max-w-2xl p-4 px-10 text-xl lg:max-w-7xl ">
+      <div className="mx-auto max-w-2xl p-4 px-10 pt-24 text-xl lg:max-w-7xl ">
         {/* Create NFT */}
         <div>
           <form onSubmit={onSubmit}>
