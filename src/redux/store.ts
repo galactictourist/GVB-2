@@ -6,7 +6,6 @@ import createSagaMiddleware from 'redux-saga'
 import rootSaga from './saga'
 import adminReducer from './slices/adminSlice'
 import authReducer from './slices/authSlice'
-import storageReducer from './slices/storageSlice'
 import topicsReducer from './slices/topicsSlice'
 
 const routerMiddleware = createRouterMiddleware()
@@ -17,7 +16,6 @@ const reducer = combineReducers({
   router: routerReducer,
   admin: adminReducer,
   auth: authReducer,
-  storage: storageReducer,
   topics: topicsReducer,
 })
 

@@ -4,6 +4,7 @@ import {
   Bars3Icon,
   ChartBarIcon,
   CursorArrowRaysIcon,
+  ListBulletIcon,
   Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
@@ -254,7 +255,15 @@ const HeaderNoSSR: React.FC<any> = () => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 mt-2 flex flex-col gap-4 rounded-md bg-white px-4 py-2 shadow-lg">
+                  <Menu.Items className="absolute right-0 mt-2 flex w-48 flex-col gap-4 rounded-md bg-white px-4 py-2 shadow-lg">
+                    <Menu.Item>
+                      <Link href="/profile/collections">
+                        <button type="button" className="flex items-center gap-2">
+                          <ListBulletIcon className="h-6 w-6" />
+                          My Collections
+                        </button>
+                      </Link>
+                    </Menu.Item>
                     <Menu.Item>
                       <button
                         type="button"

@@ -210,7 +210,7 @@ export default function EditCollection() {
               >
                 Update
               </button>
-              <Link href={'/profile'}>
+              <Link href={`/collection/${collection?.id}`}>
                 <button
                   className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                   type="button"
