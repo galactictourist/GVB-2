@@ -1,13 +1,6 @@
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import {
-  Bars3Icon,
-  ChartBarIcon,
-  CursorArrowRaysIcon,
-  ListBulletIcon,
-  Squares2X2Icon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline'
+import { Bars3Icon, ListBulletIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { signMessage } from '@wagmi/core'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -17,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { useHandleCreateNonce } from '~/handlers/useHandleCreateNonce'
 import { useHandleVerifySignature } from '~/handlers/useHandleVerifySignature'
+import { useAllCauses } from '~/hooks/useAllCauses'
 import { metamaskConnector } from '~/providers/Web3ContextProvider'
 import { signOut, verifySignature } from '~/redux/slices/authSlice'
 import { RootState } from '~/types'
@@ -25,36 +19,13 @@ import { CHAIN_ID } from '~/utils/constants'
 import { formatWalletAddress } from '~/utils/wallet'
 import Logo from '../../public/img/givabit_full_logo2.svg'
 
-const explore = [
-  {
-    name: 'Education',
-    description:
-      'The future of the world depends on the children of today, so investing in them is to take care of humanities future',
-    href: '/cause/Education',
-    icon: ChartBarIcon,
-  },
-  {
-    name: 'Animal Welfare',
-    description:
-      'Many animals across the world are in danger, whether it is from direct human intervention or climate change. Lets help them',
-    href: '/cause/Animals',
-    icon: Squares2X2Icon,
-  },
-  {
-    name: 'Environment',
-    description:
-      'We have only one earth, and it is our responsibility for our future grandchildren to take care of it',
-    href: '/cause/Environment',
-    icon: CursorArrowRaysIcon,
-  },
-]
-
 const HeaderNoSSR: React.FC<any> = () => {
   const dispatch = useDispatch()
   const { wallet } = useSelector((state: RootState) => state.auth)
 
   const handleCreateNonce = useHandleCreateNonce()
   const handleVerifySignature = useHandleVerifySignature()
+  const { data: causes } = useAllCauses()
 
   const { address, status } = useAccount()
   const { connect } = useConnect({
@@ -185,26 +156,23 @@ const HeaderNoSSR: React.FC<any> = () => {
                     leaveTo="opacity-0 translate-y-1"
                   >
                     <Popover.Panel className="absolute z-10 -ml-4 mt-3 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
-                      <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                        <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                          {explore.map((item) => (
-                            <a
-                              key={item.name}
-                              href={item.href}
-                              className="-m-3 flex items-start rounded-lg p-3 transition duration-700 hover:bg-gray-50"
-                            >
-                              <item.icon
-                                className="h-6 w-6 flex-shrink-0 text-n4gMediumTeal"
-                                aria-hidden="true"
-                              />
-                              <div className="ml-4">
-                                <p className="text-base font-medium text-gray-900">{item.name}</p>
-                                <p className="mt-1 text-sm text-gray-500">{item.description}</p>
-                              </div>
-                            </a>
-                          ))}
+                      {({ close }) => (
+                        <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+                          <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                            {causes &&
+                              causes.map((cause) => (
+                                <Link key={cause.id} href={`/cause/${cause.name}`}>
+                                  <div
+                                    className="-m-3 flex cursor-pointer items-start rounded-lg p-3 text-gray-400 transition duration-700 hover:bg-gray-50 hover:text-gray-900"
+                                    onClick={() => close()}
+                                  >
+                                    <p className="text-base font-medium">{cause.name}</p>
+                                  </div>
+                                </Link>
+                              ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </Popover.Panel>
                   </Transition>
                 </>
@@ -316,74 +284,74 @@ const HeaderNoSSR: React.FC<any> = () => {
           focus
           className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden"
         >
-          <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-            <div className="px-5 pt-5 pb-6">
-              <div className="flex items-center justify-between">
+          {({ close }) => (
+            <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+              <div className="px-5 pt-5 pb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Image src={Logo} alt="Givabit logo" />
+                  </div>
+                  <div className="-mr-2">
+                    <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-n4gMediumTeal">
+                      <span className="sr-only">Close menu</span>
+                      <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                    </Popover.Button>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <nav className="grid gap-y-8">
+                    {causes &&
+                      causes.map((cause) => (
+                        <Link key={cause.id} href={`/collection/${cause.name}`}>
+                          <div
+                            className="-m-3 flex cursor-pointer items-start rounded-lg p-3 transition duration-700 hover:bg-gray-50"
+                            onClick={() => close()}
+                          >
+                            <p className="text-base font-medium text-gray-900">{cause.name}</p>
+                          </div>
+                        </Link>
+                      ))}
+                  </nav>
+                </div>
+              </div>
+              <div className="space-y-6 py-6 px-5">
+                <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+                  <Link href="/profile/">
+                    <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                      Profile
+                    </div>
+                  </Link>
+                  <Link href="/collection/create">
+                    <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                      Collection
+                    </div>
+                  </Link>
+                  <Link href="/admin/login">
+                    <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
+                      Admin
+                    </div>
+                  </Link>
+                </div>
                 <div>
-                  <Image src={Logo} alt="Givabit logo" />
-                </div>
-                <div className="-mr-2">
-                  <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-n4gMediumTeal">
-                    <span className="sr-only">Close menu</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                  </Popover.Button>
-                </div>
-              </div>
-              <div className="mt-6">
-                <nav className="grid gap-y-8">
-                  {explore.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50"
+                  {address ? (
+                    <div className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
+                      {formatWalletAddress(address)}
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                      onClick={() => {
+                        connect()
+                      }}
                     >
-                      <item.icon
-                        className="h-6 w-6 flex-shrink-0 text-n4gMediumTeal"
-                        aria-hidden="true"
-                      />
-                      <span className="ml-3 text-base font-medium text-gray-900">{item.name}</span>
-                    </a>
-                  ))}
-                </nav>
+                      Connect Wallet
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="space-y-6 py-6 px-5">
-              <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                <Link href="/profile/">
-                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
-                    Profile
-                  </div>
-                </Link>
-                <Link href="/collection/create">
-                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
-                    Collection
-                  </div>
-                </Link>
-                <Link href="/admin/login">
-                  <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
-                    Admin
-                  </div>
-                </Link>
-              </div>
-              <div>
-                {address ? (
-                  <div className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
-                    {formatWalletAddress(address)}
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                    onClick={() => {
-                      connect()
-                    }}
-                  >
-                    Connect Wallet
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+          )}
         </Popover.Panel>
       </Transition>
     </Popover>

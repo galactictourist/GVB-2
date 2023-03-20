@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useHandleCreateCollection } from '~/handlers/useHandleCreateCollection'
-import { useAllCauses } from '~/hooks/useAllCauses'
+import { useChildCauses } from '~/hooks/useChildCauses'
 import { RootState } from '~/types'
 import Header from '../../components/Header'
 
@@ -16,7 +16,7 @@ export default function CreateCollection() {
   const [preview, setPreview] = useState<string>()
   const [isLoading, setLoading] = useState<boolean>(false)
 
-  const { data: causes } = useAllCauses()
+  const { data: causes } = useChildCauses()
   const handleCreateCollection = useHandleCreateCollection()
 
   useEffect(() => {
@@ -178,12 +178,16 @@ export default function CreateCollection() {
                   Cause
                 </label>
                 <div className="mt-1">
-                  <select className="n4gForm h-10" {...register('cause')}>
+                  <select className="n4gForm h-10 capitalize" {...register('cause')}>
                     {causes &&
-                      causes.map((cause, idx) => (
-                        <option key={idx} value={cause.id}>
-                          {cause.name}
-                        </option>
+                      causes.map((cause) => (
+                        <optgroup label={cause.name} key={cause.id}>
+                          {cause.children.map((subcause) => (
+                            <option key={subcause.id} value={subcause.id} className="capitalize">
+                              {subcause.name}
+                            </option>
+                          ))}
+                        </optgroup>
                       ))}
                   </select>
                 </div>

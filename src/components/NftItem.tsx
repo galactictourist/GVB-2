@@ -26,7 +26,6 @@ const NftItem = ({ nft }: Props) => {
             />
             <div className="flex-col">
               <p className="relative text-lg font-semibold text-white">{nft.name}</p>
-              <p className="relative  text-white">{nft.collectionId}</p>
             </div>
           </div>
         </div>
