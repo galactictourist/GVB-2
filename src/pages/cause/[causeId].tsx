@@ -2,18 +2,10 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
-import nfts from '../../../content/meta.json'
-import { NftItem } from '~/components/NftList'
 
 const CausePage: NextPage = () => {
   const router = useRouter()
   const cause = router.query.causeId
-
-  const showNfts = () => {
-    return nfts
-      .filter((nft) => nft.cause === cause)
-      .map((nft) => <NftItem key={nft.name} nft={nft} single={false} />)
-  }
 
   return (
     <>
@@ -26,9 +18,6 @@ const CausePage: NextPage = () => {
               These are all NFT collections belonging to {cause}. Please click on any of them for
               additional information.
             </h3>
-            <div className="mt-8 grid grid-cols-1 gap-y-12 pb-10 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-              {showNfts()}
-            </div>
           </>
         </div>
       </div>
