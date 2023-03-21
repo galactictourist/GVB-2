@@ -1,4 +1,6 @@
 import { BaseEntity } from './base.entity'
+import { CollectionEntity } from './collection.entity'
+import { UserEntity } from './user.entity'
 export enum BlockchainNetwork {
   ETHEREUM = 'ETHEREUM',
   BSC = 'BSC',
@@ -38,4 +40,7 @@ export interface NftEntity extends BaseEntity {
   status: NftStatus
   creatorWallet?: string
   royalty?: number
+
+  collection?: CollectionEntity
+  owner?: UserEntity
 }

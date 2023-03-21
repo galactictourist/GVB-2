@@ -9,7 +9,7 @@ interface Props {
 const NftItem = ({ nft }: Props) => {
   return (
     <div>
-      <Link href={`/nft/${nft.name}`}>
+      <Link href={`/nft/${nft.id}`}>
         <div className="group relative cursor-pointer">
           <div className="relative h-72 overflow-hidden rounded-lg">
             <Image

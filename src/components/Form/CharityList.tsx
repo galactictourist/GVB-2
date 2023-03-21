@@ -1,31 +1,33 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { useEffect, useState } from 'react'
-import { givabitApi } from '~/services/givabit/api'
+import { useEffect, useMemo, useState } from 'react'
+import { useCharities } from '~/hooks/useCharities'
 import { CharityEntity } from '~/types/entity/charities.entity'
 import { classNames } from '~/utils'
 
-export function CharityList() {
+export function CharityList({ onChange }: { onChange: (val: string) => void }) {
   const [query, setQuery] = useState('')
-  const [selectedCharity, selectedCharitySetter] = useState(null)
+  const [selectedCharity, selectedCharitySetter] = useState<CharityEntity>()
 
-  const [charities, charitiesSetter] = useState<CharityEntity[]>([])
+  const { data: charities } = useCharities()
 
-  const fetch = async () => {
-    const countries = await givabitApi.getCharities()
-    charitiesSetter(countries.data)
-  }
+  const filteredCharities = useMemo(() => {
+    if (charities) {
+      return query === ''
+        ? charities
+        : charities.filter((charity) => {
+            return charity.name.toLowerCase().includes(query.toLowerCase())
+          })
+    }
+
+    return []
+  }, [query, charities])
 
   useEffect(() => {
-    fetch()
-  }, [])
-
-  const filteredCharities =
-    query === ''
-      ? charities
-      : charities.filter((charity) => {
-          return charity.name.toLowerCase().includes(query.toLowerCase())
-        })
+    if (selectedCharity) {
+      onChange(selectedCharity.id)
+    }
+  }, [selectedCharity])
 
   return (
     <Combobox as="div" value={selectedCharity} onChange={selectedCharitySetter}>

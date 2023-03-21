@@ -2,7 +2,6 @@ import axios, { AxiosInstance } from 'axios'
 import { BigNumberish } from 'ethers'
 import { parseCookies } from 'nookies'
 import { CountryEntity } from '~/types/entity'
-import { CharityEntity } from '~/types/entity/charities.entity'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { SaleEntity } from '~/types/entity/sale.entity'
 import { TopicEntity } from '~/types/entity/topic.entity'
@@ -167,13 +166,6 @@ export class GivabitApi {
     const { data: result } = await this.instance.get('/topics')
     return {
       data: result.data as TopicEntity[],
-    }
-  }
-
-  async getCharities() {
-    const { data: result } = await this.instance.get('/charities')
-    return {
-      data: result.data as CharityEntity[],
     }
   }
 
