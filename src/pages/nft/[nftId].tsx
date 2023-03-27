@@ -93,10 +93,10 @@ const NftPage: NextPage = () => {
   }
 
   const onSubmitList = (data: any) => {
-    if (!data.topicId) {
-      toast.error('You need to choose topic')
-      return
-    }
+    // if (!data.topicId) {
+    //   toast.error('You need to choose topic')
+    //   return
+    // }
 
     if (!data.charityId) {
       toast.error('You need to choose charity')
