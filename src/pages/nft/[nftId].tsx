@@ -4,7 +4,7 @@ import {
   ArrowPathIcon,
   EllipsisVerticalIcon,
   LinkIcon,
-  ShareIcon,
+  ShareIcon
 } from '@heroicons/react/24/outline'
 import { Contract, Signer } from 'ethers'
 import { NextPage } from 'next'
@@ -16,7 +16,6 @@ import { toast } from 'react-hot-toast'
 import { useAccount, useConnect, useSigner, useSignTypedData } from 'wagmi'
 import Footer from '~/components/Footer'
 import { CharityList } from '~/components/Form/CharityList'
-import { TopicList } from '~/components/Form/TopicList'
 import Header from '~/components/Header'
 import NFTDetails from '~/components/NftDetail/NftDetails'
 import { useNft } from '~/hooks/useNft'
@@ -341,10 +340,10 @@ const NftPage: NextPage = () => {
                           </h3>
                         </div>
                         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                          <div className="sm:col-span-6">
+                          {/* <div className="sm:col-span-6">
                             <TopicList onChange={(val: string) => setValue('topicId', val)} />
                             <div className="mt-1"></div>
-                          </div>
+                          </div> */}
 
                           <div className="sm:col-span-6">
                             <CharityList onChange={(val: string) => setValue('charityId', val)} />
