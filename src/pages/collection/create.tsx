@@ -48,6 +48,7 @@ export default function CreateCollection() {
     }
 
     formData.append('name', data.name)
+    formData.append('artistAddress', data.artistAddress)
     formData.append('description', data.description)
     formData.append('contractAddress', data.contract_address)
     formData.append('topicId', data.cause)
@@ -161,6 +162,14 @@ export default function CreateCollection() {
                 </div>
               </div>
 
+              <div className="sm:col-span-6 md:col-span-4">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Artist address
+                </label>
+                <div className="mt-1">
+                  <input required type="text" className="n4gForm h-10" {...register('artistAddress')} />
+                </div>
+              </div>
               <div className="sm:col-span-6">
                 <label htmlFor="about" className="block text-sm font-medium text-gray-700">
                   Description

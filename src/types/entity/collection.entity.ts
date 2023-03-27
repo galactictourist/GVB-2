@@ -7,6 +7,7 @@ export enum CollectionStatus {
 
 export interface CollectionEntity extends BaseEntity {
   name: string
+  artistAddress: string
   description: string
   imageStorageId: string
   imageUrl: string

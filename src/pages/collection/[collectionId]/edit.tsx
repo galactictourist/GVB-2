@@ -43,6 +43,7 @@ export default function EditCollection() {
   useEffect(() => {
     if (collection) {
       setValue('name', collection.name)
+      setValue('artistAddress', collection.artistAddress)
       setValue('description', collection.description)
       setValue('cause', collection.topicId)
       setPreview(collection.imageUrl)
@@ -64,6 +65,7 @@ export default function EditCollection() {
     }
 
     formData.append('name', data.name)
+    formData.append('artistAddress', data.artistAddress)
     formData.append('description', data.description)
     formData.append('topicId', data.cause)
 
@@ -167,6 +169,15 @@ export default function EditCollection() {
                   </label>
                   <div className="mt-1">
                     <input required type="text" className="n4gForm h-10" {...register('name')} />
+                  </div>
+                </div>
+
+                <div className="sm:col-span-6 md:col-span-4">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    Artist address
+                  </label>
+                  <div className="mt-1">
+                    <input required type="text" className="n4gForm h-10" {...register('artistAddress')} />
                   </div>
                 </div>
 
