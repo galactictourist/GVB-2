@@ -187,7 +187,7 @@ export class GivabitApi {
   async signingNftSale(info: {
     nftId: string
     countryCode: string
-    topicId: string
+    // topicId: string
     charityId: string
     charityShare: number
     price: number

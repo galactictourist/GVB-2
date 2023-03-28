@@ -117,7 +117,7 @@ const NftPage: NextPage = () => {
       signResp = await givabitApi.signingNftSale({
         nftId: data.id,
         charityId: data.charityId,
-        topicId: data.topicId,
+        // topicId: data.topicId,
         network: data.network,
         currency: data.currency,
         price: data.price,
