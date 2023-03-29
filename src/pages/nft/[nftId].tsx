@@ -289,7 +289,6 @@ const NftPage: NextPage = () => {
             },
           ],
           {
-            gasLimit: 1000000,
             value: BigNumber.from(sale.signedData.message.itemPrice).toString(),
           }
         )) as TransactionResponse
@@ -313,7 +312,7 @@ const NftPage: NextPage = () => {
       <div className="mx-auto max-w-2xl px-10 lg:max-w-7xl">
         <div className="flex h-[10vh]" />
 
-        {nft && (
+        {nft ? (
           <div className={style.wrapper}>
             <div className={style.nftContainer}>
               <div className="flex w-[480px] flex-col space-y-4">
@@ -420,6 +419,8 @@ const NftPage: NextPage = () => {
               </div>
             </div>
           </div>
+        ) : (
+          <div className="h-96 w-full text-center text-2xl">Loading...</div>
         )}
       </div>
       <Footer />

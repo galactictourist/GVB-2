@@ -10,7 +10,7 @@ interface Props {
 
 const CollectionItem = ({ id, name, cause, image }: Props) => {
   return (
-    <div className="rounded-xl border">
+    <div className="rounded-xl shadow-lg">
       <Link href={`/collection/${id}`}>
         <button
           className="relative flex h-48 w-full rounded-xl border p-2 hover:opacity-80"

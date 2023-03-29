@@ -29,7 +29,7 @@ const NFTDetails = ({ nft }: { nft: NftEntity }) => {
         </div>
         <div className={style.innerTextContainer}>{nft.description}</div>
       </>
-      <Disclosure>
+      <Disclosure defaultOpen={true}>
         {({ open }) => (
           <>
             <Disclosure.Button>
@@ -48,7 +48,7 @@ const NFTDetails = ({ nft }: { nft: NftEntity }) => {
             </Disclosure.Button>
             <Disclosure.Panel>
               <div className={style.innerTextContainer}>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="nowrap grid grid-cols-3 gap-4">
                   {nft.attributes &&
                     nft.attributes.map((attr) => (
                       <div
@@ -56,7 +56,7 @@ const NFTDetails = ({ nft }: { nft: NftEntity }) => {
                         className="rounded-md border border-n4gMediumTeal p-3"
                       >
                         <p className="text-sm text-gray-400">{attr.trait_type}</p>
-                        <p>{attr.value}</p>
+                        <p className="capitalize">{attr.value}</p>
                       </div>
                     ))}
                 </div>

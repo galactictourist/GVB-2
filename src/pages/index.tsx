@@ -18,7 +18,7 @@ const Home: NextPage = () => {
       <Header />
       <div className="bg-gradient-to-tl from-n4gLightTeal to-white">
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-          {causes &&
+          {causes ? (
             causes.map(
               (cause) =>
                 cause.collections.length > 0 && (
@@ -55,7 +55,12 @@ const Home: NextPage = () => {
                     </div>
                   </div>
                 )
-            )}
+            )
+          ) : (
+            <div className="flex h-96 w-full items-center justify-center text-center text-2xl">
+              Loading...
+            </div>
+          )}
         </div>
       </div>
       <Footer />
