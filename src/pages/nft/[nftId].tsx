@@ -86,8 +86,10 @@ const NftPage: NextPage = () => {
     if (nft) {
       setValue('id', nft.id)
 
-      if (nft.sales.length > 0) {
-        setSale(nft.sales[0])
+      const listedSales = nft.sales.filter((s) => s.status == 'LISTING')
+
+      if (listedSales.length > 0) {
+        setSale(listedSales[0])
       }
     }
   }, [nft])

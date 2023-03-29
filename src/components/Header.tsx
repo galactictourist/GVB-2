@@ -104,6 +104,32 @@ const HeaderNoSSR: React.FC<any> = () => {
     dispatch(signOut())
   }
 
+  const getCauseBgColor = (cause: string) => {
+    if (cause == 'Education') {
+      return '#000000'
+    } else if (cause == 'Health') {
+      return '#CC3835'
+    } else if (cause == 'Animal Welfare') {
+      return '#F2D265'
+    } else if (cause == 'Human Services') {
+      return '#D7DEDB'
+    } else if (cause == 'Art & Culture') {
+      return '#24A1BA'
+    } else if (cause == 'Environment') {
+      return '#107942'
+    }
+
+    return '#FFFFFF'
+  }
+
+  const getCauseTextColor = (cause: string) => {
+    if (cause == 'Human Services' || cause == 'Animal Welfare') {
+      return '#000000'
+    }
+
+    return '#FFFFFF'
+  }
+
   return (
     <Popover
       className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${
@@ -155,18 +181,22 @@ const HeaderNoSSR: React.FC<any> = () => {
                     leaveFrom="opacity-100 translate-y-0"
                     leaveTo="opacity-0 translate-y-1"
                   >
-                    <Popover.Panel className="absolute z-10 -ml-4 mt-3 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
+                    <Popover.Panel className="absolute z-10 -ml-4 mt-3 w-[240px] transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
                       {({ close }) => (
                         <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                           <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                             {causes &&
                               causes.map((cause) => (
-                                <Link key={cause.id} href={`/cause/${cause.name}`}>
+                                <Link key={cause.id} href={`/cause/${cause.id}`}>
                                   <div
-                                    className="-m-3 flex cursor-pointer items-start rounded-lg p-3 text-gray-400 transition duration-700 hover:bg-gray-50 hover:text-gray-900"
+                                    className="-m-3 flex cursor-pointer items-center rounded-3xl py-3 px-6 text-white transition duration-700 hover:opacity-50"
+                                    style={{
+                                      color: getCauseTextColor(cause.name),
+                                      background: getCauseBgColor(cause.name),
+                                    }}
                                     onClick={() => close()}
                                   >
-                                    <p className="text-base font-medium">{cause.name}</p>
+                                    <p className="w-full text-center font-medium">{cause.name}</p>
                                   </div>
                                 </Link>
                               ))}

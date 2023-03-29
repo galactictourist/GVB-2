@@ -6,13 +6,13 @@ export interface TopicEntity extends BaseEntity {
   parentId?: string
 }
 
-export interface HomeTopicEntity {
+export interface CauseTopicEntity {
   id: string
   name: string
   collections: CollectionEntity[]
 }
 
-export interface CauseTopicEntity {
+export interface SubCauseTopicEntity {
   id: string
   name: string
   children: TopicEntity[]

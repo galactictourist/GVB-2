@@ -2,12 +2,12 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useHomeCollections } from '~/hooks/useHomeCollections'
+import { useCauseCollections } from '~/hooks/useCauseCollections'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 
 const Home: NextPage = () => {
-  const { data: causes } = useHomeCollections()
+  const { data: causes } = useCauseCollections()
 
   return (
     <>
@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       </Head>
       <Header />
       <div className="bg-gradient-to-tl from-n4gLightTeal to-white">
-        <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="mx-auto min-h-[calc(100vh-320px)] max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           {causes ? (
             causes.map(
               (cause) =>
