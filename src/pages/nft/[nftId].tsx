@@ -1,12 +1,11 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { ShoppingBagIcon } from '@heroicons/react/20/solid'
 import {
   ArrowPathIcon,
   EllipsisVerticalIcon,
   LinkIcon,
-  ShareIcon
+  ShareIcon,
 } from '@heroicons/react/24/outline'
-import { Contract, Signer } from 'ethers'
+import { BigNumber, Contract, Signer } from 'ethers'
 import { NextPage } from 'next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -26,7 +25,9 @@ import { CHAIN_ID } from '~/utils/constants'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { useSelector } from 'react-redux'
 import { nftAbi } from '~/abi/erc721'
+import { marketAbi } from '~/abi/market'
 import { RootState } from '~/redux/store'
+import { SaleEntity } from '~/types/entity/sale.entity'
 
 const style = {
   wrapper: `flex-col space-y-4 lg:py-8`,
@@ -71,6 +72,7 @@ const NftPage: NextPage = () => {
 
   const [serverSignature, setServerSignature] = useState()
   const [saleData, setSaleData] = useState()
+  const [sale, setSale] = useState<SaleEntity>()
 
   const {
     register,
@@ -83,6 +85,10 @@ const NftPage: NextPage = () => {
   useEffect(() => {
     if (nft) {
       setValue('id', nft.id)
+
+      if (nft.sales.length > 0) {
+        setSale(nft.sales[0])
+      }
     }
   }, [nft])
 
@@ -112,6 +118,9 @@ const NftPage: NextPage = () => {
       return
     }
 
+    const toastId = toast.loading('Processing list nft...')
+    setListOpen(false)
+
     let signResp
     try {
       signResp = await givabitApi.signingNftSale({
@@ -131,7 +140,9 @@ const NftPage: NextPage = () => {
       setSaleData(signResp.data.saleData)
     } catch (ex: any) {
       console.log(ex)
-      toast.error(ex.response.data.message ?? 'Get error while prepare listing.')
+      toast.error(ex.response.data.message ?? 'Get error while prepare listing.', {
+        id: toastId,
+      })
       return
     }
 
@@ -144,7 +155,7 @@ const NftPage: NextPage = () => {
     // if (typedData.message.isMinted)
     // const isApproved = (await nftContract.getApproved(
     //   typedData.message.tokenId
-    // )) as providers.TransactionResponse
+    // )) as TransactionResponse
     // console.log('isApproved', isApproved)
     // if (!isApproved) {
     // const txResponse = (await nftContract.approve(
@@ -177,7 +188,9 @@ const NftPage: NextPage = () => {
       }
     } catch (ex: any) {
       console.log(ex)
-      toast.error(ex.message ?? 'Get error while approve')
+      toast.error(ex.message ?? 'Get error while approve', {
+        id: toastId,
+      })
       return
     }
 
@@ -187,10 +200,89 @@ const NftPage: NextPage = () => {
         types: typedData.types,
         value: typedData.message,
       })
+      toast.remove(toastId)
     } catch (ex: any) {
       console.log(ex)
-      toast.error(ex.message ?? 'Get error while sign data')
+      toast.error(ex.message ?? 'Get error while sign data', {
+        id: toastId,
+      })
       return
+    }
+  }
+
+  const handleUnlist = async () => {
+    if (!address) {
+      toast.error('You need to connect wallet')
+      return
+    }
+
+    if (!sale) {
+      toast.error('NFT is not on sale')
+      return
+    }
+
+    const toastId = toast.loading('Unlist is in progress')
+
+    const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
+    const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
+
+    try {
+      const response = (await contractMp.cancelOrders([sale.signedData.message], {
+        gasLimit: 1000000,
+      })) as TransactionResponse
+      console.log(response)
+
+      toast.success('Unlist successed.', {
+        id: toastId,
+      })
+    } catch (ex) {
+      console.log(ex)
+      toast.error('Unlist NFT failed.', {
+        id: toastId,
+      })
+    }
+  }
+
+  const handleBuy = async () => {
+    if (!address) {
+      toast.error('You need to connect wallet')
+      return
+    }
+
+    if (!sale) {
+      toast.error('NFT is not on sale')
+      return
+    }
+
+    const toastId = toast.loading('Buy NFT is in progress')
+
+    const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
+    const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
+
+    try {
+      const response = (await contractMp.buyItems(
+        [
+          {
+            signature: sale.signature,
+            additionalAmount: 0,
+            orderItem: sale.signedData.message,
+          },
+        ],
+        {
+          gasLimit: 1000000,
+          value: BigNumber.from(sale.signedData.message.itemPrice).toString(),
+        }
+      )) as TransactionResponse
+      console.log(response)
+
+      toast.success('Buy NFT successed.', {
+        id: toastId,
+      })
+    } catch (ex) {
+      console.log(ex)
+      toast.error('Buy NFT failed.', {
+        id: toastId,
+      })
     }
   }
 
@@ -277,16 +369,40 @@ const NftPage: NextPage = () => {
 
                 <div className="rounded-md border border-gray-200 p-4">
                   {nft.ownerId == userId ? (
-                    <button
-                      type="button"
-                      className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                      onClick={handleListOpen}
-                    >
-                      <ShoppingBagIcon className="h-8 w-8" />
-                      <span className="text-xl">List</span>
-                    </button>
+                    sale ? (
+                      <button
+                        type="button"
+                        className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-red-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                        onClick={handleUnlist}
+                      >
+                        <span className="text-xl">Unlist</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                        onClick={handleListOpen}
+                      >
+                        <span className="text-xl">List</span>
+                      </button>
+                    )
+                  ) : sale ? (
+                    <>
+                      <div className="mb-4">
+                        <span className="text-2xl font-semibold">
+                          {parseFloat(sale.price)} MATIC
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                        onClick={handleBuy}
+                      >
+                        <span className="text-xl">Buy</span>
+                      </button>
+                    </>
                   ) : (
-                    <h1>Only owner can list nft</h1>
+                    <h1>Nft not listed</h1>
                   )}
                 </div>
 
