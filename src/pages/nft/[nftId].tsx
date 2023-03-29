@@ -210,6 +210,25 @@ const NftPage: NextPage = () => {
     }
   }
 
+  useEffect(() => {
+    if (signedData && serverSignature && saleData) {
+      givabitApi
+        .createSale({
+          clientSignature: signedData,
+          serverSignature,
+          saleData,
+        })
+        .then((ret) => {
+          toast.success('List nft successed.')
+          router.reload()
+        })
+        .catch((err) => {
+          console.log(err)
+          toast.error(err.message ?? 'List nft failed.')
+        })
+    }
+  }, [signedData, serverSignature, saleData])
+
   const handleUnlist = async () => {
     if (!address) {
       toast.error('You need to connect wallet')
@@ -227,9 +246,9 @@ const NftPage: NextPage = () => {
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
 
     try {
-      const response = (await contractMp.cancelOrders([sale.signedData.message], {
-        gasLimit: 1000000,
-      })) as TransactionResponse
+      const response = await (
+        (await contractMp.cancelOrders([sale.signedData.message])) as TransactionResponse
+      ).wait()
       console.log(response)
 
       toast.success('Unlist successed.', {
@@ -260,19 +279,21 @@ const NftPage: NextPage = () => {
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
 
     try {
-      const response = (await contractMp.buyItems(
-        [
+      const response = await (
+        (await contractMp.buyItems(
+          [
+            {
+              signature: sale.signature,
+              additionalAmount: 0,
+              orderItem: sale.signedData.message,
+            },
+          ],
           {
-            signature: sale.signature,
-            additionalAmount: 0,
-            orderItem: sale.signedData.message,
-          },
-        ],
-        {
-          gasLimit: 1000000,
-          value: BigNumber.from(sale.signedData.message.itemPrice).toString(),
-        }
-      )) as TransactionResponse
+            gasLimit: 1000000,
+            value: BigNumber.from(sale.signedData.message.itemPrice).toString(),
+          }
+        )) as TransactionResponse
+      ).wait()
       console.log(response)
 
       toast.success('Buy NFT successed.', {
@@ -285,24 +306,6 @@ const NftPage: NextPage = () => {
       })
     }
   }
-
-  useEffect(() => {
-    if (signedData && serverSignature && saleData) {
-      givabitApi
-        .createSale({
-          clientSignature: signedData,
-          serverSignature,
-          saleData,
-        })
-        .then((ret) => {
-          toast.success('List nft successed.')
-        })
-        .catch((err) => {
-          console.log(err)
-          toast.error(err.message ?? 'List nft failed.')
-        })
-    }
-  }, [signedData, serverSignature, saleData])
 
   return (
     <>

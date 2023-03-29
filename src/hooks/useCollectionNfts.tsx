@@ -6,10 +6,16 @@ const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
 
 export type CollectionNftsResp = NftEntity[]
 
-export const useCollectionNfts = ({ id }: { id: string }) => {
-  return useQuery<CollectionNftsResp>([`collection-nfts-${id}`], async () => {
-    const { data: resp } = await mainClient.get(`/collections/${id}/nfts`)
+export const useCollectionNfts = ({ id }: { id: string | undefined }) => {
+  return useQuery<CollectionNftsResp>(
+    [`collection-nfts-${id}`],
+    async () => {
+      const { data: resp } = await mainClient.get(`/collections/${id}/nfts`)
 
-    return resp.data
-  })
+      return resp.data
+    },
+    {
+      enabled: !(!id || id.length === 0),
+    }
+  )
 }

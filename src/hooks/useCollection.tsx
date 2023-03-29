@@ -6,10 +6,16 @@ const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
 
 export type CollectionResp = CollectionEntity
 
-export const useCollection = ({ id }: { id: string }) => {
-  return useQuery<CollectionResp>([`collection-${id}`], async () => {
-    const { data: resp } = await mainClient.get(`/collections/${id}`)
+export const useCollection = ({ id }: { id: string | undefined }) => {
+  return useQuery<CollectionResp>(
+    [`collection-${id}`],
+    async () => {
+      const { data: resp } = await mainClient.get(`/collections/${id}`)
 
-    return resp.data
-  })
+      return resp.data
+    },
+    {
+      enabled: !(!id || id.length === 0),
+    }
+  )
 }

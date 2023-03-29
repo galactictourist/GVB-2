@@ -6,10 +6,16 @@ const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
 
 export type NftResp = NftEntity
 
-export const useNft = ({ id }: { id: string }) => {
-  return useQuery<NftResp>([`nft-${id}`], async () => {
-    const { data: resp } = await mainClient.get(`/nfts/${id}`)
+export const useNft = ({ id }: { id: string | undefined }) => {
+  return useQuery<NftResp>(
+    [`nft-${id}`],
+    async () => {
+      const { data: resp } = await mainClient.get(`/nfts/${id}`)
 
-    return resp.data
-  })
+      return resp.data
+    },
+    {
+      enabled: !(!id || id.length === 0),
+    }
+  )
 }
