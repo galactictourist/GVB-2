@@ -21,7 +21,7 @@ import Logo from '../../public/img/givabit_full_logo2.svg'
 
 const HeaderNoSSR: React.FC<any> = () => {
   const dispatch = useDispatch()
-  const { wallet } = useSelector((state: RootState) => state.auth)
+  const { wallet, loading } = useSelector((state: RootState) => state.auth)
 
   const handleCreateNonce = useHandleCreateNonce()
   const handleVerifySignature = useHandleVerifySignature()
@@ -39,49 +39,57 @@ const HeaderNoSSR: React.FC<any> = () => {
 
   useEffect(() => {
     const signNonce = async () => {
-      if (address && status == 'connected') {
+      if (address) {
         if (wallet == address) {
           return
         }
 
         setIsSigning(true)
 
-        try {
-          const { nonce } = await handleCreateNonce.mutateAsync({ address })
-
-          const signature = await signMessage({
-            message: nonce,
-          })
-          if (signature) {
-            handleVerifySignature.mutate(
-              {
-                address,
-                signature,
-              },
-              {
-                onSuccess(data, variables, context) {
-                  dispatch(verifySignature(data))
-                  setIsSigning(false)
-                },
-                onError(error) {
-                  setIsSigning(false)
-                },
+        handleCreateNonce.mutate(
+          { address },
+          {
+            onSuccess: async (nonceResp) => {
+              try {
+                const signature = await signMessage({
+                  message: nonceResp.nonce,
+                })
+                if (signature) {
+                  handleVerifySignature.mutate(
+                    {
+                      address,
+                      signature,
+                    },
+                    {
+                      onSuccess(data, variables, context) {
+                        dispatch(verifySignature(data))
+                        setIsSigning(false)
+                      },
+                      onError(error) {
+                        setIsSigning(false)
+                      },
+                    }
+                  )
+                }
+              } catch (ex) {
+                console.log(ex)
+                setIsSigning(false)
               }
-            )
+            },
+            onError: () => {
+              setIsSigning(false)
+            },
           }
-        } catch (ex) {
-          console.log(ex)
-          setIsSigning(false)
-        }
+        )
       }
     }
 
-    if (address) {
+    if (address && !loading && status == 'connected') {
       signNonce()
     } else if (wallet) {
       connect()
     }
-  }, [address, status, wallet])
+  }, [address, wallet, loading, status])
 
   // Adjusting the menu bar when scrolling.
   useEffect(() => {

@@ -5,20 +5,19 @@ import {
   LinkIcon,
   ShareIcon,
 } from '@heroicons/react/24/outline'
-import { BigNumber, Contract, Signer } from 'ethers'
+import { BigNumber, Contract, ethers, Signer } from 'ethers'
 import { NextPage } from 'next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useAccount, useConnect, useSigner, useSignTypedData } from 'wagmi'
+import { useAccount, useSigner, useSignTypedData } from 'wagmi'
 import Footer from '~/components/Footer'
 import { CharityList } from '~/components/Form/CharityList'
 import Header from '~/components/Header'
 import NFTDetails from '~/components/NftDetail/NftDetails'
 import { useNft } from '~/hooks/useNft'
-import { metamaskConnector } from '~/providers/Web3ContextProvider'
 import { givabitApi } from '~/services/givabit/api'
 import { CHAIN_ID } from '~/utils/constants'
 
@@ -60,10 +59,6 @@ const NftPage: NextPage = () => {
   })
   const { id: userId } = useSelector((state: RootState) => state.auth)
 
-  const { connect } = useConnect({
-    chainId: CHAIN_ID,
-    connector: metamaskConnector,
-  })
   const { address } = useAccount()
   const { data: signer } = useSigner({
     chainId: CHAIN_ID,
@@ -73,6 +68,7 @@ const NftPage: NextPage = () => {
   const [serverSignature, setServerSignature] = useState()
   const [saleData, setSaleData] = useState()
   const [sale, setSale] = useState<SaleEntity>()
+  const [additionalAmount, setAdditionalAmount] = useState<string>()
 
   const {
     register,
@@ -95,9 +91,15 @@ const NftPage: NextPage = () => {
   }, [nft])
 
   const [isListOpen, setListOpen] = useState<boolean>(false)
+  const [isBuyOpen, setBuyOpen] = useState<boolean>(false)
 
   const handleListOpen = () => {
     setListOpen(true)
+  }
+
+  const handleBuyOpen = () => {
+    setAdditionalAmount(undefined)
+    setBuyOpen(true)
   }
 
   const onSubmitList = (data: any) => {
@@ -120,6 +122,11 @@ const NftPage: NextPage = () => {
       return
     }
 
+    if (data.charityShare < 10 || data.charityShare > 100) {
+      toast.error('Charity share should be more than 10%, less than 100%')
+      return
+    }
+
     const toastId = toast.loading('Processing list nft...')
     setListOpen(false)
 
@@ -132,7 +139,7 @@ const NftPage: NextPage = () => {
         network: data.network,
         currency: data.currency,
         price: data.price,
-        charityShare: data.charityShare,
+        charityShare: data.charityShare * 100,
         expiryInMinutes: 30 * 24 * 60,
         quantity: 1,
         countryCode: 'US',
@@ -281,17 +288,22 @@ const NftPage: NextPage = () => {
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
 
     try {
+      const itemPrice = BigNumber.from(sale.signedData.message.itemPrice)
+      const additionalPrice = additionalAmount ? ethers.utils.parseEther(additionalAmount) : 0
+      const value = itemPrice.add(additionalPrice)
+
       const response = await (
         (await contractMp.buyItems(
           [
             {
               signature: sale.signature,
-              additionalAmount: 0,
+              additionalAmount: additionalPrice,
               orderItem: sale.signedData.message,
             },
           ],
           {
-            value: BigNumber.from(sale.signedData.message.itemPrice).toString(),
+            gasLimit: 100000,
+            value,
           }
         )) as TransactionResponse
       ).wait()
@@ -400,7 +412,7 @@ const NftPage: NextPage = () => {
                       <button
                         type="button"
                         className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                        onClick={handleBuy}
+                        onClick={handleBuyOpen}
                       >
                         <span className="text-xl">Buy</span>
                       </button>
@@ -566,6 +578,81 @@ const NftPage: NextPage = () => {
                       </button>
                     </div>
                   </form>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root>
+
+      <Transition.Root show={isBuyOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={setListOpen}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                  <div className="space-y-4 divide-y divide-gray-200">
+                    <div className="">
+                      <div>
+                        <h3 className="text-lg font-medium leading-6 text-gray-900">
+                          Buy {nft?.name}
+                        </h3>
+                      </div>
+                      <div className="mt-6">
+                        <label
+                          htmlFor="additionalAmount"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Donate Amount
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            type="text"
+                            id="additionalAmount"
+                            value={additionalAmount}
+                            onChange={(e) => setAdditionalAmount(e.target.value)}
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+                    <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+                      onClick={() => handleBuy()}
+                    >
+                      Buy
+                    </button>
+                    <button
+                      type="button"
+                      className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+                      onClick={() => setBuyOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
