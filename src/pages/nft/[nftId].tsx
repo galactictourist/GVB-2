@@ -3,7 +3,7 @@ import {
   ArrowPathIcon,
   EllipsisVerticalIcon,
   LinkIcon,
-  ShareIcon,
+  ShareIcon
 } from '@heroicons/react/24/outline'
 import { BigNumber, Contract, ethers, Signer } from 'ethers'
 import { NextPage } from 'next'
@@ -302,7 +302,7 @@ const NftPage: NextPage = () => {
             },
           ],
           {
-            gasLimit: 100000,
+            // gasLimit: 100000,
             value,
           }
         )) as TransactionResponse
