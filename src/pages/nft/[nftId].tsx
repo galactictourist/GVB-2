@@ -22,9 +22,11 @@ import { givabitApi } from '~/services/givabit/api'
 import { CHAIN_ID } from '~/utils/constants'
 
 import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { sleep } from 'react-query/types/core/utils'
 import { useSelector } from 'react-redux'
 import { nftAbi } from '~/abi/erc721'
 import { marketAbi } from '~/abi/market'
+import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
 import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
 
@@ -64,6 +66,7 @@ const NftPage: NextPage = () => {
     chainId: CHAIN_ID,
   })
   const { data: signedData, signTypedData } = useSignTypedData()
+  const handleSaleStatus = useHandleSaleStatus();
 
   const [serverSignature, setServerSignature] = useState()
   const [saleData, setSaleData] = useState()
@@ -249,7 +252,7 @@ const NftPage: NextPage = () => {
       return
     }
 
-    const toastId = toast.loading('Unlist is in progress')
+    let toastId = toast.loading('Unlist is in progress')
 
     const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
@@ -260,7 +263,27 @@ const NftPage: NextPage = () => {
       ).wait()
       console.log(response)
 
-      toast.success('Unlist successed.', {
+      toastId = toast.loading('Confirming unlist transaction', {
+        id: toastId
+      })
+
+      for (let i = 0; i < 30; i++) {
+        const isFinished = await handleSaleStatus
+          .mutateAsync({
+            nftId: nftId as string,
+            actionStatus: "UNLIST"
+          })
+        if (isFinished) {
+          toast.success('Unlist successed.', {
+            id: toastId,
+          })
+          return;
+        }
+
+        await sleep(3000);
+      }
+
+      toast.error('Unlist confirmation failed.', {
         id: toastId,
       })
     } catch (ex) {
@@ -282,7 +305,7 @@ const NftPage: NextPage = () => {
       return
     }
 
-    const toastId = toast.loading('Buy NFT is in progress')
+    let toastId = toast.loading('Buy NFT is in progress')
 
     const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
@@ -309,7 +332,27 @@ const NftPage: NextPage = () => {
       ).wait()
       console.log(response)
 
-      toast.success('Buy NFT successed.', {
+      toastId = toast.loading('Confirming buy transaction', {
+        id: toastId
+      })
+
+      for (let i = 0; i < 30; i++) {
+        const isFinished = await handleSaleStatus
+          .mutateAsync({
+            nftId: nftId as string,
+            actionStatus: "BUY"
+          })
+        if (isFinished) {
+          toast.success('Buy NFT successed.', {
+            id: toastId,
+          })
+          return;
+        }
+
+        await sleep(3000);
+      }
+
+      toast.error('Buy confirmation failed.', {
         id: toastId,
       })
     } catch (ex) {

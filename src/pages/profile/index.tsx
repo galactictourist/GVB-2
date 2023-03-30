@@ -3,9 +3,10 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import MyCollectionsTab from '~/components/Profile/MyCollectionsTab'
+import MyNftsTab from '~/components/Profile/MyNftsTab'
 import { RootState } from '~/types'
 import Header from '../../components/Header'
 
@@ -16,6 +17,14 @@ function classNames(...classes: string[]) {
 const Profile: NextPage = () => {
   const router = useRouter()
   const { id, wallet } = useSelector((state: RootState) => state.auth)
+
+  const [walletAddress, setWalletAddress] = useState<string>()
+
+  useEffect(() => {
+    setWalletAddress(wallet ?? "-")
+  }, [
+    wallet
+  ])
 
   useEffect(() => {
     if (!id) {
@@ -44,7 +53,7 @@ const Profile: NextPage = () => {
           </div>
           <div className="py-8">
             <h2 className="text-2xl font-semibold">Unnamed</h2>
-            <p className="text-xl">{wallet ?? '-'}</p>
+            <h3 className="text-xl">{walletAddress}</h3>
           </div>
 
           <div className="w-full px-2 sm:px-0">
@@ -76,6 +85,9 @@ const Profile: NextPage = () => {
               <Tab.Panels className="mt-2">
                 <Tab.Panel>
                   <MyCollectionsTab />
+                </Tab.Panel>
+                <Tab.Panel>
+                  <MyNftsTab />
                 </Tab.Panel>
               </Tab.Panels>
             </Tab.Group>

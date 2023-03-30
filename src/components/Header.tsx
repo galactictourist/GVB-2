@@ -227,11 +227,6 @@ const HeaderNoSSR: React.FC<any> = () => {
                 Collection
               </div>
             </Link>
-            <Link href="/sales">
-              <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
-                Sales
-              </div>
-            </Link>
             <Link href="/admin/login">
               <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Admin
