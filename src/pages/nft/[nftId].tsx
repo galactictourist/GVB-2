@@ -311,6 +311,8 @@ const NftPage: NextPage = () => {
       return
     }
 
+    setBuyOpen(false)
+
     let toastId = toast.loading('Buy NFT is in progress')
 
     const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
