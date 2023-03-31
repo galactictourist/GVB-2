@@ -56,7 +56,7 @@ const actionItems = [
 const NftPage: NextPage = () => {
   const router = useRouter()
   const { nftId } = router.query
-  const { data: nft } = useNft({
+  const { data: nft, refetch: loadNft } = useNft({
     id: nftId as string,
   })
   const { id: userId } = useSelector((state: RootState) => state.auth)
@@ -89,6 +89,9 @@ const NftPage: NextPage = () => {
 
       if (listedSales.length > 0) {
         setSale(listedSales[0])
+      }
+      else {
+        setSale(undefined)
       }
     }
   }, [nft])
@@ -232,7 +235,7 @@ const NftPage: NextPage = () => {
         })
         .then((ret) => {
           toast.success('List nft successed.')
-          router.reload()
+          loadNft();
         })
         .catch((err) => {
           console.log(err)
@@ -276,7 +279,10 @@ const NftPage: NextPage = () => {
         if (isFinished) {
           toast.success('Unlist successed.', {
             id: toastId,
+            duration: 10000,
+            position: 'top-right'
           })
+          loadNft();
           return;
         }
 
@@ -345,7 +351,10 @@ const NftPage: NextPage = () => {
         if (isFinished) {
           toast.success('Buy NFT successed.', {
             id: toastId,
+            duration: 10000,
+            position: 'top-right'
           })
+          loadNft();
           return;
         }
 
