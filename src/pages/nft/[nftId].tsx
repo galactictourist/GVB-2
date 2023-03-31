@@ -22,13 +22,15 @@ import { givabitApi } from '~/services/givabit/api'
 import { CHAIN_ID } from '~/utils/constants'
 
 import { TransactionResponse } from '@ethersproject/abstract-provider'
+import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { nftAbi } from '~/abi/erc721'
 import { marketAbi } from '~/abi/market'
 import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
+import { useCharity } from '~/hooks/useCharity'
 import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
-import { sleep } from '~/utils'
+import { getEtherscan, shortify, sleep } from '~/utils'
 
 const style = {
   wrapper: `flex-col space-y-4 lg:py-8`,
@@ -59,6 +61,7 @@ const NftPage: NextPage = () => {
   const { data: nft, refetch: loadNft } = useNft({
     id: nftId as string,
   })
+
   const { id: userId } = useSelector((state: RootState) => state.auth)
 
   const { address } = useAccount()
@@ -72,6 +75,8 @@ const NftPage: NextPage = () => {
   const [saleData, setSaleData] = useState()
   const [sale, setSale] = useState<SaleEntity>()
   const [additionalAmount, setAdditionalAmount] = useState<string>()
+
+  const { data: charity } = useCharity(sale?.charityId)
 
   const {
     register,
@@ -386,13 +391,13 @@ const NftPage: NextPage = () => {
               <div className="flex w-[480px] flex-col space-y-4">
                 <div className="rounded-lg border">
                   <div className="flex items-center justify-between p-4">
-                    <Image height={20} width={20} src="/img/eth-logo.svg" alt="eth" />
+                    <Image height={20} width={20} src="/img/polygon-logo.svg" alt="polygon" />
                   </div>
 
                   <div className="relative h-96 w-full">
                     {nft.imageUrl && (
                       <Image
-                        className="absolute inset-0 rounded-b-lg"
+                        className="absolute rounded-b-lg"
                         src={`${nft.imageUrl}`}
                         layout="fill"
                         alt={nft.name}
@@ -424,29 +429,38 @@ const NftPage: NextPage = () => {
                   </div>
                 </div>
 
-                <div className="pt-6 text-4xl text-gray-900">{nft.name}</div>
+                <div className="pt-4 text-4xl text-gray-900">{nft.name}</div>
 
                 <div className="hidden lg:block">
-                  <div className="flex space-x-6 py-6">
-                    <div className="text-lg font-medium text-gray-500">
-                      Owned by{' '}
-                      <span className="text-n4gMediumTeal">
-                        {nft.owner?.name ?? nft.owner?.wallet}
-                      </span>
+                  <div className="flex space-x-2 py-2 text-lg font-medium">
+                    <div className="text-gray-500">
+                      Owned by
                     </div>
+                    <Link href={getEtherscan(nft.owner?.wallet)}>
+                      <a target="_blank">
+                        <div className="text-n4gMediumTeal hover:text-gray-600">
+                          {nft.owner?.name ?? shortify(nft.owner?.wallet)}
+                        </div>
+                      </a>
+                    </Link>
                   </div>
                 </div>
 
                 <div className="rounded-md border border-gray-200 p-4">
                   {nft.ownerId == userId ? (
                     sale ? (
-                      <button
-                        type="button"
-                        className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-red-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                        onClick={handleUnlist}
-                      >
-                        <span className="text-xl">Unlist</span>
-                      </button>
+                      <div className='flex gap-4 items-center'>
+                        <button
+                          type="button"
+                          className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-red-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                          onClick={handleUnlist}
+                        >
+                          <span className="text-xl">Unlist</span>
+                        </button>
+                        <span className='text-lg text-gray-600'>
+                          Charity: {charity?.name}
+                        </span>
+                      </div>
                     ) : (
                       <button
                         type="button"

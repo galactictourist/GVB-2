@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import Header from '~/components/Header'
 import { useHandleUpdateCollection } from '~/handlers/useHandleUpdateCollection'
-import { useAllCauses } from '~/hooks/useAllCauses'
+import { useChildCauses } from '~/hooks/useChildCauses'
 import { useCollection } from '~/hooks/useCollection'
 import { RootState } from '~/types'
 
@@ -18,7 +18,7 @@ export default function EditCollection() {
   const { id: userId } = useSelector((state: RootState) => state.auth)
   const [preview, setPreview] = useState<string>()
 
-  const { data: causes } = useAllCauses()
+  const { data: causes } = useChildCauses()
   const { data: collection, isLoading } = useCollection({
     id: collectionId as string,
   })
@@ -198,12 +198,16 @@ export default function EditCollection() {
                     Cause
                   </label>
                   <div className="mt-1">
-                    <select className="n4gForm h-10" {...register('cause')}>
+                    <select className="n4gForm h-10 capitalize" {...register('cause')}>
                       {causes &&
-                        causes.map((cause, idx) => (
-                          <option key={idx} value={cause.id}>
-                            {cause.name}
-                          </option>
+                        causes.map((cause) => (
+                          <optgroup label={cause.name} key={cause.id}>
+                            {cause.children.map((subcause) => (
+                              <option key={subcause.id} value={subcause.id} className="capitalize">
+                                {subcause.name}
+                              </option>
+                            ))}
+                          </optgroup>
                         ))}
                     </select>
                   </div>

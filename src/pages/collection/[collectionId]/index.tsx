@@ -9,6 +9,7 @@ import NftItem from '~/components/NftItem'
 import { useCollection } from '~/hooks/useCollection'
 import { useCollectionNfts } from '~/hooks/useCollectionNfts'
 import { RootState } from '~/types'
+import { getEtherscan, shortify } from '~/utils'
 
 export default function CollectionPage() {
   const router = useRouter()
@@ -45,6 +46,13 @@ export default function CollectionPage() {
                 <h3 className="flex items-center justify-center text-2xl text-gray-900">
                   {collection.description}
                 </h3>
+                <Link href={getEtherscan(collection.artistAddress)}>
+                  <a target="_blank">
+                    <div className="text-center text-xl text-gray-900 py-2 cursor-pointer">
+                      Artist: <span className='text-n4gMediumTeal hover:text-gray-600'>{shortify(collection.artistAddress)}</span>
+                    </div>
+                  </a>
+                </Link>
 
                 {collection.ownerId == userId && (
                   <div className="my-4 flex items-center justify-center gap-4">

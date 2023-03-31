@@ -15,9 +15,8 @@ const NftItem = ({ nft }: Props) => {
             <Image
               src={nft.imageUrl ?? '/img/image-placeholder.png'}
               alt={nft.name}
-              className="h-full w-full object-cover object-center group-hover:opacity-75"
-              layout="fill"
-            ></Image>
+              className="h-full w-full object-cover object-center group-hover:opacity-75 my-8"
+              layout="fill" />
           </div>
           <div className="absolute inset-x-0 top-0 flex h-72 items-end justify-end overflow-hidden rounded-lg p-4">
             <div

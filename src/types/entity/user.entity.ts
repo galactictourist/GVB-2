@@ -4,6 +4,6 @@ export interface UserEntity extends BaseEntity {
   countryCode: string
   name: string
   status: string
-  wallet: number
+  wallet: string
   imageUrl: string
 }
