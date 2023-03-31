@@ -22,13 +22,13 @@ import { givabitApi } from '~/services/givabit/api'
 import { CHAIN_ID } from '~/utils/constants'
 
 import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { sleep } from 'react-query/types/core/utils'
 import { useSelector } from 'react-redux'
 import { nftAbi } from '~/abi/erc721'
 import { marketAbi } from '~/abi/market'
 import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
 import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
+import { sleep } from '~/utils'
 
 const style = {
   wrapper: `flex-col space-y-4 lg:py-8`,
