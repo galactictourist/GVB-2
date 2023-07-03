@@ -17,7 +17,7 @@ import { RootState } from '~/types'
 import { classNames } from '~/utils'
 import { CHAIN_ID } from '~/utils/constants'
 import { formatWalletAddress } from '~/utils/wallet'
-import Logo from '../../public/img/givabit_full_logo2.svg'
+import Logo from '../../public/img/givabit_logo_v8.svg'
 
 const HeaderNoSSR: React.FC<any> = () => {
   const dispatch = useDispatch()
@@ -140,9 +140,8 @@ const HeaderNoSSR: React.FC<any> = () => {
 
   return (
     <Popover
-      className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${
-        !isScrolled && 'transition duration-700'
-      }`}
+      className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${!isScrolled && 'transition duration-700'
+        }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between  py-2 md:justify-start md:space-x-10">
