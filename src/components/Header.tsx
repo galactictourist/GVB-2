@@ -221,7 +221,7 @@ const HeaderNoSSR: React.FC<any> = () => {
                 Profile
               </div>
             </Link>
-            <Link href="/collection/create">
+            {/* <Link href="/collection/create">
               <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Collection
               </div>
@@ -230,7 +230,7 @@ const HeaderNoSSR: React.FC<any> = () => {
               <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Admin
               </div>
-            </Link>
+            </Link> */}
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
             {address ? (
