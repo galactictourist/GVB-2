@@ -14,15 +14,50 @@ const CausePage: NextPage = () => {
     id: causeId as string,
   })
 
+  const getCauseBgColor = (cause: string) => {
+    if (cause == 'Education') {
+      return '#000000'
+    } else if (cause == 'Health') {
+      return '#CC3835'
+    } else if (cause == 'Animal Welfare') {
+      return '#F2D265'
+    } else if (cause == 'Human Services') {
+      return '#D7DEDB'
+    } else if (cause == 'Art & Culture') {
+      return '#24A1BA'
+    } else if (cause == 'Environment') {
+      return '#107942'
+    }
+
+    return '#FFFFFF'
+  }
+
+  const getCauseTextColor = (cause: string) => {
+    if (cause == 'Human Services' || cause == 'Animal Welfare') {
+      return '#000000'
+    }
+
+    return '#FFFFFF'
+  }
+
+
   return (
     <>
       <Header />
       <div className="mx-auto min-h-[calc(100vh-320px)] max-w-2xl py-16 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         {cause && (
           <>
-            <h2 className="flex items-center justify-center p-4 text-4xl text-gray-900">
-              {cause.name}
-            </h2>
+            <div className="flex items-center justify-center p-4 text-4xl text-gray-900">
+              <h2
+                className="rounded-3xl py-3 px-6 text-center font-bold"
+                style={{
+                  color: getCauseTextColor(cause.name),
+                  background: getCauseBgColor(cause.name),
+                  width: '400px'
+                }}>
+                {cause.name}
+              </h2>
+            </div>
             <h3 className="mb-8 flex items-center justify-center  text-xl text-gray-900">
               These are all NFT collections belonging to {cause.name}. Please click on any of them
               for additional information.
