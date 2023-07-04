@@ -13,7 +13,7 @@ import { getEtherscan, shortify } from '~/utils'
 
 export default function CollectionPage() {
   const router = useRouter()
-  const { collectionId } = router.query
+  const { collectionId, cause, causeId } = router.query
 
   const { id: userId } = useSelector((state: RootState) => state.auth)
 
@@ -23,6 +23,32 @@ export default function CollectionPage() {
   const { data: nfts, isLoading } = useCollectionNfts({
     id: collectionId as string,
   })
+
+  const getCauseBgColor = (cause: string | undefined | string[]) => {
+    if (cause == 'Education') {
+      return '#000000'
+    } else if (cause == 'Health') {
+      return '#CC3835'
+    } else if (cause == 'Animal Welfare') {
+      return '#F2D265'
+    } else if (cause == 'Human Services') {
+      return '#D7DEDB'
+    } else if (cause == 'Art & Culture') {
+      return '#24A1BA'
+    } else if (cause == 'Environment') {
+      return '#107942'
+    }
+
+    return '#FFFFFF'
+  }
+
+  const getCauseTextColor = (cause: string | undefined | string[]) => {
+    if (cause == 'Human Services' || cause == 'Animal Welfare') {
+      return '#000000'
+    }
+
+    return '#FFFFFF'
+  }
 
   return (
     <>
@@ -40,19 +66,35 @@ export default function CollectionPage() {
           ) : (
             collection && (
               <>
-                <h2 className="flex items-center justify-center p-4 text-4xl text-gray-900">
-                  {collection.name}
-                </h2>
-                <h3 className="flex items-center justify-center text-2xl text-gray-900">
-                  {collection.description}
-                </h3>
-                <Link href={getEtherscan(collection.artistAddress)}>
-                  <a target="_blank">
-                    <div className="text-center text-xl text-gray-900 py-2 cursor-pointer">
-                      Artist: <span className='text-n4gMediumTeal hover:text-gray-600'>{shortify(collection.artistAddress)}</span>
-                    </div>
-                  </a>
-                </Link>
+                <div className="flex justify-center relative">
+                  <div className="max-w-[calc(100%-350px)]">
+                    <h2 className="flex items-center justify-center p-4 text-4xl text-gray-900">
+                      {collection.name}
+                    </h2>
+                    <h3 className="flex items-center justify-center text-2xl text-gray-900 text-center">
+                      {collection.description}
+                    </h3>
+                  </div>
+                  <div className="absolute right-0 bottom-0">
+                    <Link href={getEtherscan(collection.artistAddress)}>
+                      <a target="_blank">
+                        <div className="text-center text-xl text-gray-900 py-2 cursor-pointer">
+                          Artist: <span className='text-n4gMediumTeal hover:text-gray-600'>{shortify(collection.artistAddress)}</span>
+                        </div>
+                      </a>
+                    </Link>
+                    <Link href={`/cause/${causeId}`}>
+                      <h2
+                        className="flex justify-center rounded-3xl p-2 text-xl cursor-pointer"
+                        style={{
+                          color: getCauseTextColor(cause),
+                          background: getCauseBgColor(cause),
+                        }}>
+                        {cause}
+                      </h2>
+                    </Link>
+                  </div>
+                </div>
 
                 {collection.ownerId == userId && (
                   <div className="my-4 flex items-center justify-center gap-4">
