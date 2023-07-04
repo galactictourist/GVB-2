@@ -8,6 +8,31 @@ import Header from '../components/Header'
 
 const Home: NextPage = () => {
   const { data: causes } = useCauseCollections()
+  const getCauseBgColor = (cause: string) => {
+    if (cause == 'Education') {
+      return '#000000'
+    } else if (cause == 'Health') {
+      return '#CC3835'
+    } else if (cause == 'Animal Welfare') {
+      return '#F2D265'
+    } else if (cause == 'Human Services') {
+      return '#D7DEDB'
+    } else if (cause == 'Art & Culture') {
+      return '#24A1BA'
+    } else if (cause == 'Environment') {
+      return '#107942'
+    }
+
+    return '#FFFFFF'
+  }
+
+  const getCauseTextColor = (cause: string) => {
+    if (cause == 'Human Services' || cause == 'Animal Welfare') {
+      return '#000000'
+    }
+
+    return '#FFFFFF'
+  }
 
   return (
     <>
@@ -23,9 +48,17 @@ const Home: NextPage = () => {
               (cause) =>
                 cause.collections.length > 0 && (
                   <div key={cause.id}>
-                    <h2 className="flex items-center justify-center p-4 text-3xl text-gray-900">
-                      {cause.name}
-                    </h2>
+                    <div className="flex itemoks-center justify-center p-4 text-2xl text-gray-900">
+                      <h2
+                        className="rounded-3xl py-2 px-6 text-center"
+                        style={{
+                          color: getCauseTextColor(cause.name),
+                          background: getCauseBgColor(cause.name),
+                          width: '300px'
+                        }}>
+                        {cause.name}
+                      </h2>
+                    </div>
                     <div className="mt-4 grid grid-cols-1 gap-y-12 pb-10 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
                       {cause.collections.map((collection) => (
                         <Link href={`/collection/${collection.id}`} key={collection.id}>
