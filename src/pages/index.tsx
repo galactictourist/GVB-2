@@ -61,7 +61,7 @@ const Home: NextPage = () => {
                     </div>
                     <div className="mt-4 grid grid-cols-1 gap-y-12 pb-10 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
                       {cause.collections.map((collection) => (
-                        <Link href={`/collection/${collection.id}?cause=${cause.name}&causeId=${cause.id}`} key={collection.id}>
+                        <Link href={`/collection/${collection.id}`} key={collection.id}>
                           <div className="group relative cursor-pointer">
                             <div className="relative h-48 overflow-hidden rounded-lg">
                               <Image

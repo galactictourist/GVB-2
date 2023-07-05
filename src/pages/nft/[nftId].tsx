@@ -5,14 +5,14 @@ import {
   LinkIcon,
   ShareIcon
 } from '@heroicons/react/24/outline'
-import { BigNumber, Contract, ethers, Signer } from 'ethers'
+import { BigNumber, Contract, Signer, ethers } from 'ethers'
 import { NextPage } from 'next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useAccount, useSigner, useSignTypedData } from 'wagmi'
+import { useAccount, useSignTypedData, useSigner } from 'wagmi'
 import Footer from '~/components/Footer'
 import { CharityList } from '~/components/Form/CharityList'
 import Header from '~/components/Header'
@@ -394,7 +394,7 @@ const NftPage: NextPage = () => {
                     <Image height={20} width={20} src="/img/polygon-logo.svg" alt="polygon" />
                   </div>
 
-                  <div className="relative h-96 w-full">
+                  <div className="relative h-[480px]">
                     {nft.imageUrl && (
                       <Image
                         className="absolute rounded-b-lg"

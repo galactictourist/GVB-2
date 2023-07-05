@@ -13,7 +13,7 @@ import { getEtherscan, shortify } from '~/utils'
 
 export default function CollectionPage() {
   const router = useRouter()
-  const { collectionId, cause, causeId } = router.query
+  const { collectionId } = router.query
 
   const { id: userId } = useSelector((state: RootState) => state.auth)
 
@@ -83,14 +83,14 @@ export default function CollectionPage() {
                         </div>
                       </a>
                     </Link>
-                    <Link href={`/cause/${causeId}`}>
+                    <Link href={`/cause/${collection.topic.parentId}`}>
                       <h2
                         className="flex justify-center rounded-3xl p-2 text-xl cursor-pointer"
                         style={{
-                          color: getCauseTextColor(cause),
-                          background: getCauseBgColor(cause),
+                          color: getCauseTextColor(collection.cause),
+                          background: getCauseBgColor(collection.cause),
                         }}>
-                        {cause}
+                        {collection.cause}
                       </h2>
                     </Link>
                   </div>

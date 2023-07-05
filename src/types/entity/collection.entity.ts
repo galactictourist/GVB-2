@@ -1,4 +1,5 @@
 import { BaseEntity } from './base.entity'
+import { TopicEntity } from './topic.entity'
 
 export enum CollectionStatus {
   ACTIVE = 'ACTIVE',
@@ -14,4 +15,6 @@ export interface CollectionEntity extends BaseEntity {
   ownerId: string
   topicId: string
   status: string
+  cause: string
+  topic: TopicEntity
 }
