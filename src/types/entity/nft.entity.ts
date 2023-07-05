@@ -1,6 +1,7 @@
 import { BaseEntity } from './base.entity'
 import { CollectionEntity } from './collection.entity'
 import { SaleEntity } from './sale.entity'
+import { TopicEntity } from './topic.entity'
 import { UserEntity } from './user.entity'
 export enum BlockchainNetwork {
   ETHEREUM = 'ETHEREUM',
@@ -46,4 +47,5 @@ export interface NftEntity extends BaseEntity {
 
   collection?: CollectionEntity
   owner?: UserEntity
+  cause?: TopicEntity
 }

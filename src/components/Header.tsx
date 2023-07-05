@@ -14,7 +14,7 @@ import { useAllCauses } from '~/hooks/useAllCauses'
 import { metamaskConnector } from '~/providers/Web3ContextProvider'
 import { signOut, verifySignature } from '~/redux/slices/authSlice'
 import { RootState } from '~/types'
-import { classNames } from '~/utils'
+import { classNames, getCauseBgColor, getCauseTextColor } from '~/utils'
 import { CHAIN_ID } from '~/utils/constants'
 import { formatWalletAddress } from '~/utils/wallet'
 import Logo from '../../public/img/givabit_logo_v8.svg'
@@ -110,32 +110,6 @@ const HeaderNoSSR: React.FC<any> = () => {
   const handleDisconnect = () => {
     disconnect()
     dispatch(signOut())
-  }
-
-  const getCauseBgColor = (cause: string) => {
-    if (cause == 'Education') {
-      return '#000000'
-    } else if (cause == 'Health') {
-      return '#CC3835'
-    } else if (cause == 'Animal Welfare') {
-      return '#F2D265'
-    } else if (cause == 'Human Services') {
-      return '#D7DEDB'
-    } else if (cause == 'Art & Culture') {
-      return '#24A1BA'
-    } else if (cause == 'Environment') {
-      return '#107942'
-    }
-
-    return '#FFFFFF'
-  }
-
-  const getCauseTextColor = (cause: string) => {
-    if (cause == 'Human Services' || cause == 'Animal Welfare') {
-      return '#000000'
-    }
-
-    return '#FFFFFF'
   }
 
   return (

@@ -1,10 +1,4 @@
 import { Dialog, Transition } from '@headlessui/react'
-import {
-  ArrowPathIcon,
-  EllipsisVerticalIcon,
-  LinkIcon,
-  ShareIcon
-} from '@heroicons/react/24/outline'
 import { BigNumber, Contract, Signer, ethers } from 'ethers'
 import { NextPage } from 'next'
 import Image from 'next/image'
@@ -30,7 +24,10 @@ import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
 import { useCharity } from '~/hooks/useCharity'
 import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
-import { getEtherscan, shortify, sleep } from '~/utils'
+import { getCauseBgColor, getCauseTextColor, getEtherscan, shortify, sleep } from '~/utils'
+import FacebookIcon from '../../../public/img/facebook.svg'
+import InstagramIcon from '../../../public/img/instagram.svg'
+import TwitterIcon from '../../../public/img/twitter.svg'
 
 const style = {
   wrapper: `flex-col space-y-4 lg:py-8`,
@@ -42,16 +39,13 @@ const style = {
 
 const actionItems = [
   {
-    icon: <ArrowPathIcon className={style.icon} />,
+    icon: <Image src={FacebookIcon} alt="facebook" width={30} height={30} />,
   },
   {
-    icon: <LinkIcon className={style.icon} />,
+    icon: <Image src={TwitterIcon} alt="twitter" width={30} height={30} />,
   },
   {
-    icon: <ShareIcon className={style.icon} />,
-  },
-  {
-    icon: <EllipsisVerticalIcon className={style.icon} />,
+    icon: <Image src={InstagramIcon} alt="instagram" width={30} height={30} />,
   },
 ]
 
@@ -414,25 +408,29 @@ const NftPage: NextPage = () => {
               <div className={style.rightContainer}>
                 <div className="flex items-center justify-between">
                   <div className="text-lg font-semibold text-n4gMediumTeal">
-                    {nft.collection?.name ?? ''}
+                    <Link href={`/collection/${nft.collection?.id}`}>
+                      {nft.collection?.name ?? ''}
+                    </Link>
+                  </div>
+                  <div className="flex itemoks-center justify-center p-4 text-2xl text-gray-900">
+                    <Link href={`/cause/${nft.cause?.id}`}>
+                      <h2
+                        className="rounded-3xl py-2 px-6 text-center cursor-pointer"
+                        style={{
+                          color: getCauseTextColor(nft.cause?.name || ''),
+                          background: getCauseBgColor(nft.cause?.name || ''),
+                        }}>
+                        {nft.cause?.name ?? ''}
+                      </h2>
+                    </Link>
                   </div>
 
-                  <div className="flex divide-x divide-gray-300 rounded-lg border border-gray-300">
-                    {actionItems.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex cursor-pointer items-center justify-center p-3"
-                      >
-                        {item.icon}
-                      </div>
-                    ))}
-                  </div>
                 </div>
 
                 <div className="pt-4 text-4xl text-gray-900">{nft.name}</div>
 
-                <div className="hidden lg:block">
-                  <div className="flex space-x-2 py-2 text-lg font-medium">
+                <div className="lg:flex hidden justify-between">
+                  <div className="flex space-x-2 py-2 text-lg font-medium items-center">
                     <div className="text-gray-500">
                       Owned by
                     </div>
@@ -443,6 +441,16 @@ const NftPage: NextPage = () => {
                         </div>
                       </a>
                     </Link>
+                  </div>
+                  <div className="flex divide-x divide-gray-300 rounded-lg border border-gray-300">
+                    {actionItems.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex cursor-pointer items-center justify-center p-3"
+                      >
+                        {item.icon}
+                      </div>
+                    ))}
                   </div>
                 </div>
 

@@ -9,7 +9,7 @@ import NftItem from '~/components/NftItem'
 import { useCollection } from '~/hooks/useCollection'
 import { useCollectionNfts } from '~/hooks/useCollectionNfts'
 import { RootState } from '~/types'
-import { getEtherscan, shortify } from '~/utils'
+import { getCauseBgColor, getCauseTextColor, getEtherscan, shortify } from '~/utils'
 
 export default function CollectionPage() {
   const router = useRouter()
@@ -23,32 +23,6 @@ export default function CollectionPage() {
   const { data: nfts, isLoading } = useCollectionNfts({
     id: collectionId as string,
   })
-
-  const getCauseBgColor = (cause: string | undefined | string[]) => {
-    if (cause == 'Education') {
-      return '#000000'
-    } else if (cause == 'Health') {
-      return '#CC3835'
-    } else if (cause == 'Animal Welfare') {
-      return '#F2D265'
-    } else if (cause == 'Human Services') {
-      return '#D7DEDB'
-    } else if (cause == 'Art & Culture') {
-      return '#24A1BA'
-    } else if (cause == 'Environment') {
-      return '#107942'
-    }
-
-    return '#FFFFFF'
-  }
-
-  const getCauseTextColor = (cause: string | undefined | string[]) => {
-    if (cause == 'Human Services' || cause == 'Animal Welfare') {
-      return '#000000'
-    }
-
-    return '#FFFFFF'
-  }
 
   return (
     <>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Footer from '~/components/Footer'
 import Header from '~/components/Header'
 import { useCause } from '~/hooks/useCause'
+import { getCauseBgColor, getCauseTextColor } from '~/utils'
 
 const CausePage: NextPage = () => {
   const router = useRouter()
@@ -13,33 +14,6 @@ const CausePage: NextPage = () => {
   const { data: cause } = useCause({
     id: causeId as string,
   })
-
-  const getCauseBgColor = (cause: string) => {
-    if (cause == 'Education') {
-      return '#000000'
-    } else if (cause == 'Health') {
-      return '#CC3835'
-    } else if (cause == 'Animal Welfare') {
-      return '#F2D265'
-    } else if (cause == 'Human Services') {
-      return '#D7DEDB'
-    } else if (cause == 'Art & Culture') {
-      return '#24A1BA'
-    } else if (cause == 'Environment') {
-      return '#107942'
-    }
-
-    return '#FFFFFF'
-  }
-
-  const getCauseTextColor = (cause: string) => {
-    if (cause == 'Human Services' || cause == 'Animal Welfare') {
-      return '#000000'
-    }
-
-    return '#FFFFFF'
-  }
-
 
   return (
     <>
