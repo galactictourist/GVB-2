@@ -498,6 +498,19 @@ const NftPage: NextPage = () => {
                   )}
                 </div>
 
+                {sale && <div className="rounded-md border border-gray-200 p-4">
+                  <p className="pb-4">Clarity</p>
+                  <div className="w-full bg-neutral-200 flex rounded-full bg-black">
+                    <div className={`p-3 justify-center text-white text-xs font-medium leading-none text-primary w-[${100 - Number(sale.charityShare / 100)}%] flex`}>
+                      {(Number(sale.price) * (100 - Number(sale.charityShare) / 100) / 100).toFixed(2)}
+                    </div>
+                    <div className={`bg-blue-500 p-3 justify-center text-xs text-white font-medium leading-none text-primary w-[${Number(sale.charityShare / 100)}%] flex rounded-full`}>
+                      {(Number(sale.price) * Number(sale.charityShare) / 100 / 100).toFixed(2)}
+                    </div>
+                  </div>
+                  <p className="text-right pt-2 font-bold">={Number(sale.price)}</p>
+                </div>}
+
                 <div className="rounded-md border border-gray-200">
                   <div className="p-4">
                     <p className="text-lg">Item Activity</p>

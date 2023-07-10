@@ -76,6 +76,7 @@ const CollectionAddPage: NextPage = () => {
                 name: data.name,
                 description: data.description,
                 network: 'POLYGON_MUMBAI',
+                collectionId: collectionId,
                 metadata: {
                   external_url: data.external_url,
                   youtube_url: data.youtube_url,
