@@ -22,6 +22,7 @@ import { nftAbi } from '~/abi/erc721'
 import { marketAbi } from '~/abi/market'
 import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
 import { useCharity } from '~/hooks/useCharity'
+import { useProfile } from '~/hooks/useProfile'
 import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
 import { getCauseBgColor, getCauseTextColor, getEtherscan, shortify, sleep } from '~/utils'
@@ -39,13 +40,13 @@ const style = {
 
 const actionItems = [
   {
-    icon: <Image src={FacebookIcon} alt="facebook" width={30} height={30} />,
+    icon: <Image src={FacebookIcon} alt="facebook" width={30} height={30} />, name: 'facebook',
   },
   {
-    icon: <Image src={TwitterIcon} alt="twitter" width={30} height={30} />,
+    icon: <Image src={TwitterIcon} alt="twitter" width={30} height={30} />, name: 'twitter',
   },
   {
-    icon: <Image src={InstagramIcon} alt="instagram" width={30} height={30} />,
+    icon: <Image src={InstagramIcon} alt="instagram" width={30} height={30} />, name: 'instagram',
   },
 ]
 
@@ -57,6 +58,8 @@ const NftPage: NextPage = () => {
   })
 
   const { id: userId } = useSelector((state: RootState) => state.auth)
+
+  const { data: prof } = useProfile({ id: userId })
 
   const { address } = useAccount()
   const { data: signer } = useSigner({
@@ -95,6 +98,12 @@ const NftPage: NextPage = () => {
     }
   }, [nft])
 
+  const getSocialUrl = (data: any, key: string) => {
+    if (data && data.socialMedia) {
+      return data.socialMedia[key]
+    }
+    return ''
+  }
   const [isListOpen, setListOpen] = useState<boolean>(false)
   const [isBuyOpen, setBuyOpen] = useState<boolean>(false)
 
@@ -444,12 +453,15 @@ const NftPage: NextPage = () => {
                   </div>
                   <div className="flex divide-x divide-gray-300 rounded-lg border border-gray-300">
                     {actionItems.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex cursor-pointer items-center justify-center p-3"
-                      >
-                        {item.icon}
-                      </div>
+                      <Link key={index} href={getSocialUrl(prof, item.name)}>
+                        <a target="_blank">
+                          <div
+                            className="flex cursor-pointer items-center justify-center p-3"
+                          >
+                            {item.icon}
+                          </div>
+                        </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
