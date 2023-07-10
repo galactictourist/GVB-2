@@ -6,4 +6,6 @@ export interface UserEntity extends BaseEntity {
   status: string
   wallet: string
   imageUrl: string
+  description: string
+  socialMedia: object
 }

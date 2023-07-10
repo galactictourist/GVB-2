@@ -64,6 +64,7 @@ const CollectionAddPage: NextPage = () => {
     handleUploadImage.mutate(
       {
         image: data.image,
+        postUrl: '/storage/nft/image'
       },
       {
         onSuccess(resp) {
