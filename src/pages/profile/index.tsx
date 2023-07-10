@@ -122,7 +122,7 @@ const Profile: NextPage = () => {
     if (data && data.socialMedia) {
       return data.socialMedia[key]
     }
-    return '/'
+    return ''
   }
 
   return (
