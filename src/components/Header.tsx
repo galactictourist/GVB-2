@@ -170,10 +170,9 @@ const HeaderNoSSR: React.FC<any> = () => {
                               causes.map((cause) => (
                                 <Link key={cause.id} href={`/cause/${cause.id}`}>
                                   <div
-                                    className="-m-3 flex cursor-pointer items-center rounded-3xl py-3 px-6 text-white transition duration-700 hover:opacity-50"
+                                    className={`-m-3 flex cursor-pointer items-center rounded-3xl py-3 px-6 text-white transition duration-700 hover:opacity-50 ${getCauseBgColor(cause.name)}`}
                                     style={{
                                       color: getCauseTextColor(cause.name),
-                                      background: getCauseBgColor(cause.name),
                                     }}
                                     onClick={() => close()}
                                   >

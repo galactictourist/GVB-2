@@ -18,7 +18,12 @@ module.exports = {
         n4gDarkGray: '#374151',
         n4gMediumGray: '#6b7280,',
         n4gLightGray: '#e5e7eb',
-        n4gRed: '#c6494d',
+        n4gRed: '#cc3835',
+        n4gOrange: '#e5a144',
+        n4gGray: '#d7dedb',
+        n4gWhite: '#ffffff',
+        n4gBlack: '#000000',
+        n4gGreen: '#107942',
       },
       fontFamily: {
         body: ['Poppins', 'sans-serif'],
@@ -26,4 +31,7 @@ module.exports = {
     },
   },
   plugins: [require('@tailwindcss/forms')],
+  safelist: [{
+    pattern: /bg-+/, //
+  }]
 }

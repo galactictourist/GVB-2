@@ -421,13 +421,12 @@ const NftPage: NextPage = () => {
                       {nft.collection?.name ?? ''}
                     </Link>
                   </div>
-                  <div className="flex itemoks-center justify-center p-4 text-2xl text-gray-900">
+                  <div className="flex itemoks-center justify-center p-4 text-xl text-gray-900">
                     <Link href={`/cause/${nft.cause?.id}`}>
                       <h2
-                        className="rounded-3xl py-2 px-6 text-center cursor-pointer"
+                        className={`rounded-full py-1 px-4 text-center cursor-pointer ${getCauseBgColor(nft.cause?.name || '')}`}
                         style={{
                           color: getCauseTextColor(nft.cause?.name || ''),
-                          background: getCauseBgColor(nft.cause?.name || ''),
                         }}>
                         {nft.cause?.name ?? ''}
                       </h2>
