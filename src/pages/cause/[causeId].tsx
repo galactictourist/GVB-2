@@ -21,13 +21,12 @@ const CausePage: NextPage = () => {
       <div className="mx-auto min-h-[calc(100vh-320px)] max-w-2xl py-16 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         {cause && (
           <>
-            <div className="flex items-center justify-center p-4 text-4xl text-gray-900">
+            <div className="flex items-center justify-center p-4 text-2xl text-gray-900">
               <h2
-                className="rounded-3xl py-3 px-6 text-center font-bold"
+                className={`rounded-full py-2 px-4 text-center font-bold ${getCauseBgColor(cause.name)}`}
                 style={{
                   color: getCauseTextColor(cause.name),
-                  background: getCauseBgColor(cause.name),
-                  width: '400px'
+                  minWidth: '250px'
                 }}>
                 {cause.name}
               </h2>

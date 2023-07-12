@@ -59,10 +59,9 @@ export default function CollectionPage() {
                     </Link>
                     <Link href={`/cause/${collection.topic.parentId}`}>
                       <h2
-                        className="flex justify-center rounded-3xl p-2 text-xl cursor-pointer"
+                        className={`flex justify-center rounded-3xl p-2 text-xl cursor-pointer ${getCauseBgColor(collection.cause)}`}
                         style={{
                           color: getCauseTextColor(collection.cause),
-                          background: getCauseBgColor(collection.cause),
                         }}>
                         {collection.cause}
                       </h2>

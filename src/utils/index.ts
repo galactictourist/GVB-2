@@ -14,17 +14,17 @@ export const getEtherscan = (address: string | undefined) => {
 
 export const getCauseBgColor = (cause: string) => {
   if (cause == 'Education') {
-    return '#000000'
+    return 'bg-n4gBlack'
   } else if (cause == 'Health') {
-    return '#CC3835'
+    return 'bg-n4gRed'
   } else if (cause == 'Animal Welfare') {
-    return '#F2D265'
+    return 'bg-n4gOrange'
   } else if (cause == 'Human Services') {
-    return '#D7DEDB'
+    return 'bg-n4gGray'
   } else if (cause == 'Art & Culture') {
-    return '#24A1BA'
+    return 'bg-n4gMediumTeal'
   } else if (cause == 'Environment') {
-    return '#107942'
+    return 'bg-n4gGreen'
   }
 
   return '#FFFFFF'

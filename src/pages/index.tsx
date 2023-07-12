@@ -26,11 +26,10 @@ const Home: NextPage = () => {
                   <div key={cause.id}>
                     <div className="flex itemoks-center justify-center p-4 text-2xl text-gray-900">
                       <h2
-                        className="rounded-3xl py-2 px-6 text-center font-bold"
+                        className={`rounded-full py-2 px-4 text-center font-bold ${getCauseBgColor(cause.name)}`}
                         style={{
                           color: getCauseTextColor(cause.name),
-                          background: getCauseBgColor(cause.name),
-                          width: '300px'
+                          minWidth: '250px'
                         }}>
                         {cause.name}
                       </h2>
