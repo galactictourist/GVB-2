@@ -1,10 +1,11 @@
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { Bars3Icon, ListBulletIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { signMessage } from '@wagmi/core'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
@@ -21,6 +22,7 @@ import Logo from '../../public/img/givabit_logo_v8.svg'
 
 const HeaderNoSSR: React.FC<any> = () => {
   const dispatch = useDispatch()
+  const router = useRouter()
   const { wallet, loading } = useSelector((state: RootState) => state.auth)
 
   const handleCreateNonce = useHandleCreateNonce()
@@ -189,11 +191,11 @@ const HeaderNoSSR: React.FC<any> = () => {
               )}
             </Popover>
 
-            <Link href="/profile/">
+            {/* <Link href="/profile/">
               <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Profile
               </div>
-            </Link>
+            </Link> */}
             {/* <Link href="/collection/create">
               <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Collection
@@ -230,12 +232,10 @@ const HeaderNoSSR: React.FC<any> = () => {
                 >
                   <Menu.Items className="absolute right-0 mt-2 flex w-48 flex-col gap-4 rounded-md bg-white px-4 py-2 shadow-lg">
                     <Menu.Item>
-                      <Link href="/profile/collections">
-                        <button type="button" className="flex items-center gap-2">
-                          <ListBulletIcon className="h-6 w-6" />
-                          My Collections
-                        </button>
-                      </Link>
+                      <button type="button" className="flex items-center gap-2" onClick={() => router.push("/profile")}>
+                        <UserIcon className="h-6 w-6" />
+                        My Account
+                      </button>
                     </Menu.Item>
                     <Menu.Item>
                       <button
@@ -320,7 +320,7 @@ const HeaderNoSSR: React.FC<any> = () => {
                 </div>
               </div>
               <div className="space-y-6 py-6 px-5">
-                <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+                {/* <div className="grid grid-cols-2 gap-y-4 gap-x-8">
                   <Link href="/profile/">
                     <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
                       Profile
@@ -336,7 +336,7 @@ const HeaderNoSSR: React.FC<any> = () => {
                       Admin
                     </div>
                   </Link>
-                </div>
+                </div> */}
                 <div>
                   {address ? (
                     <div className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
