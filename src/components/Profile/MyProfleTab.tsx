@@ -79,7 +79,7 @@ const MyProfileTab = ({ profile, updateUser }: Props) => {
         <div className="p-5 bg-n4gMediumTeal rounded-lg">
           <p className="px-4 py-2 text-n4gWhite font-bold text-xl">Basic</p>
           <div className="flex justify-center">
-            <div className="group relative h-30 w-30 rounded-full shadow-lg xl:h-40 xl:w-40 overflow-hidden bg-n4gWhite">
+            <div className="group relative h-[6rem] w-[6rem] rounded-full shadow-lg lg:h-40 lg:w-40 overflow-hidden bg-n4gWhite">
               <Image
                 src={getAvatar()}
                 alt="Avatar"

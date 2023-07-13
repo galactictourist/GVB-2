@@ -83,7 +83,7 @@ const Profile: NextPage = () => {
 
       <div className="mx-auto max-w-2xl px-10 pt-32 lg:max-w-7xl">
         <div className="">
-          <div className="flex p-4">
+          <div className="flex p-4 lg:flex-row flex-col items-center">
             <div className="group relative h-40 w-40 rounded-full shadow-lg xl:h-56 xl:w-56 overflow-hidden">
               <Image
                 src={profile?.imageUrl || previewAvatar}
@@ -93,8 +93,8 @@ const Profile: NextPage = () => {
               />
             </div>
             <div className="flex flex-col p-8 justify-center">
-              <h2 className="text-4xl font-semibold p-3">{profile?.name || 'Unnamed'}</h2>
-              <h3 className="text-xl px-3 text-blue-700">{walletAddress}</h3>
+              <h2 className="text-3xl lg:text-4xl font-semibold p-3">{profile?.name || 'Unnamed'}</h2>
+              <h3 className="text-md lg:text-xl px-3 text-blue-700">{walletAddress}</h3>
               <div className="w-full px-3 pt-3">
                 <div className="text-md text-gray-400">{profile?.description || ''}</div>
               </div>
