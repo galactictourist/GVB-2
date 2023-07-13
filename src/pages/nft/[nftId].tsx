@@ -27,6 +27,7 @@ import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
 import { getCauseBgColor, getCauseTextColor, getEtherscan, shortify, sleep } from '~/utils'
 import FacebookIcon from '../../../public/img/facebook.svg'
+import GivabitHeart from '../../../public/img/givabit_heart.svg'
 import InstagramIcon from '../../../public/img/instagram.svg'
 import TwitterIcon from '../../../public/img/twitter.svg'
 
@@ -73,6 +74,10 @@ const NftPage: NextPage = () => {
   const [sale, setSale] = useState<SaleEntity>()
   const [additionalAmount, setAdditionalAmount] = useState<string>()
 
+  // range slider
+  const [rangeValue, setRangeValue] = useState<number>(0)
+  const [rangeMaxValue, setRangeMaxValue] = useState<number>(0)
+
   const { data: charity } = useCharity(sale?.charityId)
 
   const {
@@ -82,6 +87,10 @@ const NftPage: NextPage = () => {
     watch,
     formState: { errors },
   } = useForm()
+
+  useEffect(() => {
+    setRangeMaxValue(Number(sale?.price ?? 0))
+  }, [sale])
 
   useEffect(() => {
     if (nft) {
@@ -114,6 +123,21 @@ const NftPage: NextPage = () => {
   const handleBuyOpen = () => {
     setAdditionalAmount(undefined)
     setBuyOpen(true)
+  }
+
+  const handleRangeValue = (e: any) => {
+    setRangeValue(Number(e.target.value))
+    setRangeMaxValue(Number(sale?.price ?? 0) + Number(e.target.value))
+  }
+
+  const calcCharityPercent = () => {
+    const charity = Number(sale?.price) * Number(sale?.charityShare) / 10000
+    return charity / rangeMaxValue * 100
+  }
+
+  const calcArtPercent = () => {
+    const charity = Number(sale?.price) * Number(sale?.charityShare) / 10000
+    return (rangeMaxValue - charity - rangeValue) / rangeMaxValue * 100
   }
 
   const onSubmitList = (data: any) => {
@@ -490,37 +514,75 @@ const NftPage: NextPage = () => {
                       </button>
                     )
                   ) : sale ? (
-                    <>
-                      <div className="mb-4">
-                        <span className="text-2xl font-semibold">
-                          {parseFloat(sale.price)} MATIC
-                        </span>
+                    <div className="flex w-full">
+                      <div className="flex flex-col">
+                        <div className="mb-4">
+                          <span className="text-2xl font-semibold">
+                            {rangeMaxValue} MATIC
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                          onClick={handleBuyOpen}
+                        >
+                          <span className="text-xl">Buy</span>
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                        onClick={handleBuyOpen}
-                      >
-                        <span className="text-xl">Buy</span>
-                      </button>
-                    </>
+                      <div className="flex flex-1 flex-col">
+                        <div className="flex justify-between pl-[60px] pr-[70px]">
+                          <div className="flex text-xl items-center">
+                            <span className="pr-2">Charity:</span>
+                            <span className="text-n4gMediumTeal">{Number(sale?.price) * Number(sale?.charityShare) / 10000}+</span>
+                            <input
+                              type="number"
+                              value={rangeValue}
+                              onChange={(e) => handleRangeValue(e)}
+                              className="text-xl n4gForm w-[100px] p-[5px]"
+                            />
+                          </div>
+                          <div className="flex items-center">
+                            <span className="text-black text-xl pr-2">Art:</span>
+                            <span className="text-black font-bold text-xl">{Number(sale?.price) * (1 - Number(sale?.charityShare) / 10000)}</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col flex-1 relative items-center justify-center pl-[60px] pr-[70px]">
+                          <div className="flex p-2 items-end absolute left-0">
+                            <Image src={GivabitHeart} alt="givabit heart small" width={"50px"} height={"40px"} />
+                          </div>
+                          <div className="flex p-2 items-end absolute right-0">
+                            <Image src={GivabitHeart} alt="givabit heart small" width={"60px"} height={"50px"} />
+                          </div>
+                          <div className="w-full flex rounded-full bg-transparent">
+                            <div
+                              className="p-3 justify-center rounded-l-full bg-n4gGreen text-xs font-medium leading-none text-primary flex"
+                              style={{ width: `${rangeValue / rangeMaxValue * 100}%` }}
+                            />
+                            <div
+                              className="bg-blue-500 p-3 justify-center text-xs text-white font-medium leading-none text-primary flex"
+                              style={{ width: `${calcCharityPercent()}%` }}
+                            />
+                            <div
+                              className="p-3 justify-center text-white text-xs font-medium leading-none text-primary flex bg-black rounded-r-full"
+                              style={{ width: `${calcArtPercent()}%` }} />
+
+                          </div>
+                          <input
+                            className="bg-transparent appearance-none absolute w-full range-silder pl-[60px] pr-[70px]"
+                            type="range"
+                            min={0}
+                            max={rangeMaxValue}
+                            value={rangeValue}
+                            onChange={(e) => handleRangeValue(e)}
+                          />
+                        </div>
+                        <div className="flex"></div>
+                      </div>
+                    </div>
                   ) : (
                     <h1>Nft not listed</h1>
                   )}
                 </div>
-
-                {sale && <div className="rounded-md border border-gray-200 p-4">
-                  <p className="pb-4">Clarity</p>
-                  <div className="w-full flex rounded-full bg-black">
-                    <div className="p-3 justify-center text-white text-xs font-medium leading-none text-primary flex" style={{ width: `${100 - Number(sale.charityShare) / 100}%` }}>
-                      {(Number(sale.price) * (100 - Number(sale.charityShare) / 100) / 100).toFixed(2)}
-                    </div>
-                    <div className="bg-blue-500 p-3 justify-center text-xs text-white font-medium leading-none text-primary flex rounded-full" style={{ width: `${Number(sale.charityShare) / 100 + 1}%` }}>
-                      {(Number(sale.price) * Number(sale.charityShare) / 100 / 100).toFixed(2)}
-                    </div>
-                  </div>
-                  <p className="text-right pt-2 font-bold">={Number(sale.price)}</p>
-                </div>}
 
                 <div className="rounded-md border border-gray-200">
                   <div className="p-4">
