@@ -1,6 +1,6 @@
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { Bars3Icon, ListBulletIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { signMessage } from '@wagmi/core'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -230,10 +230,10 @@ const HeaderNoSSR: React.FC<any> = () => {
                 >
                   <Menu.Items className="absolute right-0 mt-2 flex w-48 flex-col gap-4 rounded-md bg-white px-4 py-2 shadow-lg">
                     <Menu.Item>
-                      <Link href="/profile/collections">
+                      <Link href="/profile">
                         <button type="button" className="flex items-center gap-2">
-                          <ListBulletIcon className="h-6 w-6" />
-                          My Collections
+                          <UserIcon className="h-6 w-6" />
+                          My Account
                         </button>
                       </Link>
                     </Menu.Item>
