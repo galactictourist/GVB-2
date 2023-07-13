@@ -3,10 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { BiEdit } from 'react-icons/bi'
-import { useSelector } from 'react-redux'
 import { useHandleUploadImage } from '~/handlers/useHandleUploadImage'
-import { useMyCollections } from '~/hooks/useMyCollections'
-import { RootState } from '~/types'
 import Avatar from '../../../public/img/avatar.png'
 import FacebookIcon from '../../../public/img/facebook.svg'
 import InstagramIcon from '../../../public/img/instagram.svg'
@@ -20,8 +17,7 @@ interface Props {
 const MyProfileTab = ({ profile, updateUser }: Props) => {
 
   const { handleSubmit, register } = useForm()
-  const { id } = useSelector((state: RootState) => state.auth)
-  const { data: collections } = useMyCollections(id)
+
   const [avatar, setAvatar] = useState<any | null>()
   const [previewAvatar, setPreviewAvatar] = useState<any>()
 
@@ -29,6 +25,7 @@ const MyProfileTab = ({ profile, updateUser }: Props) => {
 
 
   const onSubmit = (data: any) => {
+    console.log(data)
     if (!avatar) {
       updateUser(data, profile?.imageUrl)
       return
@@ -54,16 +51,13 @@ const MyProfileTab = ({ profile, updateUser }: Props) => {
   }
 
   const onSelectAvatar = (e: any) => {
-    console.log("Asdfsd")
     if (!e.target.files || e.target.files.length === 0) {
       setAvatar(Avatar)
-      console.log("daqfa")
     }
     else {
       const previewUrl = URL.createObjectURL(e.target.files[0])
       setAvatar(e.target.files[0])
       setPreviewAvatar(previewUrl)
-      console.log(previewUrl)
     }
   }
 
@@ -75,7 +69,7 @@ const MyProfileTab = ({ profile, updateUser }: Props) => {
 
   return (
     <div className="relative pt-4 pb-8">
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-5 bg-n4gMediumTeal rounded-lg">
           <p className="px-4 py-2 text-n4gWhite font-bold text-xl">Basic</p>
           <div className="flex justify-center">
@@ -106,13 +100,13 @@ const MyProfileTab = ({ profile, updateUser }: Props) => {
               Officail Wallet Address
             </label>
             <div className="mt-1 mb-4">
-              <input defaultValue={profile?.wallet} disabled type="text" className="n4gForm h-10" />
+              <input defaultValue={profile?.wallet} disabled type="text" className="n4gForm h-10" {...register('wallet')} />
             </div>
             <label className="block text-md font-medium text-gray-700">
               Username
             </label>
             <div className="mt-1 mb-4">
-              <input defaultValue={profile?.name} required type="text" className="n4gForm h-10" {...register('name')} />
+              <input required defaultValue={profile?.name} type="text" className="n4gForm h-10" {...register('name')} />
             </div>
             <label htmlFor="about" className="block text-sm font-medium text-gray-700">
               Description

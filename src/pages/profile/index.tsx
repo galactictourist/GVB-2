@@ -152,7 +152,7 @@ const Profile: NextPage = () => {
                 </Tab.List>
                 <Tab.Panels className="mt-2">
                   <Tab.Panel>
-                    <MyProfileTab profile={profile} updateUser={updateUser} />
+                    {profile && <MyProfileTab profile={profile} updateUser={updateUser} />}
                   </Tab.Panel>
                   <Tab.Panel>
                     <MyNftsTab />
