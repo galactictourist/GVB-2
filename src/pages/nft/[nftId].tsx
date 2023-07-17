@@ -518,7 +518,7 @@ const NftPage: NextPage = () => {
                       <div className="flex flex-col">
                         <div className="mb-4">
                           <span className="text-2xl font-semibold">
-                            {rangeMaxValue} MATIC
+                            {rangeMaxValue.toFixed(3)} MATIC
                           </span>
                         </div>
                         <button
@@ -570,6 +570,7 @@ const NftPage: NextPage = () => {
                           <input
                             className="bg-transparent appearance-none absolute w-full range-silder pl-[60px] pr-[70px]"
                             type="range"
+                            step={0.001}
                             min={0}
                             max={rangeMaxValue}
                             value={rangeValue}
