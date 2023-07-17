@@ -538,7 +538,7 @@ const NftPage: NextPage = () => {
                               type="number"
                               value={rangeValue}
                               onChange={(e) => handleRangeValue(e)}
-                              className="text-xl n4gForm w-[100px] p-[5px]"
+                              className="text-xl n4gForm w-[110px] p-[5px]"
                             />
                           </div>
                           <div className="flex items-center">
@@ -570,7 +570,7 @@ const NftPage: NextPage = () => {
                           <input
                             className="bg-transparent appearance-none absolute w-full range-silder pl-[60px] pr-[70px]"
                             type="range"
-                            step={0.001}
+                            step={0.000001}
                             min={0}
                             max={rangeMaxValue}
                             value={rangeValue}
