@@ -125,9 +125,9 @@ const NftPage: NextPage = () => {
     setBuyOpen(true)
   }
 
-  const handleRangeValue = (e: any) => {
-    setRangeValue(Number(e.target.value))
-    setRangeMaxValue(Number(sale?.price ?? 0) + Number(e.target.value))
+  const handleRangeValue = (val: any) => {
+    setRangeValue(Number(val))
+    setRangeMaxValue(Number(sale?.price ?? 0) + Number(val))
   }
 
   const calcCharityPercent = () => {
@@ -352,9 +352,9 @@ const NftPage: NextPage = () => {
 
     try {
       const itemPrice = BigNumber.from(sale.signedData.message.itemPrice)
-      const additionalPrice = additionalAmount ? ethers.utils.parseEther(additionalAmount) : 0
+      const additionalPrice = rangeValue ? ethers.utils.parseEther(rangeValue.toString()) : 0
       const value = itemPrice.add(additionalPrice)
-
+      console.log(additionalPrice, value)
       const response = await (
         (await contractMp.buyItems(
           [
@@ -530,52 +530,56 @@ const NftPage: NextPage = () => {
                         </button>
                       </div>
                       <div className="flex flex-1 flex-col">
-                        <div className="flex justify-between pl-[60px] pr-[70px]">
-                          <div className="flex text-xl items-center">
-                            <span className="pr-2">Charity:</span>
-                            <span className="text-n4gMediumTeal">{Number(sale?.price) * Number(sale?.charityShare) / 10000}+</span>
-                            <input
-                              type="number"
-                              value={rangeValue}
-                              onChange={(e) => handleRangeValue(e)}
-                              className="text-xl n4gForm w-[110px] p-[5px]"
-                            />
+                        <div className="flex flex-row flex-1 relative items-center justify-between">
+                          <div className="flex p-2 pb-0 h-full items-end">
+                            <Image src={GivabitHeart} alt="givabit heart small" className="cursor-pointer" onClick={() => handleRangeValue(0)} width={"50px"} height={"40px"} />
                           </div>
-                          <div className="flex items-center">
-                            <span className="text-black text-xl pr-2">Art:</span>
-                            <span className="text-black font-bold text-xl">{Number(sale?.price) * (1 - Number(sale?.charityShare) / 10000)}</span>
-                          </div>
-                        </div>
-                        <div className="flex flex-col flex-1 relative items-center justify-center pl-[60px] pr-[70px]">
-                          <div className="flex p-2 items-end absolute left-0">
-                            <Image src={GivabitHeart} alt="givabit heart small" width={"50px"} height={"40px"} />
-                          </div>
-                          <div className="flex p-2 items-end absolute right-0">
-                            <Image src={GivabitHeart} alt="givabit heart small" width={"60px"} height={"50px"} />
-                          </div>
-                          <div className="w-full flex rounded-full bg-transparent">
-                            <div
-                              className="p-3 justify-center rounded-l-full bg-n4gGreen text-xs font-medium leading-none text-primary flex"
-                              style={{ width: `${rangeValue / rangeMaxValue * 100}%` }}
-                            />
-                            <div
-                              className="bg-blue-500 p-3 justify-center text-xs text-white font-medium leading-none text-primary flex"
-                              style={{ width: `${calcCharityPercent()}%` }}
-                            />
-                            <div
-                              className="p-3 justify-center text-white text-xs font-medium leading-none text-primary flex bg-black rounded-r-full"
-                              style={{ width: `${calcArtPercent()}%` }} />
+                          <div className="flex flex-col justify-between h-full flex-1">
+                            <div className="flex justify-between">
+                              <div className="flex text-xl items-center">
+                                <span className="pr-2">Charity:</span>
+                                <span className="text-n4gMediumTeal">{(Number(sale?.price) * Number(sale?.charityShare) / 10000).toFixed(3)}+</span>
+                                <input
+                                  type="number"
+                                  value={rangeValue}
+                                  onChange={(e) => handleRangeValue(e.target.value)}
+                                  className="text-xl n4gForm w-[110px] p-[5px]"
+                                />
+                              </div>
+                              <div className="flex items-center">
+                                <span className="text-black text-xl pr-2">Art:</span>
+                                <span className="text-black font-bold text-xl">{(Number(sale?.price) * (1 - Number(sale?.charityShare) / 10000)).toFixed(3)}</span>
+                              </div>
+                            </div>
+                            <div className="flex relative justify-center items-center">
+                              <div className="w-full flex rounded-full bg-transparent">
+                                <div
+                                  className="p-3 justify-center rounded-l-full bg-n4gGreen text-xs font-medium leading-none text-primary flex"
+                                  style={{ width: `${rangeValue / rangeMaxValue * 100}%` }}
+                                />
+                                <div
+                                  className="bg-blue-500 p-3 justify-center text-xs text-white font-medium leading-none text-primary flex"
+                                  style={{ width: `${calcCharityPercent()}%` }}
+                                />
+                                <div
+                                  className="p-3 justify-center text-white text-xs font-medium leading-none text-primary flex bg-black rounded-r-full"
+                                  style={{ width: `${calcArtPercent()}%` }} />
 
+                              </div>
+                              <input
+                                className="bg-transparent appearance-none absolute w-full range-silder"
+                                type="range"
+                                step={0.001}
+                                min={0}
+                                max={rangeMaxValue}
+                                value={rangeValue}
+                                onChange={(e) => handleRangeValue(e.target.value)}
+                              />
+                            </div>
                           </div>
-                          <input
-                            className="bg-transparent appearance-none absolute w-full range-silder pl-[60px] pr-[70px]"
-                            type="range"
-                            step={0.000001}
-                            min={0}
-                            max={rangeMaxValue}
-                            value={rangeValue}
-                            onChange={(e) => handleRangeValue(e)}
-                          />
+                          <div className="flex p-2 pb-0 items-end h-full">
+                            <Image src={GivabitHeart} alt="givabit heart small" className="cursor-pointer" onClick={() => handleRangeValue(rangeValue + 1)} width={"60px"} height={"50px"} />
+                          </div>
                         </div>
                         <div className="flex"></div>
                       </div>
