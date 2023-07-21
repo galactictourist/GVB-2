@@ -558,7 +558,7 @@ const NftPage: NextPage = () => {
                                   style={{ width: `${rangeValue / rangeMaxValue * 100}%` }}
                                 />
                                 <div
-                                  className="bg-blue-500 p-3 justify-center text-xs text-white font-medium leading-none text-primary flex"
+                                  className="bg-n4gMediumTeal p-3 justify-center text-xs text-white font-medium leading-none text-primary flex"
                                   style={{ width: `${calcCharityPercent()}%` }}
                                 />
                                 <div
