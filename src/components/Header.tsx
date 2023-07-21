@@ -191,7 +191,7 @@ const HeaderNoSSR: React.FC<any> = () => {
               )}
             </Popover>
 
-            {/* <Link href="/profile/">
+            {/* <Link href="/account/">
               <div className="text-lg font-medium text-gray-500 transition duration-500 hover:cursor-pointer hover:text-gray-900">
                 Profile
               </div>
@@ -232,7 +232,7 @@ const HeaderNoSSR: React.FC<any> = () => {
                 >
                   <Menu.Items className="absolute right-0 mt-2 flex w-48 flex-col gap-4 rounded-md bg-white px-4 py-2 shadow-lg">
                     <Menu.Item>
-                      <button type="button" className="flex items-center gap-2" onClick={() => router.push("/profile")}>
+                      <button type="button" className="flex items-center gap-2" onClick={() => router.push("/account")}>
                         <UserIcon className="h-6 w-6" />
                         My Account
                       </button>
@@ -321,7 +321,7 @@ const HeaderNoSSR: React.FC<any> = () => {
               </div>
               <div className="space-y-6 py-6 px-5">
                 {/* <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                  <Link href="/profile/">
+                  <Link href="/account/">
                     <div className="text-base font-medium text-gray-900 hover:cursor-pointer hover:text-gray-700">
                       Profile
                     </div>

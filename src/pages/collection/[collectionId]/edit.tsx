@@ -81,7 +81,7 @@ export default function EditCollection() {
           toast.success('Update collection successed.', {
             id: toastId,
           })
-          router.push('/profile')
+          router.push('/account')
         },
         onError(error: any) {
           console.log(error)

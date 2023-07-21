@@ -66,7 +66,7 @@ export default function CreateCollection() {
           toast.success('Create collection successed.', {
             id: toastId,
           })
-          router.push('/profile')
+          router.push('/account')
         },
         onError(error: any) {
           console.log(error)
@@ -215,7 +215,7 @@ export default function CreateCollection() {
             >
               Create
             </button>
-            <Link href={'/profile'}>
+            <Link href={'/acount'}>
               <button
                 className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                 type="button"

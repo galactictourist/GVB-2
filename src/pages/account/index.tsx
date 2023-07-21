@@ -48,7 +48,7 @@ const Profile: NextPage = () => {
     }, {
       onSuccess(resp) {
         setProfile(resp.data)
-        router.push("/profile")
+        router.push("/account")
         setIsEdit(false)
       }
     })
