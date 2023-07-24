@@ -492,17 +492,51 @@ const NftPage: NextPage = () => {
                 <div className="rounded-md border border-gray-200 p-4">
                   {nft.ownerId == userId ? (
                     sale ? (
-                      <div className='flex gap-4 items-center'>
-                        <button
-                          type="button"
-                          className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-red-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                          onClick={handleUnlist}
-                        >
-                          <span className="text-xl">Unlist</span>
-                        </button>
-                        <span className='text-lg text-gray-600'>
-                          Charity: {charity?.name}
-                        </span>
+                      <div className="flex w-full">
+                        <div className='flex flex-col items-center'>
+                          <div className="mb-4">
+                            <span className="text-2xl font-semibold">
+                              {Number(sale?.price).toFixed(3)} MATIC
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            className="flex w-32 items-center justify-center rounded-md border border-transparent bg-red-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                            onClick={handleUnlist}
+                          >
+                            <span className="text-xl">Unlist</span>
+                          </button>
+                        </div>
+                        <div className="flex flex-1 flex-col">
+                          <div className="flex flex-row flex-1 relative items-center justify-between pl-3">
+                            <div className="flex flex-col justify-between h-full flex-1">
+                              <div className="flex justify-between">
+                                <div className="flex text-xl items-center">
+                                  <span className='text-lg text-gray-600 pr-3'>
+                                    Charity: {charity?.name}
+                                  </span>
+                                  <span className="text-n4gMediumTeal font-bold">{(Number(sale?.price) * Number(sale?.charityShare) / 10000).toFixed(3)}</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <span className="text-black text-xl pr-2">Art:</span>
+                                  <span className="text-black font-bold text-xl">{(Number(sale?.price) * (1 - Number(sale?.charityShare) / 10000)).toFixed(3)}</span>
+                                </div>
+                              </div>
+                              <div className="flex relative justify-center items-center">
+                                <div className="w-full flex rounded-full bg-transparent">
+                                  <div
+                                    className="bg-n4gMediumTeal rounded-l-full justify-center py-3 text-xs text-white font-medium leading-none text-primary flex"
+                                    style={{ width: `${calcCharityPercent()}%` }}
+                                  />
+                                  <div
+                                    className="py-3 justify-center text-white text-xs font-medium leading-none text-primary flex bg-black rounded-r-full"
+                                    style={{ width: `${calcArtPercent()}%` }} />
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       <button
