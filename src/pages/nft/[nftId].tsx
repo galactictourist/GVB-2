@@ -1,4 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
+import {
+  XMarkIcon
+} from '@heroicons/react/24/outline'
 import { BigNumber, Contract, Signer, ethers } from 'ethers'
 import { NextPage } from 'next'
 import Image from 'next/image'
@@ -107,14 +110,15 @@ const NftPage: NextPage = () => {
     }
   }, [nft])
 
-  const getSocialUrl = (data: any, key: string) => {
-    if (data && data.socialMedia) {
-      return data.socialMedia[key]
-    }
-    return ''
-  }
+  // const getSocialUrl = (data: any, key: string) => {
+  //   if (data && data.socialMedia) {
+  //     return data.socialMedia[key]
+  //   }
+  //   return ''
+  // }
   const [isListOpen, setListOpen] = useState<boolean>(false)
   const [isBuyOpen, setBuyOpen] = useState<boolean>(false)
+  const [isShowImage, setIsShowImage] = useState<boolean>(false)
 
   const handleListOpen = () => {
     setListOpen(true)
@@ -421,7 +425,7 @@ const NftPage: NextPage = () => {
                     <Image height={20} width={20} src="/img/polygon-logo.svg" alt="polygon" />
                   </div>
 
-                  <div className="relative h-[480px]">
+                  <div className="relative h-[480px] cursor-pointer" onClick={() => setIsShowImage(true)}>
                     {nft.imageUrl && (
                       <Image
                         className="absolute rounded-b-lg"
@@ -431,6 +435,39 @@ const NftPage: NextPage = () => {
                       />
                     )}
                   </div>
+                  <Transition.Root
+                    show={isShowImage}
+                  >
+                    <div className="fixed flex w-screen h-screen top-0 left-0 bg-n4gBlack opacity-75 z-30" />
+
+                    <Transition.Child
+                      enter="ease-out duration-300"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="ease-in duration-200"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <div className="fixed top-[50%] left-[50%] z-50 none"
+                        style={{
+                          transform: 'translate(-50%, -50%)',
+                          width: '650px',
+                          height: '650px',
+                        }}
+                      >
+                        <Image
+                          className="absolute rounded-b-lg"
+                          src={`${nft.imageUrl}`}
+                          layout="fill"
+                          alt={nft.name}
+                          width={320}
+                        />
+                        <span className="fixed top-0 right-0 z-40 mt-[-50px] mr-[-50px] cursor-pointer">
+                          <XMarkIcon className="w-[32px] h-[32px] text-white font-bold" aria-hidden="true" onClick={() => setIsShowImage(false)} fontSize={'30px'} />
+                        </span>
+                      </div>
+                    </Transition.Child>
+                  </Transition.Root>
                 </div>
 
                 <div className={style.leftElement}>
@@ -593,15 +630,15 @@ const NftPage: NextPage = () => {
                             <div className="flex relative justify-center items-center">
                               <div className="w-full flex rounded-full bg-transparent">
                                 <div
-                                  className="p-3 justify-center rounded-l-full bg-n4gGreen text-xs font-medium leading-none text-primary flex"
+                                  className="py-3 justify-center rounded-l-full bg-n4gGreen text-xs font-medium leading-none text-primary flex"
                                   style={{ width: `${rangeValue / rangeMaxValue * 100}%` }}
                                 />
                                 <div
-                                  className="bg-n4gMediumTeal p-3 justify-center text-xs text-white font-medium leading-none text-primary flex"
+                                  className="bg-n4gMediumTeal py-3 justify-center text-xs text-white font-medium leading-none text-primary flex"
                                   style={{ width: `${calcCharityPercent()}%` }}
                                 />
                                 <div
-                                  className="p-3 justify-center text-white text-xs font-medium leading-none text-primary flex bg-black rounded-r-full"
+                                  className="py-3 justify-center text-white text-xs font-medium leading-none text-primary flex bg-black rounded-r-full"
                                   style={{ width: `${calcArtPercent()}%` }} />
 
                               </div>
