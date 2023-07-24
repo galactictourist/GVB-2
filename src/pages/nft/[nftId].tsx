@@ -474,7 +474,7 @@ const NftPage: NextPage = () => {
                       </a>
                     </Link>
                   </div>
-                  <div className="flex divide-x divide-gray-300 rounded-lg border border-gray-300">
+                  {/* <div className="flex divide-x divide-gray-300 rounded-lg border border-gray-300">
                     {actionItems.map((item, index) => (
                       <Link key={index} href={getSocialUrl(prof, item.name)}>
                         <a target="_blank">
@@ -486,7 +486,7 @@ const NftPage: NextPage = () => {
                         </a>
                       </Link>
                     ))}
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="rounded-md border border-gray-200 p-4">
@@ -557,7 +557,7 @@ const NftPage: NextPage = () => {
                         </div>
                         <button
                           type="button"
-                          className="flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                          className="mt-2 flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                           onClick={handleBuyOpen}
                         >
                           <span className="text-xl">Buy</span>
@@ -584,6 +584,11 @@ const NftPage: NextPage = () => {
                                 <span className="text-black text-xl pr-2">Art:</span>
                                 <span className="text-black font-bold text-xl">{(Number(sale?.price) * (1 - Number(sale?.charityShare) / 10000)).toFixed(3)}</span>
                               </div>
+                            </div>
+                            <div className='flex'>
+                              <span className='-mt-3 text-md text-gray-600 pl-3'>
+                                {charity?.name}
+                              </span>
                             </div>
                             <div className="flex relative justify-center items-center">
                               <div className="w-full flex rounded-full bg-transparent">
