@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import MyCausesTab from '~/components/Profile/MyCausesTab'
 import MyCollectionsTab from '~/components/Profile/MyCollectionsTab'
 import MyNftsTab from '~/components/Profile/MyNftsTab'
 import MyProfileTab from '~/components/Profile/MyProfleTab'
@@ -157,7 +158,9 @@ const Profile: NextPage = () => {
                   <Tab.Panel>
                     <MyNftsTab />
                   </Tab.Panel>
-                  <Tab.Panel></Tab.Panel>
+                  <Tab.Panel>
+                    <MyCausesTab />
+                  </Tab.Panel>
                   <Tab.Panel>
                     <MyCollectionsTab />
                   </Tab.Panel>
