@@ -522,15 +522,15 @@ const NftPage: NextPage = () => {
                   {nft.ownerId == userId ? (
                     sale ? (
                       <div className="flex w-full">
-                        <div className='flex flex-col items-center'>
-                          <div className="mb-4">
+                        <div className='flex flex-col justify-between items-center'>
+                          <div className="py-1">
                             <span className="text-2xl font-semibold">
                               {Number(sale?.price).toFixed(3)} MATIC
                             </span>
                           </div>
                           <button
                             type="button"
-                            className="flex w-32 items-center justify-center rounded-md border border-transparent bg-red-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                            className="mt-2 flex w-32 items-center justify-center rounded-md border border-transparent bg-red-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
                             onClick={handleUnlist}
                           >
                             <span className="text-xl">Unlist</span>
@@ -538,8 +538,11 @@ const NftPage: NextPage = () => {
                         </div>
                         <div className="flex flex-1 flex-col">
                           <div className="flex flex-row flex-1 relative items-center justify-between pl-3">
+                            <div className="flex p-2 pb-0 h-full items-end invisible">
+                              <Image src={GivabitHeart} alt="givabit heart small" className="cursor-pointer" onClick={() => handleRangeValue(0)} width={"50px"} height={"40px"} />
+                            </div>
                             <div className="flex flex-col justify-between h-full flex-1">
-                              <div className="flex justify-between">
+                              <div className="flex justify-between py-2">
                                 <div className="flex text-xl items-center">
                                   <span className='text-lg text-gray-600 pr-3'>
                                     Charity: {charity?.name}
@@ -552,7 +555,7 @@ const NftPage: NextPage = () => {
                                 </div>
                               </div>
                               <div className="flex relative justify-center items-center">
-                                <div className="w-full flex rounded-full bg-transparent">
+                                <div className="w-full flex rounded-full overflow-hidden bg-transparent">
                                   <div
                                     className="bg-n4gMediumTeal rounded-l-full justify-center py-3 text-xs text-white font-medium leading-none text-primary flex"
                                     style={{ width: `${calcCharityPercent()}%` }}
@@ -563,6 +566,9 @@ const NftPage: NextPage = () => {
 
                                 </div>
                               </div>
+                            </div>
+                            <div className="flex p-2 pb-0 items-end h-full invisible">
+                              <Image src={GivabitHeart} alt="givabit heart small" className="cursor-pointer" onClick={() => handleRangeValue(rangeValue + 1)} width={"60px"} height={"50px"} />
                             </div>
                           </div>
                         </div>
@@ -578,8 +584,8 @@ const NftPage: NextPage = () => {
                     )
                   ) : sale ? (
                     <div className="flex w-full">
-                      <div className="flex flex-col">
-                        <div className="mb-4">
+                      <div className="flex flex-col justify-between">
+                        <div className="py-1">
                           <span className="text-2xl font-semibold">
                             {rangeMaxValue.toFixed(3)} MATIC
                           </span>
@@ -615,12 +621,12 @@ const NftPage: NextPage = () => {
                               </div>
                             </div>
                             <div className='flex'>
-                              <span className='-mt-3 text-md text-gray-600 pl-3'>
+                              <span className='-mt-3 text-md text-gray-600'>
                                 {charity?.name}
                               </span>
                             </div>
                             <div className="flex relative justify-center items-center">
-                              <div className="w-full flex rounded-full bg-transparent">
+                              <div className="w-full flex rounded-full overflow-hidden bg-transparent">
                                 <div
                                   className="py-3 justify-center rounded-l-full bg-n4gGreen text-xs font-medium leading-none text-primary flex"
                                   style={{ width: `${rangeValue / rangeMaxValue * 100}%` }}

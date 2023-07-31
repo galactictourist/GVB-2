@@ -76,7 +76,7 @@ const Profile: NextPage = () => {
   return (
     <>
       <Head>
-        <title>GivaBit | Profile </title>
+        <title>GivaBit | Account </title>
         <meta name="description" content="Support charities by buying an NFT" />
       </Head>
 
