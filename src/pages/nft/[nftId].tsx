@@ -117,16 +117,10 @@ const NftPage: NextPage = () => {
   //   return ''
   // }
   const [isListOpen, setListOpen] = useState<boolean>(false)
-  const [isBuyOpen, setBuyOpen] = useState<boolean>(false)
   const [isShowImage, setIsShowImage] = useState<boolean>(false)
 
   const handleListOpen = () => {
     setListOpen(true)
-  }
-
-  const handleBuyOpen = () => {
-    setAdditionalAmount(undefined)
-    setBuyOpen(true)
   }
 
   const handleRangeValue = (val: any) => {
@@ -347,8 +341,6 @@ const NftPage: NextPage = () => {
       return
     }
 
-    setBuyOpen(false)
-
     let toastId = toast.loading('Buy NFT is in progress')
 
     const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
@@ -358,7 +350,7 @@ const NftPage: NextPage = () => {
       const itemPrice = BigNumber.from(sale.signedData.message.itemPrice)
       const additionalPrice = rangeValue ? ethers.utils.parseEther(rangeValue.toString()) : 0
       const value = itemPrice.add(additionalPrice)
-      console.log(additionalPrice, value)
+
       const response = await (
         (await contractMp.buyItems(
           [
@@ -595,7 +587,7 @@ const NftPage: NextPage = () => {
                         <button
                           type="button"
                           className="mt-2 flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
-                          onClick={handleBuyOpen}
+                          onClick={handleBuy}
                         >
                           <span className="text-xl">Buy</span>
                         </button>
@@ -828,7 +820,7 @@ const NftPage: NextPage = () => {
         </Dialog>
       </Transition.Root>
 
-      <Transition.Root show={isBuyOpen} as={Fragment}>
+      {/* <Transition.Root show={isBuyOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={setListOpen}>
           <Transition.Child
             as={Fragment}
@@ -901,7 +893,7 @@ const NftPage: NextPage = () => {
             </div>
           </div>
         </Dialog>
-      </Transition.Root>
+      </Transition.Root> */}
     </>
   )
 }
