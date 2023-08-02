@@ -11,3 +11,16 @@ export const USER_COOKIES = {
 }
 
 export const CHAIN_ID = polygonMumbai.id
+
+export const ADMIN_PAGES = {
+  HOME: '/admin/dashboard',
+  USERS: '/admin/users',
+  CAUSES: {
+    INDEX: '/admin/causes',
+    CREATE: '/admin/createCause',
+  },
+  COLLECTIONS: {
+    INDEX: '/admin/collections',
+    CREATE: '/admin/collections/add',
+  }
+}

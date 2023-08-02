@@ -101,7 +101,7 @@ const AdminContainer = ({ children }: Props) => {
                               router.pathname == item.href
                                 ? 'bg-indigo-800 text-white'
                                 : 'text-indigo-100 hover:bg-indigo-600',
-                              'group flex items-center rounded-md px-2 py-2 text-base font-medium'
+                              'group flex items-center rounded-md px-2 py-2 text-base font-medium cursor-pointer'
                             )}
                           >
                             <item.icon
@@ -139,7 +139,7 @@ const AdminContainer = ({ children }: Props) => {
                         router.pathname == item.href
                           ? 'bg-indigo-800 text-white'
                           : 'text-indigo-100 hover:bg-indigo-600',
-                        'group flex items-center rounded-md px-2 py-2 text-base font-medium'
+                        'group flex items-center rounded-md px-2 py-2 text-base font-medium cursor-pointer'
                       )}
                     >
                       <item.icon

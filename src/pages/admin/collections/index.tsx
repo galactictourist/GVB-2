@@ -1,12 +1,19 @@
 import { NextPage } from 'next'
+import Head from 'next/head'
+import Link from 'next/link'
 import AdminContainer from '~/components/Admin/AdminContainer'
 import { useAllCollections } from '~/hooks/useAllCollections'
+import { ADMIN_PAGES } from '~/utils/constants'
 
 const Collections: NextPage = () => {
   const { data: collections, isLoading } = useAllCollections()
 
   return (
     <>
+      <Head>
+        <title>GivaBit | Admin | Collection </title>
+        <meta name="description" content="Show NFT collections" />
+      </Head>
       <AdminContainer>
         {isLoading ? (
           <div>LOADING</div>
@@ -18,6 +25,16 @@ const Collections: NextPage = () => {
                 <p className="mt-2 text-sm text-gray-700">
                   A list of all collections and including their ownerIds and name.
                 </p>
+              </div>
+              <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                <Link href={ADMIN_PAGES.COLLECTIONS.CREATE}>
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                  >
+                    Create Collection
+                  </button>
+                </Link>
               </div>
             </div>
             <div className="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
@@ -78,8 +95,8 @@ const Collections: NextPage = () => {
                         </td>
                         <td className="px-3 py-4 text-sm text-gray-500">{collection.ownerId}</td>
                         <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                            Details<span className="sr-only">, {collection.name}</span>
+                          <a href={`${ADMIN_PAGES.COLLECTIONS.INDEX}/${collection.id}`} className="text-indigo-600 hover:text-indigo-900">
+                            Edit<span className="sr-only">, {collection.name}</span>
                           </a>
                         </td>
                       </tr>
