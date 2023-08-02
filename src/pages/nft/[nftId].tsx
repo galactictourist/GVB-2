@@ -361,7 +361,7 @@ const NftPage: NextPage = () => {
             },
           ],
           {
-            // gasLimit: 100000,
+            gasLimit: 100000,
             value,
           }
         )) as TransactionResponse
