@@ -4,8 +4,9 @@ import {
   FolderIcon,
   HomeIcon,
   InboxIcon,
+  InboxStackIcon,
   UsersIcon,
-  XMarkIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -17,6 +18,7 @@ const navigation = [
   { name: 'Users', href: '/admin/users', icon: UsersIcon },
   { name: 'Causes', href: '/admin/causes', icon: FolderIcon },
   { name: 'Collections', href: '/admin/collections', icon: InboxIcon },
+  { name: 'Nfts', href: '/admin/nfts', icon: InboxStackIcon },
 ]
 
 const userNavigation = [
