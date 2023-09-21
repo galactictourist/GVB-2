@@ -97,7 +97,7 @@ const MyProfileTab = ({ profile, updateUser }: Props) => {
 
           <div className="p-4 rounded-lg">
             <label className="block text-md font-medium text-gray-700">
-              Officail Wallet Address
+              Official Wallet Address
             </label>
             <div className="mt-1 mb-4">
               <input defaultValue={profile?.wallet} disabled type="text" className="n4gForm h-10" {...register('wallet')} />

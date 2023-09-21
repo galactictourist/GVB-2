@@ -9,15 +9,12 @@ import MyCausesTab from '~/components/Profile/MyCausesTab'
 import MyCollectionsTab from '~/components/Profile/MyCollectionsTab'
 import MyNftsTab from '~/components/Profile/MyNftsTab'
 import MyProfileTab from '~/components/Profile/MyProfleTab'
+import NavTab from '~/components/Profile/NavTab'
 import { useHandleUpdateUser } from '~/handlers/useHandleUpdateUser'
 import { useProfile } from '~/hooks/useProfile'
 import { RootState } from '~/types'
 import Avatar from '../../../public/img/avatar.png'
 import Header from '../../components/Header'
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
 
 const Profile: NextPage = () => {
   const router = useRouter()
@@ -106,50 +103,10 @@ const Profile: NextPage = () => {
             {!isEdit &&
               <Tab.Group>
                 <Tab.List className="flex border-b border-gray-200">
-                  <Tab
-                    className={({ selected }) =>
-                      classNames(
-                        'border-b px-8 py-2.5 text-lg font-medium leading-5 focus:outline-none',
-                        selected
-                          ? 'border-gray-900'
-                          : 'border-gray-200 text-gray-500 hover:border-gray-900'
-                      )
-                    }
-                  >
-                    My Profile
-                  </Tab>
-                  <Tab
-                    className={({ selected }) =>
-                      classNames(
-                        'border-b px-8 py-2.5 text-lg font-medium leading-5 focus:outline-none',
-                        selected
-                          ? 'border-gray-900'
-                          : 'border-gray-200 text-gray-500 hover:border-gray-900'
-                      )
-                    }
-                  >
-                    My Items
-                  </Tab>
-                  <Tab
-                    className={({ selected }) =>
-                      classNames(
-                        'border-b px-8 py-2.5 text-lg font-medium leading-5 focus:outline-none',
-                        selected ? 'border-gray-900' : 'text-gray-500 hover:border-gray-900'
-                      )
-                    }
-                  >
-                    My Causes
-                  </Tab>
-                  <Tab
-                    className={({ selected }) =>
-                      classNames(
-                        'border-b px-8 py-2.5 text-lg font-medium leading-5 focus:outline-none',
-                        selected ? 'border-gray-900' : 'text-gray-500 hover:border-gray-900'
-                      )
-                    }
-                  >
-                    My Collections
-                  </Tab>
+                  <NavTab title="My Profile" />
+                  <NavTab title="My Items" />
+                  <NavTab title="My Causes" />
+                  <NavTab title="My Collections" />
                 </Tab.List>
                 <Tab.Panels className="mt-2">
                   <Tab.Panel>
