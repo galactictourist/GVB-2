@@ -11,6 +11,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, ReactNode, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import useAuth from '~/hooks/useAuth'
+import { logout } from '~/redux/slices/adminSlice'
+
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/home', icon: HomeIcon },
@@ -21,7 +25,7 @@ const navigation = [
 
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Sign out', href: '/admin/login' },
 ]
 
 interface Props {
@@ -34,7 +38,15 @@ function classNames(...classes: string[]) {
 
 const AdminContainer = ({ children }: Props) => {
   const router = useRouter()
+  const dispatch = useDispatch()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [profileNav, signoutNav] = userNavigation;
+
+  const signoutHandler = (e: any) => {
+    dispatch(
+      logout()
+    )
+  }
 
   return (
     <>
@@ -191,21 +203,33 @@ const AdminContainer = ({ children }: Props) => {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              {item.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
+                      <Menu.Item key={profileNav.name}>
+                        {({ active }) => (
+                          <a
+                            href={profileNav.href}
+                            className={classNames(
+                              active ? 'bg-gray-100' : '',
+                              'block px-4 py-2 text-sm text-gray-700'
+                            )}
+                          >
+                            {profileNav.name}
+                          </a>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item key={signoutNav.name}>
+                        {({ active }) => (
+                          <a
+                            href={signoutNav.href}
+                            className={classNames(
+                              active ? 'bg-gray-100' : '',
+                              'block px-4 py-2 text-sm text-gray-700'
+                            )}
+                            onClick={signoutHandler}
+                          >
+                            {signoutNav.name}
+                          </a>
+                        )}
+                      </Menu.Item>
                     </Menu.Items>
                   </Transition>
                 </Menu>
@@ -224,4 +248,4 @@ const AdminContainer = ({ children }: Props) => {
   )
 }
 
-export default AdminContainer
+export default useAuth(AdminContainer)
