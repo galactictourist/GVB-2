@@ -1,13 +1,12 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import AdminContainer from '~/components/Admin/AdminContainer'
 import { useHandleUploadBulk } from '~/handlers/useHandleUploadBulk'
 import { useHandleUploadImage } from '~/handlers/useHandleUploadImage'
 import { useAllCollections } from '~/hooks/useAllCollections'
-import NftBuildJson from '~/nfts/json/_metadata.json'
+// import NftBuildJson from '~/nfts/json/_metadata.json'
 
 
 
@@ -26,24 +25,24 @@ const Nfts: NextPage = () => {
     const toastId = toast.loading('Create nft in progress...')
 
 
-    NftBuildJson.slice(0, 1).forEach((nft) => {
-      const nftImage = new File([require(`~/nfts/images/${nft.image.split('/')[3]}`)], `${nft.image.split('/')[3]}`, { type: 'image/png' })
+    // NftBuildJson.slice(0, 1).forEach((nft) => {
+    //   const nftImage = new File([require(`~/nfts/images/${nft.image.split('/')[3]}`)], `${nft.image.split('/')[3]}`, { type: 'image/png' })
 
-      bulkData.push({
-        name: nft.name,
-        description: nft.description,
-        network: 'POLYGON_MUMBAI',
-        collectionId: collectionId,
-        metadata: {
-          external_url: nft.external_url,
-          youtube_url: '',
-          animation_url: '',
-        },
-        royality: 1,
-        attributes: nft.attributes,
-        image: new File([require(`~/nfts/images/${nft.image.split('/')[3]}`)], `${nft.image.split('/')[3]}`, { type: 'image/png' })
-      })
-    })
+    //   bulkData.push({
+    //     name: nft.name,
+    //     description: nft.description,
+    //     network: 'POLYGON_MUMBAI',
+    //     collectionId: collectionId,
+    //     metadata: {
+    //       external_url: nft.external_url,
+    //       youtube_url: '',
+    //       animation_url: '',
+    //     },
+    //     royality: 1,
+    //     attributes: nft.attributes,
+    //     image: new File([require(`~/nfts/images/${nft.image.split('/')[3]}`)], `${nft.image.split('/')[3]}`, { type: 'image/png' })
+    //   })
+    // })
 
 
 
@@ -127,7 +126,7 @@ const Nfts: NextPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white h-[500px] overflow-hidden">
-                {NftBuildJson &&
+                {/*NftBuildJson &&
                   NftBuildJson.slice(0, 10).map((nft, _id) => (
                     <tr key={_id}>
                       <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
@@ -150,7 +149,7 @@ const Nfts: NextPage = () => {
                         {nft.description}
                       </td>
                     </tr>
-                  ))}
+                  ))*/}
               </tbody>
             </table>
           </div>
