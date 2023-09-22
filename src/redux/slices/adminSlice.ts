@@ -32,6 +32,12 @@ const adminSlice = createSlice({
       state.username = ''
       state.error = action.payload.message
     },
+    logout(state) {
+      state.id = ''
+      state.role = ''
+      state.status = ''
+      state.username = ''
+    },
     /**
      * createTopic
      */
@@ -69,6 +75,7 @@ export const {
   login,
   loginSuccess,
   loginFailure,
+  logout,
   createTopic,
   createTopicSuccess,
   createTopicFailure,

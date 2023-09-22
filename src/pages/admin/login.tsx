@@ -38,21 +38,19 @@ const AdminLogin: NextPage = () => {
     if (loading) infoMessage()
     if (id && !loading) {
       successMessage()
-      router.push('/admin/causes')
+      router.push('/admin/home')
     }
     if (error) errorMessage()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, error, loading])
 
   const submitHandler = (e: any) => {
-    console.log(username)
     dispatch(
       login({
         username: username,
         password: password,
       })
     )
-    console.log(password)
   }
 
   return (
