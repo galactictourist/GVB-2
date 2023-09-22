@@ -1,7 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import {
-  XMarkIcon
-} from '@heroicons/react/24/outline'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import { BigNumber, Contract, Signer, ethers } from 'ethers'
 import { NextPage } from 'next'
 import Image from 'next/image'
@@ -44,13 +42,16 @@ const style = {
 
 const actionItems = [
   {
-    icon: <Image src={FacebookIcon} alt="facebook" width={30} height={30} />, name: 'facebook',
+    icon: <Image src={FacebookIcon} alt="facebook" width={30} height={30} />,
+    name: 'facebook',
   },
   {
-    icon: <Image src={TwitterIcon} alt="twitter" width={30} height={30} />, name: 'twitter',
+    icon: <Image src={TwitterIcon} alt="twitter" width={30} height={30} />,
+    name: 'twitter',
   },
   {
-    icon: <Image src={InstagramIcon} alt="instagram" width={30} height={30} />, name: 'instagram',
+    icon: <Image src={InstagramIcon} alt="instagram" width={30} height={30} />,
+    name: 'instagram',
   },
 ]
 
@@ -70,7 +71,7 @@ const NftPage: NextPage = () => {
     chainId: CHAIN_ID,
   })
   const { data: signedData, signTypedData } = useSignTypedData()
-  const handleSaleStatus = useHandleSaleStatus();
+  const handleSaleStatus = useHandleSaleStatus()
 
   const [serverSignature, setServerSignature] = useState()
   const [saleData, setSaleData] = useState()
@@ -103,8 +104,7 @@ const NftPage: NextPage = () => {
 
       if (listedSales.length > 0) {
         setSale(listedSales[0])
-      }
-      else {
+      } else {
         setSale(undefined)
       }
     }
@@ -129,13 +129,13 @@ const NftPage: NextPage = () => {
   }
 
   const calcCharityPercent = () => {
-    const charity = Number(sale?.price) * Number(sale?.charityShare) / 10000
-    return charity / rangeMaxValue * 100
+    const charity = (Number(sale?.price) * Number(sale?.charityShare)) / 10000
+    return (charity / rangeMaxValue) * 100
   }
 
   const calcArtPercent = () => {
-    const charity = Number(sale?.price) * Number(sale?.charityShare) / 10000
-    return (rangeMaxValue - charity - rangeValue) / rangeMaxValue * 100
+    const charity = (Number(sale?.price) * Number(sale?.charityShare)) / 10000
+    return ((rangeMaxValue - charity - rangeValue) / rangeMaxValue) * 100
   }
 
   const onSubmitList = (data: any) => {
@@ -265,7 +265,7 @@ const NftPage: NextPage = () => {
         })
         .then((ret) => {
           toast.success('List nft successed.')
-          loadNft();
+          loadNft()
         })
         .catch((err) => {
           console.log(err)
@@ -297,26 +297,25 @@ const NftPage: NextPage = () => {
       console.log(response)
 
       toastId = toast.loading('Confirming unlist transaction', {
-        id: toastId
+        id: toastId,
       })
 
       for (let i = 0; i < 30; i++) {
-        const isFinished = await handleSaleStatus
-          .mutateAsync({
-            nftId: nftId as string,
-            actionStatus: "UNLIST"
-          })
+        const isFinished = await handleSaleStatus.mutateAsync({
+          nftId: nftId as string,
+          actionStatus: 'UNLIST',
+        })
         if (isFinished) {
           toast.success('Unlist successed.', {
             id: toastId,
             duration: 10000,
-            position: 'top-right'
+            position: 'top-right',
           })
-          loadNft();
-          return;
+          loadNft()
+          return
         }
 
-        await sleep(3000);
+        await sleep(3000)
       }
 
       toast.error('Unlist confirmation failed.', {
@@ -369,26 +368,25 @@ const NftPage: NextPage = () => {
       console.log(response)
 
       toastId = toast.loading('Confirming buy transaction', {
-        id: toastId
+        id: toastId,
       })
 
       for (let i = 0; i < 30; i++) {
-        const isFinished = await handleSaleStatus
-          .mutateAsync({
-            nftId: nftId as string,
-            actionStatus: "BUY"
-          })
+        const isFinished = await handleSaleStatus.mutateAsync({
+          nftId: nftId as string,
+          actionStatus: 'BUY',
+        })
         if (isFinished) {
           toast.success('Buy NFT successed.', {
             id: toastId,
             duration: 10000,
-            position: 'top-right'
+            position: 'top-right',
           })
-          loadNft();
-          return;
+          loadNft()
+          return
         }
 
-        await sleep(3000);
+        await sleep(3000)
       }
 
       toast.error('Buy confirmation failed.', {
@@ -417,7 +415,10 @@ const NftPage: NextPage = () => {
                     <Image height={20} width={20} src="/img/polygon-logo.svg" alt="polygon" />
                   </div>
 
-                  <div className="relative h-[480px] cursor-pointer" onClick={() => setIsShowImage(true)}>
+                  <div
+                    className="relative h-[480px] cursor-pointer"
+                    onClick={() => setIsShowImage(true)}
+                  >
                     {nft.imageUrl && (
                       <Image
                         className="absolute rounded-b-lg"
@@ -427,10 +428,8 @@ const NftPage: NextPage = () => {
                       />
                     )}
                   </div>
-                  <Transition.Root
-                    show={isShowImage}
-                  >
-                    <div className="fixed flex w-screen h-screen top-0 left-0 bg-n4gBlack opacity-75 z-30" />
+                  <Transition.Root show={isShowImage}>
+                    <div className="fixed top-0 left-0 z-30 flex h-screen w-screen bg-n4gBlack opacity-75" />
 
                     <Transition.Child
                       enter="ease-out duration-300"
@@ -440,7 +439,8 @@ const NftPage: NextPage = () => {
                       leaveFrom="opacity-100"
                       leaveTo="opacity-0"
                     >
-                      <div className="fixed top-[50%] left-[50%] z-50 none"
+                      <div
+                        className="none fixed top-[50%] left-[50%] z-50"
                         style={{
                           transform: 'translate(-50%, -50%)',
                           width: '650px',
@@ -455,7 +455,12 @@ const NftPage: NextPage = () => {
                           width={320}
                         />
                         <span className="fixed top-0 right-0 z-40 mt-[-50px] mr-[-50px] cursor-pointer">
-                          <XMarkIcon className="w-[32px] h-[32px] text-white font-bold" aria-hidden="true" onClick={() => setIsShowImage(false)} fontSize={'30px'} />
+                          <XMarkIcon
+                            className="h-[32px] w-[32px] font-bold text-white"
+                            aria-hidden="true"
+                            onClick={() => setIsShowImage(false)}
+                            fontSize={'30px'}
+                          />
                         </span>
                       </div>
                     </Transition.Child>
@@ -474,27 +479,27 @@ const NftPage: NextPage = () => {
                       {nft.collection?.name ?? ''}
                     </Link>
                   </div>
-                  <div className="flex itemoks-center justify-center p-4 text-xl text-gray-900">
+                  <div className="itemoks-center flex justify-center p-4 text-xl text-gray-900">
                     <Link href={`/cause/${nft.cause?.id}`}>
                       <h2
-                        className={`rounded-full py-1 px-4 text-center cursor-pointer ${getCauseBgColor(nft.cause?.name || '')}`}
+                        className={`cursor-pointer rounded-full py-1 px-4 text-center ${getCauseBgColor(
+                          nft.cause?.name || ''
+                        )}`}
                         style={{
                           color: getCauseTextColor(nft.cause?.name || ''),
-                        }}>
+                        }}
+                      >
                         {nft.cause?.name ?? ''}
                       </h2>
                     </Link>
                   </div>
-
                 </div>
 
                 <div className="pt-4 text-4xl text-gray-900">{nft.name}</div>
 
-                <div className="lg:flex hidden justify-between">
-                  <div className="flex space-x-2 py-2 text-lg font-medium items-center">
-                    <div className="text-gray-500">
-                      Owned by
-                    </div>
+                <div className="hidden justify-between lg:flex">
+                  <div className="flex items-center space-x-2 py-2 text-lg font-medium">
+                    <div className="text-gray-500">Owned by</div>
                     <Link href={getEtherscan(nft.owner?.wallet)}>
                       <a target="_blank">
                         <div className="text-n4gMediumTeal hover:text-gray-600">
@@ -522,7 +527,7 @@ const NftPage: NextPage = () => {
                   {nft.ownerId == userId ? (
                     sale ? (
                       <div className="flex w-full">
-                        <div className='flex flex-col justify-between items-center'>
+                        <div className="flex flex-col items-center justify-between">
                           <div className="py-1">
                             <span className="text-2xl font-semibold">
                               {Number(sale?.price).toFixed(3)} MATIC
@@ -537,38 +542,62 @@ const NftPage: NextPage = () => {
                           </button>
                         </div>
                         <div className="flex flex-1 flex-col">
-                          <div className="flex flex-row flex-1 relative items-center justify-between pl-3">
-                            <div className="flex p-2 pb-0 h-full items-end invisible">
-                              <Image src={GivabitHeart} alt="givabit heart small" className="cursor-pointer" onClick={() => handleRangeValue(0)} width={"50px"} height={"40px"} />
+                          <div className="relative flex flex-1 flex-row items-center justify-between pl-3">
+                            <div className="invisible flex h-full items-end p-2 pb-0">
+                              <Image
+                                src={GivabitHeart}
+                                alt="givabit heart small"
+                                className="cursor-pointer"
+                                onClick={() => handleRangeValue(0)}
+                                width={'50px'}
+                                height={'40px'}
+                              />
                             </div>
-                            <div className="flex flex-col justify-between h-full flex-1">
+                            <div className="flex h-full flex-1 flex-col justify-between">
                               <div className="flex justify-between py-2">
-                                <div className="flex text-xl items-center">
-                                  <span className='text-lg text-gray-600 pr-3'>
+                                <div className="flex items-center text-xl">
+                                  <span className="pr-3 text-lg text-gray-600">
                                     Charity: {charity?.name}
                                   </span>
-                                  <span className="text-n4gMediumTeal font-bold">{(Number(sale?.price) * Number(sale?.charityShare) / 10000).toFixed(3)}</span>
+                                  <span className="font-bold text-n4gMediumTeal">
+                                    {(
+                                      (Number(sale?.price) * Number(sale?.charityShare)) /
+                                      10000
+                                    ).toFixed(3)}
+                                  </span>
                                 </div>
                                 <div className="flex items-center">
-                                  <span className="text-black text-xl pr-2">Art:</span>
-                                  <span className="text-black font-bold text-xl">{(Number(sale?.price) * (1 - Number(sale?.charityShare) / 10000)).toFixed(3)}</span>
+                                  <span className="pr-2 text-xl text-black">Art:</span>
+                                  <span className="text-xl font-bold text-black">
+                                    {(
+                                      Number(sale?.price) *
+                                      (1 - Number(sale?.charityShare) / 10000)
+                                    ).toFixed(3)}
+                                  </span>
                                 </div>
                               </div>
-                              <div className="flex relative justify-center items-center">
-                                <div className="w-full flex rounded-full overflow-hidden bg-transparent">
+                              <div className="relative flex items-center justify-center">
+                                <div className="flex w-full overflow-hidden rounded-full bg-transparent">
                                   <div
-                                    className="bg-n4gMediumTeal rounded-l-full justify-center py-3 text-xs text-white font-medium leading-none text-primary flex"
+                                    className="text-primary flex justify-center rounded-l-full bg-n4gMediumTeal py-3 text-xs font-medium leading-none text-white"
                                     style={{ width: `${calcCharityPercent()}%` }}
                                   />
                                   <div
-                                    className="py-3 justify-center text-white text-xs font-medium leading-none text-primary flex bg-black rounded-r-full"
-                                    style={{ width: `${calcArtPercent()}%` }} />
-
+                                    className="text-primary flex justify-center rounded-r-full bg-black py-3 text-xs font-medium leading-none text-white"
+                                    style={{ width: `${calcArtPercent()}%` }}
+                                  />
                                 </div>
                               </div>
                             </div>
-                            <div className="flex p-2 pb-0 items-end h-full invisible">
-                              <Image src={GivabitHeart} alt="givabit heart small" className="cursor-pointer" onClick={() => handleRangeValue(rangeValue + 1)} width={"60px"} height={"50px"} />
+                            <div className="invisible flex h-full items-end p-2 pb-0">
+                              <Image
+                                src={GivabitHeart}
+                                alt="givabit heart small"
+                                className="cursor-pointer"
+                                onClick={() => handleRangeValue(rangeValue + 1)}
+                                width={'60px'}
+                                height={'50px'}
+                              />
                             </div>
                           </div>
                         </div>
@@ -599,49 +628,65 @@ const NftPage: NextPage = () => {
                         </button>
                       </div>
                       <div className="flex flex-1 flex-col">
-                        <div className="flex flex-row flex-1 relative items-center justify-between">
-                          <div className="flex p-2 pb-0 h-full items-end">
-                            <Image src={GivabitHeart} alt="givabit heart small" className="cursor-pointer" onClick={() => handleRangeValue(0)} width={"50px"} height={"40px"} />
+                        <div className="relative flex flex-1 flex-row items-center justify-between">
+                          <div className="flex h-full items-end p-2 pb-0">
+                            <Image
+                              src={GivabitHeart}
+                              alt="givabit heart small"
+                              className="cursor-pointer"
+                              onClick={() => handleRangeValue(0)}
+                              width={'50px'}
+                              height={'40px'}
+                            />
                           </div>
-                          <div className="flex flex-col justify-between h-full flex-1">
+                          <div className="flex h-full flex-1 flex-col justify-between">
                             <div className="flex justify-between">
-                              <div className="flex text-xl items-center">
+                              <div className="flex items-center text-xl">
                                 <span className="pr-2">Charity:</span>
-                                <span className="text-n4gMediumTeal">{(Number(sale?.price) * Number(sale?.charityShare) / 10000).toFixed(3)}+</span>
+                                <span className="text-n4gMediumTeal">
+                                  {(
+                                    (Number(sale?.price) * Number(sale?.charityShare)) /
+                                    10000
+                                  ).toFixed(3)}
+                                  +
+                                </span>
                                 <input
                                   type="number"
                                   value={rangeValue}
                                   onChange={(e) => handleRangeValue(e.target.value)}
-                                  className="text-xl n4gForm w-[110px] p-[5px]"
+                                  className="n4gForm w-[110px] p-[5px] text-xl"
                                 />
                               </div>
                               <div className="flex items-center">
-                                <span className="text-black text-xl pr-2">Art:</span>
-                                <span className="text-black font-bold text-xl">{(Number(sale?.price) * (1 - Number(sale?.charityShare) / 10000)).toFixed(3)}</span>
+                                <span className="pr-2 text-xl text-black">Art:</span>
+                                <span className="text-xl font-bold text-black">
+                                  {(
+                                    Number(sale?.price) *
+                                    (1 - Number(sale?.charityShare) / 10000)
+                                  ).toFixed(3)}
+                                </span>
                               </div>
                             </div>
-                            <div className='flex'>
-                              <span className='-mt-3 text-md text-gray-600'>
-                                {charity?.name}
-                              </span>
+                            <div className="flex">
+                              <span className="text-md -mt-3 text-gray-600">{charity?.name}</span>
                             </div>
-                            <div className="flex relative justify-center items-center">
-                              <div className="w-full flex rounded-full overflow-hidden bg-transparent">
+                            <div className="relative flex items-center justify-center">
+                              <div className="flex w-full overflow-hidden rounded-full bg-transparent">
                                 <div
-                                  className="py-3 justify-center rounded-l-full bg-n4gGreen text-xs font-medium leading-none text-primary flex"
-                                  style={{ width: `${rangeValue / rangeMaxValue * 100}%` }}
+                                  className="text-primary flex justify-center rounded-l-full bg-n4gGreen py-3 text-xs font-medium leading-none"
+                                  style={{ width: `${(rangeValue / rangeMaxValue) * 100}%` }}
                                 />
                                 <div
-                                  className="bg-n4gMediumTeal py-3 justify-center text-xs text-white font-medium leading-none text-primary flex"
+                                  className="text-primary flex justify-center bg-n4gMediumTeal py-3 text-xs font-medium leading-none text-white"
                                   style={{ width: `${calcCharityPercent()}%` }}
                                 />
                                 <div
-                                  className="py-3 justify-center text-white text-xs font-medium leading-none text-primary flex bg-black rounded-r-full"
-                                  style={{ width: `${calcArtPercent()}%` }} />
-
+                                  className="text-primary flex justify-center rounded-r-full bg-black py-3 text-xs font-medium leading-none text-white"
+                                  style={{ width: `${calcArtPercent()}%` }}
+                                />
                               </div>
                               <input
-                                className="bg-transparent appearance-none absolute w-full range-silder"
+                                className="range-silder absolute w-full appearance-none bg-transparent"
                                 type="range"
                                 step={0.001}
                                 min={0}
@@ -651,8 +696,15 @@ const NftPage: NextPage = () => {
                               />
                             </div>
                           </div>
-                          <div className="flex p-2 pb-0 items-end h-full">
-                            <Image src={GivabitHeart} alt="givabit heart small" className="cursor-pointer" onClick={() => handleRangeValue(rangeValue + 1)} width={"60px"} height={"50px"} />
+                          <div className="flex h-full items-end p-2 pb-0">
+                            <Image
+                              src={GivabitHeart}
+                              alt="givabit heart small"
+                              className="cursor-pointer"
+                              onClick={() => handleRangeValue(rangeValue + 1)}
+                              width={'60px'}
+                              height={'50px'}
+                            />
                           </div>
                         </div>
                         <div className="flex"></div>

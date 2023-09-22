@@ -31,30 +31,32 @@ const Profile: NextPage = () => {
   const handleUpdateUser = useHandleUpdateUser()
 
   const updateUser = (data: any, imgUrl: string | undefined) => {
-    handleUpdateUser.mutate({
-      id: id,
-      data: {
-        name: data.name,
-        description: data.description,
-        imageUrl: imgUrl,
-        socialMedia: {
-          facebook: data.facebook,
-          twitter: data.twitter,
-          instagram: data.instagram
-        }
+    handleUpdateUser.mutate(
+      {
+        id: id,
+        data: {
+          name: data.name,
+          description: data.description,
+          imageUrl: imgUrl,
+          socialMedia: {
+            facebook: data.facebook,
+            twitter: data.twitter,
+            instagram: data.instagram,
+          },
+        },
+      },
+      {
+        onSuccess(resp) {
+          setProfile(resp.data)
+          router.push('/account')
+          setIsEdit(false)
+        },
       }
-    }, {
-      onSuccess(resp) {
-        setProfile(resp.data)
-        router.push("/account")
-        setIsEdit(false)
-      }
-    })
+    )
   }
 
-
   useEffect(() => {
-    setWalletAddress(wallet ?? "-")
+    setWalletAddress(wallet ?? '-')
   }, [wallet])
 
   useEffect(() => {
@@ -67,9 +69,6 @@ const Profile: NextPage = () => {
     setProfile(prof)
   }, [prof])
 
-
-
-
   return (
     <>
       <Head>
@@ -81,8 +80,8 @@ const Profile: NextPage = () => {
 
       <div className="mx-auto max-w-2xl px-10 pt-32 lg:max-w-7xl">
         <div className="">
-          <div className="flex p-4 lg:flex-row flex-col items-center">
-            <div className="group relative h-40 w-40 rounded-full shadow-lg xl:h-56 xl:w-56 overflow-hidden">
+          <div className="flex flex-col items-center p-4 lg:flex-row">
+            <div className="group relative h-40 w-40 overflow-hidden rounded-full shadow-lg xl:h-56 xl:w-56">
               <Image
                 src={profile?.imageUrl || previewAvatar}
                 alt="Avatar"
@@ -90,9 +89,11 @@ const Profile: NextPage = () => {
                 layout="fill"
               />
             </div>
-            <div className="flex flex-col p-8 justify-center">
-              <h2 className="text-3xl lg:text-4xl font-semibold p-3">{profile?.name || 'Unnamed'}</h2>
-              <h3 className="text-md lg:text-xl px-3 text-blue-700">{walletAddress}</h3>
+            <div className="flex flex-col justify-center p-8">
+              <h2 className="p-3 text-3xl font-semibold lg:text-4xl">
+                {profile?.name || 'Unnamed'}
+              </h2>
+              <h3 className="text-md px-3 text-blue-700 lg:text-xl">{walletAddress}</h3>
               <div className="w-full px-3 pt-3">
                 <div className="text-md text-gray-400">{profile?.description || ''}</div>
               </div>
@@ -100,7 +101,7 @@ const Profile: NextPage = () => {
           </div>
 
           <div className="w-full px-2 sm:px-0">
-            {!isEdit &&
+            {!isEdit && (
               <Tab.Group>
                 <Tab.List className="flex border-b border-gray-200">
                   <NavTab title="My Profile" />
@@ -122,10 +123,11 @@ const Profile: NextPage = () => {
                     <MyCollectionsTab />
                   </Tab.Panel>
                 </Tab.Panels>
-              </Tab.Group>}
+              </Tab.Group>
+            )}
           </div>
         </div>
-      </div >
+      </div>
     </>
   )
 }

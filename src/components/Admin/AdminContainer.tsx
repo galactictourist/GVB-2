@@ -6,7 +6,7 @@ import {
   InboxIcon,
   InboxStackIcon,
   UsersIcon,
-  XMarkIcon
+  XMarkIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,7 +15,6 @@ import { Fragment, ReactNode, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import useAuth from '~/hooks/useAuth'
 import { logout } from '~/redux/slices/adminSlice'
-
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/home', icon: HomeIcon },
@@ -42,12 +41,10 @@ const AdminContainer = ({ children }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [profileNav, signoutNav] = userNavigation;
+  const [profileNav, signoutNav] = userNavigation
 
   const signoutHandler = (e: any) => {
-    dispatch(
-      logout()
-    )
+    dispatch(logout())
   }
 
   return (
@@ -115,7 +112,7 @@ const AdminContainer = ({ children }: Props) => {
                               router.pathname == item.href
                                 ? 'bg-indigo-800 text-white'
                                 : 'text-indigo-100 hover:bg-indigo-600',
-                              'group flex items-center rounded-md px-2 py-2 text-base font-medium cursor-pointer'
+                              'group flex cursor-pointer items-center rounded-md px-2 py-2 text-base font-medium'
                             )}
                           >
                             <item.icon
@@ -153,7 +150,7 @@ const AdminContainer = ({ children }: Props) => {
                         router.pathname == item.href
                           ? 'bg-indigo-800 text-white'
                           : 'text-indigo-100 hover:bg-indigo-600',
-                        'group flex items-center rounded-md px-2 py-2 text-base font-medium cursor-pointer'
+                        'group flex cursor-pointer items-center rounded-md px-2 py-2 text-base font-medium'
                       )}
                     >
                       <item.icon

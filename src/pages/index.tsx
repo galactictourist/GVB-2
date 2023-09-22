@@ -24,14 +24,17 @@ const Home: NextPage = () => {
               (cause) =>
                 cause.collections.length > 0 && (
                   <div key={cause.id}>
-                    <div className="flex itemoks-center justify-center p-4 text-2xl text-gray-900">
+                    <div className="itemoks-center flex justify-center p-4 text-2xl text-gray-900">
                       <Link href={`/cause/${cause.id}`}>
                         <h2
-                          className={`rounded-full cursor-pointer py-2 px-4 text-center font-bold ${getCauseBgColor(cause.name)}`}
+                          className={`cursor-pointer rounded-full py-2 px-4 text-center font-bold ${getCauseBgColor(
+                            cause.name
+                          )}`}
                           style={{
                             color: getCauseTextColor(cause.name),
-                            minWidth: '250px'
-                          }}>
+                            minWidth: '250px',
+                          }}
+                        >
                           {cause.name}
                         </h2>
                       </Link>

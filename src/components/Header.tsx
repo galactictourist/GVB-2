@@ -116,8 +116,9 @@ const HeaderNoSSR: React.FC<any> = () => {
 
   return (
     <Popover
-      className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${!isScrolled && 'transition duration-700'
-        }`}
+      className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${
+        !isScrolled && 'transition duration-700'
+      }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between  py-2 md:justify-start md:space-x-10">
@@ -172,7 +173,9 @@ const HeaderNoSSR: React.FC<any> = () => {
                               causes.map((cause) => (
                                 <Link key={cause.id} href={`/cause/${cause.id}`}>
                                   <div
-                                    className={`-m-3 flex cursor-pointer items-center rounded-3xl py-3 px-6 text-white transition duration-700 hover:opacity-50 ${getCauseBgColor(cause.name)}`}
+                                    className={`-m-3 flex cursor-pointer items-center rounded-3xl py-3 px-6 text-white transition duration-700 hover:opacity-50 ${getCauseBgColor(
+                                      cause.name
+                                    )}`}
                                     style={{
                                       color: getCauseTextColor(cause.name),
                                     }}
@@ -232,7 +235,11 @@ const HeaderNoSSR: React.FC<any> = () => {
                 >
                   <Menu.Items className="absolute right-0 mt-2 flex w-48 flex-col gap-4 rounded-md bg-white px-4 py-2 shadow-lg">
                     <Menu.Item>
-                      <button type="button" className="flex items-center gap-2" onClick={() => router.push("/account")}>
+                      <button
+                        type="button"
+                        className="flex items-center gap-2"
+                        onClick={() => router.push('/account')}
+                      >
                         <UserIcon className="h-6 w-6" />
                         My Account
                       </button>
