@@ -4,8 +4,8 @@ export interface AuthState {
   loading: boolean
 }
 
-export interface CausesState {}
+export interface CausesState { }
 
-export interface TopicState {}
+export interface TopicState { }
 
-export interface AdminState {}
+export interface AdminState { }

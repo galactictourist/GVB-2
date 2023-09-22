@@ -177,7 +177,12 @@ export default function EditCollection() {
                     Artist address
                   </label>
                   <div className="mt-1">
-                    <input required type="text" className="n4gForm h-10" {...register('artistAddress')} />
+                    <input
+                      required
+                      type="text"
+                      className="n4gForm h-10"
+                      {...register('artistAddress')}
+                    />
                   </div>
                 </div>
 

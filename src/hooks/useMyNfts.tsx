@@ -10,21 +10,17 @@ export type MyNftsResp = {
 }
 
 export const useMyNfts = (page: number, limit: number) => {
-  return useQuery<MyNftsResp>(
-    ['my-nfts', page, limit],
-    async () => {
+  return useQuery<MyNftsResp>(['my-nfts', page, limit], async () => {
+    const { data: resp } = await mainClient.post('/nfts/_search/mine', {
+      pagination: {
+        limit,
+        page,
+      },
+    })
 
-      const { data: resp } = await mainClient.post('/nfts/_search/mine', {
-        pagination: {
-          limit,
-          page
-        }
-      })
-
-      return {
-        data: resp.data,
-        total: resp.meta.pagination.total
-      }
-    },
-  )
+    return {
+      data: resp.data,
+      total: resp.meta.pagination.total,
+    }
+  })
 }

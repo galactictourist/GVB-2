@@ -8,9 +8,6 @@ import { useHandleUploadImage } from '~/handlers/useHandleUploadImage'
 import { useAllCollections } from '~/hooks/useAllCollections'
 // import NftBuildJson from '~/nfts/json/_metadata.json'
 
-
-
-
 const Nfts: NextPage = () => {
   const { data: collections, isLoading } = useAllCollections()
   const [collectionId, setCollectionId] = useState<string>()
@@ -23,7 +20,6 @@ const Nfts: NextPage = () => {
   const BulkUpload = async () => {
     const bulkData: any[] = []
     const toastId = toast.loading('Create nft in progress...')
-
 
     // NftBuildJson.slice(0, 1).forEach((nft) => {
     //   const nftImage = new File([require(`~/nfts/images/${nft.image.split('/')[3]}`)], `${nft.image.split('/')[3]}`, { type: 'image/png' })
@@ -44,20 +40,19 @@ const Nfts: NextPage = () => {
     //   })
     // })
 
-
-
-    handleUploadBulkNft.mutate({
-
-      data: bulkData
-    }, {
-      onSuccess(resp) {
-        console.log(resp)
+    handleUploadBulkNft.mutate(
+      {
+        data: bulkData,
       },
-      onError(err) {
-        console.log(err)
+      {
+        onSuccess(resp) {
+          console.log(resp)
+        },
+        onError(err) {
+          console.log(err)
+        },
       }
-    })
-
+    )
   }
 
   const selectCollectionId = (e: any) => {
@@ -70,7 +65,8 @@ const Nfts: NextPage = () => {
 
   return (
     <>
-      <Head>you
+      <Head>
+        you
         <title>GivaBit | Admin | Nfts </title>
         <meta name="description" content="Show NFTs" />
       </Head>
@@ -79,9 +75,7 @@ const Nfts: NextPage = () => {
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
               <h1 className="text-xl font-semibold text-gray-900">Nfts</h1>
-              <p className="mt-2 text-sm text-gray-700">
-                A list of all nfts for bulk uploading
-              </p>
+              <p className="mt-2 text-sm text-gray-700">A list of all nfts for bulk uploading</p>
             </div>
             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
               <button
@@ -103,10 +97,11 @@ const Nfts: NextPage = () => {
             </select>
           </div>
           <div className="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-300 h-[500px]">
+            <table className="h-[500px] min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 <tr>
-                  <th scope="col"
+                  <th
+                    scope="col"
                     className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                   >
                     Image
@@ -125,7 +120,7 @@ const Nfts: NextPage = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white h-[500px] overflow-hidden">
+              <tbody className="h-[500px] divide-y divide-gray-200 overflow-hidden bg-white">
                 {/*NftBuildJson &&
                   NftBuildJson.slice(0, 10).map((nft, _id) => (
                     <tr key={_id}>

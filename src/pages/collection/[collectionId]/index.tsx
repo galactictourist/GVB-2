@@ -40,29 +40,35 @@ export default function CollectionPage() {
           ) : (
             collection && (
               <>
-                <div className="flex justify-center relative">
+                <div className="relative flex justify-center">
                   <div className="max-w-[calc(100%-350px)]">
                     <h2 className="flex items-center justify-center p-4 text-4xl text-gray-900">
                       {collection.name}
                     </h2>
-                    <h3 className="flex items-center justify-center text-2xl text-gray-900 text-center">
+                    <h3 className="flex items-center justify-center text-center text-2xl text-gray-900">
                       {collection.description}
                     </h3>
                   </div>
                   <div className="absolute right-0 bottom-0">
                     <Link href={getEtherscan(collection.artistAddress)}>
                       <a target="_blank">
-                        <div className="text-center text-xl text-gray-900 py-2 cursor-pointer">
-                          Artist: <span className='text-n4gMediumTeal hover:text-gray-600'>{shortify(collection.artistAddress)}</span>
+                        <div className="cursor-pointer py-2 text-center text-xl text-gray-900">
+                          Artist:{' '}
+                          <span className="text-n4gMediumTeal hover:text-gray-600">
+                            {shortify(collection.artistAddress)}
+                          </span>
                         </div>
                       </a>
                     </Link>
                     <Link href={`/cause/${collection.topic.parentId}`}>
                       <h2
-                        className={`flex justify-center rounded-3xl p-2 text-xl cursor-pointer ${getCauseBgColor(collection.cause)}`}
+                        className={`flex cursor-pointer justify-center rounded-3xl p-2 text-xl ${getCauseBgColor(
+                          collection.cause
+                        )}`}
                         style={{
                           color: getCauseTextColor(collection.cause),
-                        }}>
+                        }}
+                      >
                         {collection.cause}
                       </h2>
                     </Link>

@@ -25,7 +25,7 @@ export default function EditCollection() {
     id: collectionId as string,
   })
 
-  let toastId = '';
+  let toastId = ''
 
   const {
     register,
@@ -71,7 +71,7 @@ export default function EditCollection() {
           name: formData.name,
           artistAddress: formData.artistAddress,
           description: formData.description,
-          topicId: formData.cause
+          topicId: formData.cause,
         },
       },
       {
@@ -95,19 +95,22 @@ export default function EditCollection() {
   const onSumbit = (data: any) => {
     toastId = toast.loading('Update collection in progress...')
     if (data.file.length > 0) {
-      handleUploadImage.mutate({ image: data.file[0], postUrl: '/storage/collection/image' }, {
-        onSuccess(resp) {
-          updateCollection(data, resp.url)
-        }, onError(error: any) {
-          console.log(error)
-          const errorMsg = error.message ?? 'Upload image failed.'
-          toast.error(errorMsg)
-        },
-      })
+      handleUploadImage.mutate(
+        { image: data.file[0], postUrl: '/storage/collection/image' },
+        {
+          onSuccess(resp) {
+            updateCollection(data, resp.url)
+          },
+          onError(error: any) {
+            console.log(error)
+            const errorMsg = error.message ?? 'Upload image failed.'
+            toast.error(errorMsg)
+          },
+        }
+      )
     } else {
       updateCollection(data, collection?.imageStorageId || '')
     }
-
   }
 
   return (
@@ -133,7 +136,10 @@ export default function EditCollection() {
 
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   <div className="sm:col-span-6">
-                    <label htmlFor="cover-photo" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="cover-photo"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Cover photo
                     </label>
                     <div className="px relative mt-1 h-48 w-48 rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
@@ -192,7 +198,12 @@ export default function EditCollection() {
                       Artist address
                     </label>
                     <div className="mt-1">
-                      <input required type="text" className="n4gForm h-10" {...register('artistAddress')} />
+                      <input
+                        required
+                        type="text"
+                        className="n4gForm h-10"
+                        {...register('artistAddress')}
+                      />
                     </div>
                   </div>
 
@@ -201,7 +212,12 @@ export default function EditCollection() {
                       Description
                     </label>
                     <div className="mt-2">
-                      <textarea required rows={3} className="n4gForm" {...register('description')} />
+                      <textarea
+                        required
+                        rows={3}
+                        className="n4gForm"
+                        {...register('description')}
+                      />
                     </div>
                     <p className="mt-2 text-sm text-gray-500">
                       How would you describe this collection?
@@ -218,7 +234,11 @@ export default function EditCollection() {
                           causes.map((cause) => (
                             <optgroup label={cause.name} key={cause.id}>
                               {cause.children.map((subcause) => (
-                                <option key={subcause.id} value={subcause.id} className="capitalize">
+                                <option
+                                  key={subcause.id}
+                                  value={subcause.id}
+                                  className="capitalize"
+                                >
                                   {subcause.name}
                                 </option>
                               ))}

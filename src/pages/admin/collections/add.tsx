@@ -139,7 +139,9 @@ export default function CreateCollection() {
                           />
                         </label>
                       </div>
-                      {!preview && <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>}
+                      {!preview && (
+                        <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -167,7 +169,12 @@ export default function CreateCollection() {
                     Artist address
                   </label>
                   <div className="mt-1">
-                    <input required type="text" className="n4gForm h-10" {...register('artistAddress')} />
+                    <input
+                      required
+                      type="text"
+                      className="n4gForm h-10"
+                      {...register('artistAddress')}
+                    />
                   </div>
                 </div>
                 <div className="sm:col-span-6">
