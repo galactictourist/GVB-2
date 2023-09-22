@@ -19,7 +19,7 @@ function withAuth(WrappedComponent: React.ComponentType<Props>) {
     }, []);
 
     if (status === '') {
-      return;
+      return <></>;
     }
 
     return <WrappedComponent {...props} />;
