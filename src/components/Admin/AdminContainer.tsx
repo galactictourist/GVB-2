@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, ReactNode, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import useAuth from '~/hooks/useAuth'
+import withAuth from '~/hooks/useAuth'
 import { logout } from '~/redux/slices/adminSlice'
 
 const navigation = [
@@ -247,4 +247,4 @@ const AdminContainer = ({ children }: Props) => {
   )
 }
 
-export default useAuth(AdminContainer)
+export default withAuth(AdminContainer)
