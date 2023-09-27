@@ -22,6 +22,7 @@ export const ADMIN_PAGES = {
   COLLECTIONS: {
     INDEX: '/admin/collections',
     CREATE: '/admin/collections/add',
+    EDIT: '/admin/collections/edit/',
   }
 }
 
