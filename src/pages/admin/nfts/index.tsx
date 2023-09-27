@@ -2,10 +2,14 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import AdminContainer from '~/components/Admin/AdminContainer'
+import { SimplePagination } from '~/components/Pagination/SimplePagination'
 import { useHandleUploadBulk } from '~/handlers/useHandleUploadBulk'
 import { useHandleUploadImage } from '~/handlers/useHandleUploadImage'
 import { useAllCollections } from '~/hooks/useAllCollections'
+import { usePagination } from '~/hooks/usePagination'
+import { maxDisplayedUploadedImages } from '~/utils/constants'
 import UploadZipForm from './uploadZipForm'
+
 // import NftBuildJson from '~/nfts/json/_metadata.json'
 
 export interface ImageItem {
@@ -16,12 +20,15 @@ export interface ImageItem {
 const Nfts: NextPage = () => {
   const { data: collections, isLoading } = useAllCollections()
   const [collectionId, setCollectionId] = useState<string>()
-  const [images, setImages] = useState<ImageItem[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<ImageItem[]>([]);
+  const [displayedImages, setDisplayedImages] = useState<ImageItem[]>([]);
   const [uploadBtnLabel, setUploadBtnLabel] = useState("Upload zip or images");
 
+  const pagination = usePagination(maxDisplayedUploadedImages);
+  const { pageSetter, totalSetter, changePage } = pagination;
+  const { page, limit, total } = pagination;
 
   const handleUploadBulkNft = useHandleUploadBulk()
-
   const handleUploadImage = useHandleUploadImage()
 
   const BulkUpload = async () => {
@@ -65,8 +72,20 @@ const Nfts: NextPage = () => {
   }
 
   const imagesHandler = (files: ImageItem[]) => {
+    const firstPage = 1
     setUploadBtnLabel(`${files.length} files`)
-    setImages(files);
+    setUploadedImages(files)
+    setDisplayedImages(files.slice(0, firstPage * maxDisplayedUploadedImages))
+    pageSetter(firstPage)
+    totalSetter(files.length)
+  }
+
+  const pageHandler = (newPage: number) => {
+    const end = newPage * maxDisplayedUploadedImages;
+    const start = end - maxDisplayedUploadedImages;
+    const toDisplayedImages = uploadedImages.slice(start, end)
+    setDisplayedImages(toDisplayedImages)
+    changePage(newPage);
   }
 
   useEffect(() => {
@@ -74,10 +93,10 @@ const Nfts: NextPage = () => {
   }, [collections])
 
   useEffect(() => {
-    if (!images.length) {
+    if (!uploadedImages.length) {
       setUploadBtnLabel("Upload zip or folder")
     }
-  }, [images])
+  }, [uploadedImages])
 
   return (
     <>
@@ -137,7 +156,7 @@ const Nfts: NextPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white h-[500px] overflow-hidden">
-                {images.map((image, _id) => (
+                {displayedImages.map((image, _id) => (
                   <tr key={_id}>
                     <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                       <img alt={`nft image ${_id}`} src={image.src} width={50} height={50} />
@@ -176,6 +195,13 @@ const Nfts: NextPage = () => {
                   ))} */}
               </tbody>
             </table>
+            <SimplePagination
+              page={page}
+              count={uploadedImages?.length}
+              limit={limit}
+              total={total}
+              pageSelect={pageHandler}
+            />
           </div>
         </div>
       </AdminContainer >
