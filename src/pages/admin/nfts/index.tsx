@@ -195,13 +195,13 @@ const Nfts: NextPage = () => {
                   ))} */}
               </tbody>
             </table>
-            <SimplePagination
+            {displayedImages.length > 0 && <SimplePagination
               page={page}
               count={uploadedImages?.length}
               limit={limit}
               total={total}
               pageSelect={pageHandler}
-            />
+            />}
           </div>
         </div>
       </AdminContainer >
