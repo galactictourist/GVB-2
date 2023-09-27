@@ -1,4 +1,4 @@
-import { setCookie } from 'nookies'
+import Cookies from 'js-cookie'
 import { call, put } from 'redux-saga/effects'
 import { adminApi } from '~/pages/api/admin.api'
 import { COOKIES } from '../../utils/constants'
@@ -11,16 +11,24 @@ import {
   updateTopicSuccess
 } from '../slices/adminSlice'
 
-export function* adminSaga(action: any) {
+export function* adminLoginSaga(action: any) {
   try {
     const { data } = yield call(adminApi.login, action.payload)
     if (data) {
-      yield call(setCookie, null, COOKIES.JWT, data.accessToken, { maxAge: 8640 })
+      yield call(Cookies.set, COOKIES.JWT, data.accessToken, { expires: 8640 })
       yield put(loginSuccess(data))
     }
   } catch (error) {
     console.log(error)
     yield put(loginFailure(error))
+  }
+}
+
+export function* adminLogoutSaga(action: any) {
+  try {
+    yield call(Cookies.remove, COOKIES.JWT)
+  } catch (error) {
+    console.log(error)
   }
 }
 
