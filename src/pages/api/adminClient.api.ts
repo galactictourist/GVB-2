@@ -1,5 +1,7 @@
 import axios from 'axios'
-import { parseCookies } from 'nookies'
+import Cookies from 'js-cookie'
+
+
 import { COOKIES } from '~/utils/constants'
 
 export const adminClient = (baseURL: string) => {
@@ -10,9 +12,9 @@ export const adminClient = (baseURL: string) => {
 
   instance.interceptors.request.use(
     async function (config) {
-      const cookies = await parseCookies()
-      if (cookies[COOKIES.JWT]) {
-        config.headers!.Authorization = `Bearer ${cookies[COOKIES.JWT]}`
+      const cookies = Cookies.get(COOKIES.JWT)
+      if (cookies) {
+        config.headers!.Authorization = `Bearer ${cookies}`
       }
       return { ...config }
     },

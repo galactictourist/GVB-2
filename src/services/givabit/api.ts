@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 import { BigNumberish } from 'ethers'
-import { parseCookies } from 'nookies'
+import Cookies from 'js-cookie'
 import { CountryEntity } from '~/types/entity'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { SaleEntity } from '~/types/entity/sale.entity'
@@ -48,7 +48,7 @@ export class GivabitApi {
   }
 
   async nftSearchMine(page: number, limit: number) {
-    const cookies = await parseCookies()
+    const cookies = Cookies.get(USER_COOKIES.JWT)
     const { data: result } = await this.instance.post(
       '/nfts/_search/mine',
       {
@@ -59,7 +59,7 @@ export class GivabitApi {
       },
       {
         headers: {
-          Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+          Authorization: `Bearer ${cookies}`,
         },
       }
     )
@@ -75,7 +75,7 @@ export class GivabitApi {
   }
 
   async nftSearch(filter: { ids?: string[] }, page: number, limit: number) {
-    const cookies = await parseCookies()
+    const cookies = Cookies.get(USER_COOKIES.JWT)
     const { data: result } = await this.instance.post(
       '/nfts/_search',
       {
@@ -89,7 +89,7 @@ export class GivabitApi {
       },
       {
         headers: {
-          Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+          Authorization: `Bearer ${cookies}`,
         },
       }
     )
@@ -126,7 +126,7 @@ export class GivabitApi {
   }
 
   async saleSearchMine(filter: { nftIds?: string[] }, page: number, limit: number) {
-    const cookies = await parseCookies()
+    const cookies = Cookies.get(USER_COOKIES.JWT)
     const { data: result } = await this.instance.post(
       '/sales/_search/mine',
       {
@@ -140,7 +140,7 @@ export class GivabitApi {
       },
       {
         headers: {
-          Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+          Authorization: `Bearer ${cookies}`,
         },
       }
     )
@@ -196,10 +196,10 @@ export class GivabitApi {
     quantity: number
     expiryInMinutes: number
   }) {
-    const cookies = await parseCookies()
+    const cookies = Cookies.get(USER_COOKIES.JWT)
     const { data: result } = await this.instance.post('/sales/signing', info, {
       headers: {
-        Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+        Authorization: `Bearer ${cookies}`,
       },
     })
     return {
@@ -208,10 +208,10 @@ export class GivabitApi {
   }
 
   async createSale(sale: { clientSignature: string; saleData: string; serverSignature: string }) {
-    const cookies = await parseCookies()
+    const cookies = Cookies.get(USER_COOKIES.JWT)
     const { data: result } = await this.instance.post('/sales', sale, {
       headers: {
-        Authorization: `Bearer ${cookies[USER_COOKIES.JWT]}`,
+        Authorization: `Bearer ${cookies}`,
       },
     })
     return {

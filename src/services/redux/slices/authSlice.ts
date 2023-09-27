@@ -1,4 +1,4 @@
-import { parseCookies } from 'nookies'
+import Cookies from 'js-cookie'
 import { createSlice } from '~/utils/@reduxjs/toolkit'
 import { USER_COOKIES } from '~/utils/constants'
 
@@ -7,13 +7,11 @@ export interface AuthState {
   wallet?: string
 }
 
-const cookies = parseCookies()
-
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    id: cookies[USER_COOKIES.ID] ?? '',
-    wallet: cookies[USER_COOKIES.WALLET_ADDRESS] ?? '',
+    id: Cookies.get(USER_COOKIES.ID) ?? '',
+    wallet: Cookies.get(USER_COOKIES.WALLET_ADDRESS) ?? '',
   },
   reducers: {
     /**
