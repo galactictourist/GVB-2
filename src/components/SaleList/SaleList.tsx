@@ -1,14 +1,14 @@
 import { PhoneIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'
+import { usePagination } from '~/hooks/usePagination'
 import { givabitApi } from '~/services/givabit/api'
 import { SaleEntity } from '~/types/entity/sale.entity'
 import { SimplePagination } from '../Pagination/SimplePagination'
 
 export function SaleList() {
-  const [total, totalSetter] = useState(0)
-  const [limit, limitSetter] = useState(20)
-  const [page, pageSetter] = useState(1)
-  const [navPage, navPageSetter] = useState(1)
+  const pagination = usePagination();
+  const { pageSetter, limitSetter, totalSetter, changePage } = pagination;
+  const { page, limit, total, navPage } = pagination;
   const [sales, salesSetter] = useState<SaleEntity[] | undefined>(undefined)
 
   const fetch = async (page: number, limit: number) => {
@@ -26,14 +26,10 @@ export function SaleList() {
   }
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       fetch(navPage, limit)
     })()
   }, [navPage, limit])
-
-  const changePage = (page: number) => {
-    navPageSetter(page)
-  }
 
   const buy = async (sale: SaleEntity) => {
     /*

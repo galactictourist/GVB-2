@@ -24,3 +24,5 @@ export const ADMIN_PAGES = {
     CREATE: '/admin/collections/add',
   }
 }
+
+export const maxDisplayedUploadedImages = 50;
