@@ -1,70 +1,71 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import AdminContainer from '~/components/Admin/AdminContainer'
+import DisabledButton from '~/components/DisabledButton'
 import { SimplePagination } from '~/components/Pagination/SimplePagination'
 import { useHandleUploadBulk } from '~/handlers/useHandleUploadBulk'
-import { useHandleUploadImage } from '~/handlers/useHandleUploadImage'
 import { useAllCollections } from '~/hooks/useAllCollections'
 import { usePagination } from '~/hooks/usePagination'
+import { NftEntity } from '~/types/entity/nft.entity'
 import { maxDisplayedUploadedImages } from '~/utils/constants'
 import UploadZipForm from './uploadZipForm'
-
-// import NftBuildJson from '~/nfts/json/_metadata.json'
 
 export interface ImageItem {
   name: string
   src: any
+  file: File
+  metadata: NftEntity
 }
 
 const Nfts: NextPage = () => {
   const { data: collections, isLoading } = useAllCollections()
   const [collectionId, setCollectionId] = useState<string>()
-  const [uploadedImages, setUploadedImages] = useState<ImageItem[]>([]);
-  const [displayedImages, setDisplayedImages] = useState<ImageItem[]>([]);
-  const [uploadBtnLabel, setUploadBtnLabel] = useState("Upload zip or images");
+  const [uploadedImages, setUploadedImages] = useState<ImageItem[]>([])
+  const [displayedImages, setDisplayedImages] = useState<ImageItem[]>([])
+  const [uploadBtnLabel, setUploadBtnLabel] = useState('')
 
-  const pagination = usePagination(maxDisplayedUploadedImages);
-  const { pageSetter, totalSetter, changePage } = pagination;
-  const { page, limit, total } = pagination;
+  const pagination = usePagination(maxDisplayedUploadedImages)
+  const { pageSetter, totalSetter, changePage } = pagination
+  const { page, limit, total } = pagination
 
   const handleUploadBulkNft = useHandleUploadBulk()
-  const handleUploadImage = useHandleUploadImage()
 
-  const BulkUpload = async () => {
-    //   const bulkData: any[] = []
-    //   const toastId = toast.loading('Create nft in progress...')
+  const bulkUpload = async () => {
+    const bulkData: any[] = []
+    const toastId = toast.loading('Create nft in progress...')
 
-    //   NftBuildJson.slice(0, 1).forEach((nft) => {
-    //     const nftImage = new File([require(`~/nfts/images/${nft.image.split('/')[3]}`)], `${nft.image.split('/')[3]}`, { type: 'image/png' })
+    uploadedImages.forEach((imageItem) => {
+      bulkData.push({
+        name: imageItem.name,
+        description: imageItem.metadata.description,
+        network: 'POLYGON_MUMBAI',
+        collectionId: collectionId,
+        metadata: {
+          external_url: imageItem.metadata.external_url,
+          youtube_url: '',
+          animation_url: '',
+        },
+        royality: 1,
+        attributes: imageItem.metadata.attributes,
+        image: imageItem.file,
+      })
+    })
 
-    //     bulkData.push({
-    //       name: nft.name,
-    //       description: nft.description,
-    //       network: 'POLYGON_MUMBAI',
-    //       collectionId: collectionId,
-    //       metadata: {
-    //         external_url: nft.external_url,
-    //         youtube_url: '',
-    //         animation_url: '',
-    //       },
-    //       royality: 1,
-    //       attributes: nft.attributes,
-    //       image: new File([require(`~/nfts/images/${nft.image.split('/')[3]}`)], `${nft.image.split('/')[3]}`, { type: 'image/png' })
-    //     })
-    //   })
-
-    //   handleUploadBulkNft.mutate({
-    //     data: bulkData
-    //   }, {
-    //     onSuccess(resp) {
-    //       console.log(resp)
-    //     },
-    //     onError(err) {
-    //       console.log(err)
-    //     }
-    //   })
-
+    handleUploadBulkNft.mutate(
+      {
+        data: bulkData,
+      },
+      {
+        onSuccess(resp) {
+          console.log(resp)
+        },
+        onError(err) {
+          console.log(err)
+        },
+      }
+    )
   }
 
   const selectCollectionId = (e: any) => {
@@ -73,7 +74,7 @@ const Nfts: NextPage = () => {
 
   const imagesHandler = (files: ImageItem[]) => {
     const firstPage = 1
-    setUploadBtnLabel(`${files.length} files`)
+    setUploadBtnLabel(`${files.length} images`)
     setUploadedImages(files)
     setDisplayedImages(files.slice(0, firstPage * maxDisplayedUploadedImages))
     pageSetter(firstPage)
@@ -81,11 +82,11 @@ const Nfts: NextPage = () => {
   }
 
   const pageHandler = (newPage: number) => {
-    const end = newPage * maxDisplayedUploadedImages;
-    const start = end - maxDisplayedUploadedImages;
+    const end = newPage * maxDisplayedUploadedImages
+    const start = end - maxDisplayedUploadedImages
     const toDisplayedImages = uploadedImages.slice(start, end)
     setDisplayedImages(toDisplayedImages)
-    changePage(newPage);
+    changePage(newPage)
   }
 
   useEffect(() => {
@@ -94,7 +95,7 @@ const Nfts: NextPage = () => {
 
   useEffect(() => {
     if (!uploadedImages.length) {
-      setUploadBtnLabel("Upload zip or folder")
+      setUploadBtnLabel('Attach zip file')
     }
   }, [uploadedImages])
 
@@ -111,15 +112,19 @@ const Nfts: NextPage = () => {
               <h1 className="text-xl font-semibold text-gray-900">Nfts</h1>
               <p className="mt-2 text-sm text-gray-700">A list of all nfts for bulk uploading</p>
             </div>
-            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            <div className="mt-4 flex gap-5 sm:mt-0 sm:ml-16 sm:flex-none">
+              {!uploadedImages.length ? (
+                <DisabledButton buttonLabel="Upload NFT Collection" />
+              ) : (
+                <button
+                  type="button"
+                  onClick={bulkUpload}
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                >
+                  Upload NFT Collection
+                </button>
+              )}
               <UploadZipForm label={uploadBtnLabel} imagesHandler={imagesHandler} />
-              {/* <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                onClick={BulkUpload}
-              >
-                Upload Nfts
-              </button> */}
             </div>
           </div>
           <div className="mt-4">
@@ -155,7 +160,7 @@ const Nfts: NextPage = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white h-[500px] overflow-hidden">
+              <tbody className="h-[500px] divide-y divide-gray-200 overflow-hidden bg-white">
                 {displayedImages.map((image, _id) => (
                   <tr key={_id}>
                     <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
@@ -165,46 +170,29 @@ const Nfts: NextPage = () => {
                       {image.name}
                     </td>
                     <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                      {image.name}
+                      {`${image.metadata.description}`}
+                      <br />
+                      {image.metadata.attributes &&
+                        `Attributes: ${image.metadata.attributes
+                          .map((trait: any) => trait.value)
+                          .join(', ')}`}
                     </td>
                   </tr>
                 ))}
-                {/* {NftBuildJson &&
-                  NftBuildJson.slice(0, 10).map((nft, _id) => (
-                    <tr key={_id}>
-                      <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                        <Image alt={`nft image ${_id}`} src={`/images/${nft.image.split('/')[3]}`} width={50} height={50} />
-                      </td>
-                      <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                        {nft.name}
-                        <dl className="font-normal lg:hidden">
-                          <dt className="sr-only">Description</dt>
-                          <dd className="mt-1 truncate text-gray-700">
-                            {nft.description}
-                          </dd>
-                          <dt className="sr-only sm:hidden">Status</dt>
-                          <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                            {nft.name}
-                          </dd>
-                        </dl>
-                      </td>
-                      <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                        {nft.description}
-                      </td>
-                    </tr>
-                  ))} */}
               </tbody>
             </table>
-            {displayedImages.length > 0 && <SimplePagination
-              page={page}
-              count={uploadedImages?.length}
-              limit={limit}
-              total={total}
-              pageSelect={pageHandler}
-            />}
+            {displayedImages.length > 0 && (
+              <SimplePagination
+                page={page}
+                count={uploadedImages?.length}
+                limit={limit}
+                total={total}
+                pageSelect={pageHandler}
+              />
+            )}
           </div>
         </div>
-      </AdminContainer >
+      </AdminContainer>
     </>
   )
 }

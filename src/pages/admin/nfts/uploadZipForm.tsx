@@ -1,5 +1,4 @@
 import zip from 'jszip';
-import { ImageItem } from ".";
 
 interface Props {
   label: string,
@@ -8,45 +7,38 @@ interface Props {
 
 export default function UploadZipForm({ label, imagesHandler }: Props) {
   const uploadZipHandler = async (e: any) => {
-    const file = e.target.files[0];
-    const isZip = file.name.match(/\.(zip)$/i);
-    let unparsedFiles = e.target.files;
+    const rawContents = await zip.loadAsync(e.target.files[0]);
+    const imageKeys = Object.keys(rawContents.files)
+      .filter(key => key.match(/\d\.(jpg|jpeg|png)$/i))
+      .sort(_sort).slice(0, 3);
+    const metadataKeys = Object.keys(rawContents.files)
+      .filter(key => key.match(/\d\.json$/i))
+      .sort(_sort).slice(0, 3);
 
-    if (isZip) {
-      const rawContents = await zip.loadAsync(file);
-      const contentKeys = Object.keys(rawContents.files).filter(key =>
-        !key.match(/^__MACOSX\//) && key.match(/\.(jpg|jpeg|png)$/i)
-      );
-      unparsedFiles = await Promise.all(contentKeys.map(async (key) => {
-        const content = await rawContents.file(key)!.async('blob');
-        const [, fileType] = key.match(/\.(jpg|jpeg|png)$/)!;
-        return new File([content], key, { type: `image/${fileType}` });
-      }));
-    }
+    const files = await Promise.all(imageKeys.map(async (key, i) => {
+      // convert raw image data to image file
+      const imageContent = await rawContents.file(key)!.async('blob');
+      const [, imageFileType] = key.match(/\.(jpg|jpeg|png)$/)!;
+      const image = new File([imageContent], key, { type: `image/${imageFileType}` });
 
-    const files = _parseImages(unparsedFiles);
+      // retreive data from json file
+      const metadataContent = await rawContents.file(metadataKeys[i])!.async("string");
+      console.log({ metadataContent })
+      const metadata = JSON.parse(metadataContent);
+
+      return {
+        name: metadata.name,
+        src: URL.createObjectURL(image),
+        file: image,
+        metadata
+      }
+    }));
+
     imagesHandler(files);
   }
 
-  const _parseImages = (imageFiles: File[]) => {
-    const keysArr = Object.keys(imageFiles);
-    const files = keysArr.reduce((arr: ImageItem[], key: any) => {
-      const file = imageFiles[key];
-      const isExtension = file.name.match(/\.(jpg|jpeg|png)$/i);
-
-      if (isExtension) {
-        const imageItem = {
-          name: file.name,
-          src: URL.createObjectURL(file)
-        };
-
-        return [...arr, imageItem]
-      }
-
-      return arr;
-    }, [])
-
-    return files;
+  const _sort = (a: string, b: string) => {
+    return +(a.match(/\d+/)!) - +(b.match(/\d+/)!);
   }
 
   return (
@@ -54,8 +46,7 @@ export default function UploadZipForm({ label, imagesHandler }: Props) {
       <label className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md">
         <input type="file" onChange={uploadZipHandler}
           id="fileInput"
-          accept=".zip,.jpg,.jpeg,.png"
-          multiple
+          accept=".zip"
           className="hidden"
         />
         <span id="buttonLabel">{label}</span>
