@@ -10,10 +10,10 @@ export default function UploadZipForm({ label, imagesHandler }: Props) {
     const rawContents = await zip.loadAsync(e.target.files[0]);
     const imageKeys = Object.keys(rawContents.files)
       .filter(key => key.match(/\d\.(jpg|jpeg|png)$/i))
-      .sort(_sort).slice(0, 3);
+      .sort(_sort);
     const metadataKeys = Object.keys(rawContents.files)
       .filter(key => key.match(/\d\.json$/i))
-      .sort(_sort).slice(0, 3);
+      .sort(_sort);
 
     const files = await Promise.all(imageKeys.map(async (key, i) => {
       // convert raw image data to image file
@@ -23,13 +23,13 @@ export default function UploadZipForm({ label, imagesHandler }: Props) {
 
       // retreive data from json file
       const metadataContent = await rawContents.file(metadataKeys[i])!.async("string");
-      console.log({ metadataContent })
       const metadata = JSON.parse(metadataContent);
 
       return {
         name: metadata.name,
         src: URL.createObjectURL(image),
         file: image,
+        uploadStatus: false,
         metadata
       }
     }));

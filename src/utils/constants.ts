@@ -27,3 +27,4 @@ export const ADMIN_PAGES = {
 }
 
 export const maxDisplayedUploadedImages = 50;
+export const maxDisplayedNfts = 60;

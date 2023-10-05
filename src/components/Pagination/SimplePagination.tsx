@@ -10,6 +10,10 @@ export function SimplePagination(props: {
   const maxPage = Math.ceil(props.total / props.limit)
   const pages = _.range(1, maxPage + 1)
 
+  console.log({ count: props.count, x: props })
+  const inactiveStyle = "relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium";
+  const activeStyle = "relative z-10 inline-flex items-center border border-indigo-500 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 focus:z-20"
+
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       {/* <div className="flex flex-1 justify-between sm:hidden">
@@ -31,7 +35,7 @@ export function SimplePagination(props: {
           <p className="text-sm text-gray-700">
             Showing <span className="font-medium">{(props.page - 1) * props.limit + 1}</span> to{' '}
             <span className="font-medium">
-              {(props.page - 1) * props.limit + (props.count || 0)}
+              {props.page * props.limit}
             </span>{' '}
             of <span className="font-medium">{props.total}</span> results
           </p>
@@ -49,13 +53,13 @@ export function SimplePagination(props: {
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
             </a> */}
             {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
-            {pages.map((page) => (
+            {pages.map((page, i) => (
               <a
                 key={page}
                 href="#"
                 onClick={() => props.pageSelect(page)}
                 aria-current="page"
-                className="relative z-10 inline-flex items-center border border-indigo-500 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 focus:z-20"
+                className={page === props.page ? activeStyle : inactiveStyle}
               >
                 {page}
               </a>

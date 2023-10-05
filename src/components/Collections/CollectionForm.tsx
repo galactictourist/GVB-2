@@ -113,15 +113,6 @@ const CollectionForm = ({ formLabelTexts, submitHandler, isLoading, collection }
 
           <div className="sm:col-span-6 md:col-span-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Collection address
-            </label>
-            <div className="mt-1">
-              <input type="text" className="n4gForm h-10" {...register('contract_address')} />
-            </div>
-          </div>
-
-          <div className="sm:col-span-6 md:col-span-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Artist address
             </label>
             <div className="mt-1">
@@ -151,6 +142,9 @@ const CollectionForm = ({ formLabelTexts, submitHandler, isLoading, collection }
             </label>
             <div className="mt-1">
               <select className="n4gForm h-10 capitalize" {...register('cause')}>
+                {formLabelTexts.submitButton === "Create" && <option className="capitalize">
+                  Choose cause
+                </option>}
                 {causes &&
                   causes.map((cause) => (
                     <optgroup label={cause.name} key={cause.id}>
