@@ -2,6 +2,7 @@ import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3BottomLeftIcon,
   FolderIcon,
+  HeartIcon,
   HomeIcon,
   InboxIcon,
   InboxStackIcon,
@@ -20,6 +21,7 @@ const navigation = [
   { name: 'Dashboard', href: '/admin/home', icon: HomeIcon },
   { name: 'Users', href: '/admin/users', icon: UsersIcon },
   { name: 'Causes', href: '/admin/causes', icon: FolderIcon },
+  { name: 'Charities', href: '/admin/charities', icon: HeartIcon },
   { name: 'Collections', href: '/admin/collections', icon: InboxIcon },
   { name: 'Nfts', href: '/admin/nfts', icon: InboxStackIcon },
 ]

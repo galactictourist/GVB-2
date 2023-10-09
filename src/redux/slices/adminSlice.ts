@@ -68,6 +68,36 @@ const adminSlice = createSlice({
       state.loading = false
       state.error = action.payload.error
     },
+    /**
+     * createCharity
+     */
+    createCharity(state, action) {
+      state.loading = true
+      state.error = ''
+    },
+    createCharitySuccess(state, action) {
+      state.loading = false
+      state.error = ''
+    },
+    createCharityFailure(state, action) {
+      state.loading = false
+      state.error = action.payload.error
+    },
+    /**
+    * updateCharity
+    */
+    updateCharity(state, action) {
+      state.loading = true
+      state.error = ''
+    },
+    updateCharitySuccess(state, action) {
+      state.loading = false
+      state.error = ''
+    },
+    updateCharityFailure(state, action) {
+      state.loading = false
+      state.error = action.payload.error
+    },
   },
 })
 
@@ -82,5 +112,11 @@ export const {
   updateTopic,
   updateTopicSuccess,
   updateTopicFailure,
+  createCharity,
+  createCharitySuccess,
+  createCharityFailure,
+  updateCharity,
+  updateCharitySuccess,
+  updateCharityFailure
 } = adminSlice.actions
 export default adminSlice.reducer

@@ -17,12 +17,16 @@ export const ADMIN_PAGES = {
   USERS: '/admin/users',
   CAUSES: {
     INDEX: '/admin/causes',
-    CREATE: '/admin/createCause',
+    CREATE: '/admin/causes/createCause',
   },
   COLLECTIONS: {
     INDEX: '/admin/collections',
     CREATE: '/admin/collections/add',
     EDIT: '/admin/collections/edit/',
+  },
+  CHARITIES: {
+    INDEX: '/admin/charities',
+    CREATE: '/admin/charities/createCharity',
   }
 }
 
