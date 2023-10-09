@@ -34,7 +34,7 @@ export function* adminLogoutSaga(action: any) {
 
 export function* createTopicsSaga(action: any) {
   try {
-    const { data } = yield call(adminApi.createTopic, action.payload)
+    const { data } = yield call(adminApi.createInterest, 'topics', action.payload)
     if (data) {
       yield put(createTopicSuccess(data))
     }
@@ -48,7 +48,7 @@ export function* createTopicsSaga(action: any) {
 export function* updateTopicsSaga(action: any) {
   try {
     const { id, payload } = action.payload
-    const { data } = yield call(adminApi.updateTopic, id, payload)
+    const { data } = yield call(adminApi.updateInterest, id, 'topics', payload)
     if (data) {
       yield put(updateTopicSuccess(data))
     }

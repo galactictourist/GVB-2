@@ -7,6 +7,7 @@ export interface AuthState {
 export interface CausesState { }
 
 export interface TopicState { }
+export interface CharityState { }
 
 export interface AdminState {
   id?: string

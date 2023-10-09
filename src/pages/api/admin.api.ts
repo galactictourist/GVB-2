@@ -12,25 +12,26 @@ export const adminApi = {
       throw err
     }
   },
-  async createTopic(data: any) {
+  async createInterest(interest: string, data: any) {
     try {
-      const res = await mainClient.post('/admin/topics', data)
+      const res = await mainClient.post(`/admin/${interest}`, data)
       const resBody = res.data
       return resBody
     } catch (err) {
-      console.log('API RESPONSE ERROR WHEN CREATE TOPIC')
+      console.log('API RESPONSE ERROR WHEN CREATE INTEREST')
       console.log(err)
       throw err
     }
   },
-  async updateTopic(id: string, data: any) {
-    console.log('HELLO FROM UPDATE TOPIC API')
+  async updateInterest(id: string, interest: string, data: any) {
+    console.log('HELLO FROM UPDATE INTEREST API')
+    console.log({ interest, id })
     try {
-      const res = await mainClient.put(`/admin/topics/${id}`, data)
+      const res = await mainClient.put(`/admin/${interest}/${id}`, data)
       const resBody = res.data
       return resBody
     } catch (err) {
-      console.log('API RESPONSE ERROR WHEN UPDATE TOPIC')
+      console.log('API RESPONSE ERROR WHEN UPDATE INTEREST')
       console.log(err)
       throw err
     }
