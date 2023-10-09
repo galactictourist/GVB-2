@@ -4,7 +4,7 @@ interface Props {
   csvHandler: (data: []) => void
 }
 
-export default function UploadCsvForm({ csvHandler }: Props) {
+export default function UploadCsvButton({ csvHandler }: Props) {
   const uploadCsvHandler = async (e: any) => {
     const reader = new FileReader()
     reader.readAsBinaryString(e.target.files[0]);
@@ -16,7 +16,6 @@ export default function UploadCsvForm({ csvHandler }: Props) {
 
       parse(result, { columns: true }, (err, record) => {
         csvHandler(record)
-
       });
     }
   }
