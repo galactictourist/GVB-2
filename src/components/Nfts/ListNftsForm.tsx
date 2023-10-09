@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAllCollections } from '~/hooks/useAllCollections';
+import GenerateCsvButton from '../Core/GenerateCsvButton';
+import UploadCsvButton from '../Core/UploadCsvButton';
 import BatchPanel, { NftBatch } from './BatchPanel';
-import UploadCsvForm from './UploadCsvForm';
 
 type RawBatchData = {
   id: number
@@ -60,9 +61,10 @@ const ListNftsForm = () => {
     return Object.keys(newBatchesObj).map(key => newBatchesObj[key]);
   }
 
-  useEffect(() => {
-    // check for associated nfts with shown collection
-  }, []);
+  const generateCsvCallback = (): string => {
+    const headers = "uuid,name,collection,cause,charity,percentage,rank,price";
+    return headers;
+  }
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -71,6 +73,7 @@ const ListNftsForm = () => {
           <h1 className="text-xl font-semibold text-gray-900">List Nfts</h1>
           <p className="mt-2 text-sm text-gray-700">List NFTs by batches associated with cause and charity</p>
         </div>
+        <GenerateCsvButton dataCallback={generateCsvCallback} />
       </div>
       <div className="mt-4">
         <p className="text-md font-semibold">Collections</p>
@@ -84,7 +87,7 @@ const ListNftsForm = () => {
       <div className="mt-4">
         <div className="flex justify-between">
           <p className="text-md font-semibold">NFTs Batches</p>
-          <UploadCsvForm csvHandler={csvHandler} />
+          <UploadCsvButton csvHandler={csvHandler} />
         </div>
         <div>
           {!batches.length && "No NFTs batches are associated with this collection."}
