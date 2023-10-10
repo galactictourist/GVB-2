@@ -5,6 +5,7 @@ import { SimplePagination } from '~/components/Pagination/SimplePagination'
 import { useHandleUploadBulk } from '~/handlers/useHandleUploadBulk'
 import { useAllCollections } from '~/hooks/useAllCollections'
 import { usePagination } from '~/hooks/usePagination'
+import { userClient } from '~/pages/api/userClient.api'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { maxDisplayedUploadedImages } from '~/utils/constants'
 import UploadZipForm from './UploadZipForm'
@@ -12,13 +13,14 @@ import UploadZipForm from './UploadZipForm'
 export interface ImageItem {
   name: string
   src: any
-  file: File
+  file?: File
   metadata: NftEntity
   uploadStatus: boolean
 }
 
 const UploadNftsForm = () => {
   const { data: collections, isLoading } = useAllCollections()
+
   const [collectionId, setCollectionId] = useState<string>()
   const [uploadedImages, setUploadedImages] = useState<ImageItem[]>([]);
   const [displayedImages, setDisplayedImages] = useState<ImageItem[]>([]);
@@ -35,20 +37,22 @@ const UploadNftsForm = () => {
     const toastId = toast.loading('Create nft in progress...')
 
     uploadedImages.forEach((imageItem) => {
-      bulkData.push({
-        name: imageItem.name,
-        description: imageItem.metadata.description,
-        network: 'POLYGON_MUMBAI',
-        collectionId: collectionId,
-        metadata: {
-          external_url: imageItem.metadata.external_url,
-          youtube_url: '',
-          animation_url: '',
-        },
-        royality: 1,
-        attributes: imageItem.metadata.attributes,
-        image: imageItem.file
-      })
+      if (!imageItem.uploadStatus) {
+        bulkData.push({
+          name: imageItem.name,
+          description: imageItem.metadata.description,
+          network: 'POLYGON_MUMBAI',
+          collectionId: collectionId,
+          metadata: {
+            external_url: imageItem.metadata.external_url,
+            youtube_url: '',
+            animation_url: '',
+          },
+          royality: 1,
+          attributes: imageItem.metadata.attributes,
+          image: imageItem.file
+        })
+      }
     })
 
     handleUploadBulkNft.mutate({
@@ -64,37 +68,48 @@ const UploadNftsForm = () => {
 
   }
 
+  const getExistingNfts = async (id: string) => {
+    const { data: resp } = await userClient(process.env.NEXT_PUBLIC_API!).get(`/collections/${id}/nfts`)
+    const nfts = resp.data.map((nft: NftEntity) => ({
+      name: nft.name,
+      src: nft.imageUrl,
+      metadata: nft,
+      uploadStatus: nft.status === "ACTIVE"
+    }))
+    setUploadedImages(nfts);
+    pageHandler(1, nfts);
+  }
+
   const selectCollectionId = (e: any) => {
     // on collection change, fetch list of batch nfts based on collection
     setCollectionId(e.target.value)
+    getExistingNfts(e.target.value)
   }
 
   const imagesHandler = (files: ImageItem[]) => {
-    console.log({ files })
-
     const firstPage = 1
-    setUploadBtnLabel(`${files.length} images`)
-    setUploadedImages(files)
-    setDisplayedImages(files.slice(0, firstPage * maxDisplayedUploadedImages))
+    const allImages = [...uploadedImages, ...files]
+    setUploadBtnLabel(`${allImages.length} images`)
+    setUploadedImages(allImages)
+    setDisplayedImages(allImages.slice(0, firstPage * maxDisplayedUploadedImages))
     pageSetter(firstPage)
-    totalSetter(files.length)
+    totalSetter(allImages.length)
   }
 
-  const pageHandler = (newPage: number) => {
+  const pageHandler = (newPage: number, nfts: ImageItem[] = uploadedImages) => {
     const end = newPage * maxDisplayedUploadedImages;
     const start = end - maxDisplayedUploadedImages;
-    const toDisplayedImages = uploadedImages.slice(start, end)
+    const toDisplayedImages = nfts.slice(start, end)
     setDisplayedImages(toDisplayedImages)
     pageSetter(newPage)
     changePage(newPage);
   }
 
   useEffect(() => {
-    // on page load, fetch list of batch nfts based on collection
-  }, [])
-
-  useEffect(() => {
-    collections && setCollectionId(collections[0].id)
+    if (collections) {
+      setCollectionId(collections[0].id)
+      getExistingNfts(collections[0].id);
+    }
   }, [collections])
 
   useEffect(() => {

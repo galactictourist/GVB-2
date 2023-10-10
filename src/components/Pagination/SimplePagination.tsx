@@ -35,7 +35,7 @@ export function SimplePagination(props: {
           <p className="text-sm text-gray-700">
             Showing <span className="font-medium">{(props.page - 1) * props.limit + 1}</span> to{' '}
             <span className="font-medium">
-              {props.page * props.limit}
+              {props.page * props.limit > props.total ? props.total : props.page * props.limit}
             </span>{' '}
             of <span className="font-medium">{props.total}</span> results
           </p>
