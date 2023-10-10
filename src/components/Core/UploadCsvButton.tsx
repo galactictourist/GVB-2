@@ -1,4 +1,4 @@
-import { parse } from 'csv-parse';
+import { parse } from "csv-parse";
 
 interface Props {
   csvHandler: (data: []) => void
@@ -10,13 +10,11 @@ export default function UploadCsvButton({ csvHandler }: Props) {
     reader.readAsBinaryString(e.target.files[0]);
 
     reader.onload = () => {
-      const resultArr = reader.result!.toString().split("\n");
-      resultArr[0] = resultArr[0].toLowerCase();
-      const result = resultArr.join("\n");
-
-      parse(result, { columns: true }, (err, record) => {
-        csvHandler(record)
-      });
+      if (reader.result) {
+        parse(reader.result.toString(), { columns: true }, (err, record) => {
+          csvHandler(record)
+        });
+      }
     }
   }
 

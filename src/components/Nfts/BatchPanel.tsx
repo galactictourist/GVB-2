@@ -17,6 +17,7 @@ export interface BatchNftData {
   name: string
   rank: number
   price: number
+  src?: string
 }
 
 interface Props {
