@@ -1,8 +1,8 @@
 import { useMutation } from 'react-query'
-import { adminClient } from '~/pages/api/adminClient.api'
+import { userClient } from '~/pages/api/userClient.api'
 import { StorageEntity } from '~/types/entity/storage.entity'
 
-const mainClient = adminClient(process.env.NEXT_PUBLIC_API || '')
+const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
 
 export const useHandleUploadImage = () => {
   return useMutation(

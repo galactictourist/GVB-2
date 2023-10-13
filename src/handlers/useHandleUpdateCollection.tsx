@@ -1,8 +1,8 @@
 import { useMutation } from 'react-query'
-import { adminClient } from '~/pages/api/adminClient.api'
+import { userClient } from '~/pages/api/userClient.api'
 import { CollectionEntity } from '~/types/entity/collection.entity'
 
-const mainClient = adminClient(process.env.NEXT_PUBLIC_API || '')
+const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
 
 type UpdateCollectionResponse = {
   data: CollectionEntity
