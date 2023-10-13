@@ -23,7 +23,6 @@ export default function CreateCollection() {
     formData.append('name', data.name)
     formData.append('artistAddress', data.artistAddress)
     formData.append('description', data.description)
-    formData.append('contractAddress', data.contract_address)
     formData.append('topicId', data.cause)
     console.log(formData)
     setLoading(true)
