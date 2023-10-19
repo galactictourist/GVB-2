@@ -68,7 +68,8 @@ const ListNftsForm = () => {
           name: d.name,
           rank: d.rank,
           price: d.price,
-          src: nfts[d.id].imageUrl
+          src: nfts[d.id].imageUrl,
+          type: nfts[d.id].type
         });
 
         return obj;

@@ -1,3 +1,4 @@
+import Video from '../Core/Video';
 import { BatchNftData } from './BatchPanel';
 
 interface Props {
@@ -7,7 +8,9 @@ interface Props {
 const NftPanel = ({ nft }: Props) => {
   return (
     <div className="h-18 grow flex gap-5 items-center border-2 rounded-md border-gray-400">
-      <img src={nft.src} width="50" />
+      {(nft.type === "IMAGE") ?
+        <img alt={`nft image ${nft.id}`} src={nft.src} width="50" /> :
+        <Video src={nft.src!} />}
       <div >
         <div className="flex gap-5">
           <div>
