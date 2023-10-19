@@ -3,17 +3,21 @@ import toast from 'react-hot-toast'
 import DisabledButton from '~/components/Core/DisabledButton'
 import { SimplePagination } from '~/components/Pagination/SimplePagination'
 import { useHandleUploadBulk } from '~/handlers/useHandleUploadBulk'
+import { useHandleUploadFiles } from '~/handlers/useHandleUploadFiles'
 import { useAllCollections } from '~/hooks/useAllCollections'
 import { usePagination } from '~/hooks/usePagination'
 import { userClient } from '~/pages/api/userClient.api'
 import { NftEntity } from '~/types/entity/nft.entity'
+import { StorageEntity } from '~/types/entity/storage.entity'
 import { maxDisplayedUploadedImages } from '~/utils/constants'
+import Video from '../Core/Video'
 import UploadZipForm from './UploadZipForm'
 
 export interface ImageItem {
   name: string
   src: any
   file?: File
+  type: string
   metadata: NftEntity
   uploadStatus: boolean
 }
@@ -24,23 +28,31 @@ const UploadNftsForm = () => {
   const [collectionId, setCollectionId] = useState<string>()
   const [uploadedImages, setUploadedImages] = useState<ImageItem[]>([]);
   const [displayedImages, setDisplayedImages] = useState<ImageItem[]>([]);
-  const [uploadBtnLabel, setUploadBtnLabel] = useState("");
+  const [uploadBtnLabel, setUploadBtnLabel] = useState("Attach zip file");
+  const [file, setFile] = useState("");
+  const [rawFiles, setRawFiles] = useState([]);
 
   const pagination = usePagination(maxDisplayedUploadedImages);
   const { pageSetter, totalSetter, changePage } = pagination;
   const { page, limit, total } = pagination;
 
-  const handleUploadBulkNft = useHandleUploadBulk()
+  const handleUploadFiles = useHandleUploadFiles()
+  const handleUploadBulkNft = useHandleUploadBulk();
 
-  const bulkUpload = async () => {
+  const uploadOnSuccess = (data: StorageEntity[]) => {
+    const toastId = toast.loading('Creating nft metadata in progress...')
     const bulkData: any[] = []
-    const toastId = toast.loading('Create nft in progress...')
 
+    setFile("");
     uploadedImages.forEach((imageItem) => {
+      const storageEntity = data.find(entity => imageItem.file?.name.match(new RegExp(entity.originalname, 'i')));
+
       if (!imageItem.uploadStatus) {
         bulkData.push({
           name: imageItem.name,
           description: imageItem.metadata.description,
+          url: storageEntity?.url,
+          type: imageItem.type,
           network: 'POLYGON_MUMBAI',
           collectionId: collectionId,
           metadata: {
@@ -50,7 +62,7 @@ const UploadNftsForm = () => {
           },
           royality: 1,
           attributes: imageItem.metadata.attributes,
-          image: imageItem.file
+          file: imageItem.file
         })
       }
     })
@@ -58,14 +70,34 @@ const UploadNftsForm = () => {
     handleUploadBulkNft.mutate({
       data: bulkData
     }, {
-      onSuccess(resp) {
-        console.log(resp)
+      onSuccess({ data }) {
+        setUploadBtnLabel("Attach zip file");
+        (document.getElementById('fileInput') as HTMLInputElement).value = '';
+        toast.dismiss(toastId);
+
+        if (data.length > 0) {
+          toast.success(`${data.length} NFT${data.length > 1 && 's'} upload successful!`)
+        } else {
+          toast.error('NFTs have already been uploaded!')
+        }
+
+        getExistingNfts(collectionId!);
       },
       onError(err) {
         console.log(err)
       }
     })
 
+  }
+
+  const bulkUpload = async () => {
+    const toastId = toast.loading('Uploading files in progress...')
+    handleUploadFiles.mutate(rawFiles as any, {
+      onSuccess: (data: StorageEntity[]) => {
+        toast.dismiss(toastId);
+        uploadOnSuccess(data)
+      }
+    });
   }
 
   const getExistingNfts = async (id: string) => {
@@ -86,10 +118,12 @@ const UploadNftsForm = () => {
     getExistingNfts(e.target.value)
   }
 
-  const imagesHandler = (files: ImageItem[]) => {
+  const imagesHandler = (filename: string, files: any, fileItems: ImageItem[]) => {
+    setFile(filename)
+    setRawFiles(files);
     const firstPage = 1
-    const allImages = [...uploadedImages, ...files]
-    setUploadBtnLabel(`${allImages.length} images`)
+    const allImages = [...uploadedImages, ...fileItems]
+    setUploadBtnLabel(filename)
     setUploadedImages(allImages)
     setDisplayedImages(allImages.slice(0, firstPage * maxDisplayedUploadedImages))
     pageSetter(firstPage)
@@ -103,6 +137,7 @@ const UploadNftsForm = () => {
     setDisplayedImages(toDisplayedImages)
     pageSetter(newPage)
     changePage(newPage);
+    totalSetter(nfts.length)
   }
 
   useEffect(() => {
@@ -112,12 +147,6 @@ const UploadNftsForm = () => {
     }
   }, [collections])
 
-  useEffect(() => {
-    if (!uploadedImages.length) {
-      setUploadBtnLabel("Attach zip file")
-    }
-  }, [uploadedImages])
-
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -126,7 +155,7 @@ const UploadNftsForm = () => {
           <p className="mt-2 text-sm text-gray-700">A list of all nfts for bulk uploading</p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none flex gap-5">
-          {!uploadedImages.length ? <DisabledButton buttonLabel="Upload NFT Collection" /> : <button
+          {file === "" ? <DisabledButton buttonLabel="Upload NFT Collection" /> : <button
             type="button" onClick={bulkUpload}
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
           >
@@ -178,7 +207,9 @@ const UploadNftsForm = () => {
             {displayedImages.map((image, _id) => (
               <tr key={_id}>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                  <img alt={`nft image ${_id}`} src={image.src} width={50} height={50} />
+                  {(image.metadata.type === "IMAGE" || image.type === "IMAGE") ?
+                    <img alt={`nft image ${_id}`} src={image.src} width={50} height={50} /> :
+                    <Video src={image.src} />}
                 </td>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                   {image.name}

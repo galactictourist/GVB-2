@@ -10,7 +10,6 @@ export function SimplePagination(props: {
   const maxPage = Math.ceil(props.total / props.limit)
   const pages = _.range(1, maxPage + 1)
 
-  console.log({ count: props.count, x: props })
   const inactiveStyle = "relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium";
   const activeStyle = "relative z-10 inline-flex items-center border border-indigo-500 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 focus:z-20"
 

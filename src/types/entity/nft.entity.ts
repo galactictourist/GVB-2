@@ -30,10 +30,11 @@ export interface NftEntity extends BaseEntity {
   scAddress?: string
   tokenId?: string
   name: string
-  imageUrl?: string
+  imageUrl: string
   imageIpfsUrl?: string
   external_url?: string
   description?: string
+  type: string
   attributes?: MetadataAttribute[]
   // rawMetadata?: object;
   // properties?: object;

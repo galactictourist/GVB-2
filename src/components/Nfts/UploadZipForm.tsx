@@ -8,18 +8,23 @@ interface Props {
 export default function UploadZipForm({ label, imagesHandler }: Props) {
   const uploadZipHandler = async (e: any) => {
     const rawContents = await zip.loadAsync(e.target.files[0]);
-    const imageKeys = Object.keys(rawContents.files)
-      .filter(key => key.match(/\d\.(jpg|jpeg|png)$/i))
-      .sort(_sort);
-    const metadataKeys = Object.keys(rawContents.files)
-      .filter(key => key.match(/\d\.json$/i))
+    const fileKeys = Object.keys(rawContents.files)
+      .filter(key => key.match(/\d\.(jpg|jpeg|png|mp4)$/i) && !key.match(/MACOSX/i))
       .sort(_sort);
 
-    const files = await Promise.all(imageKeys.map(async (key, i) => {
+    let rawFiles: File[] = [];
+
+    const metadataKeys = Object.keys(rawContents.files)
+      .filter(key => key.match(/\d\.json$/i) && !key.match(/MACOSX/i))
+      .sort(_sort);
+
+    const files = await Promise.all(fileKeys.map(async (key, i) => {
       // convert raw image data to image file
-      const imageContent = await rawContents.file(key)!.async('blob');
-      const [, imageFileType] = key.match(/\.(jpg|jpeg|png)$/)!;
-      const image = new File([imageContent], key, { type: `image/${imageFileType}` });
+      const fileContent = await rawContents.file(key)!.async('blob');
+      const [, fileType] = key.match(/\.(jpg|jpeg|png|mp4)$/)!;
+      const fileFormat = fileType === "mp4" ? `video/${fileType}` : `image/${fileType}`;
+      const file = new File([fileContent], key, { type: fileFormat });
+      rawFiles.push(file)
 
       // retreive data from json file
       const metadataContent = await rawContents.file(metadataKeys[i])!.async("string");
@@ -27,14 +32,15 @@ export default function UploadZipForm({ label, imagesHandler }: Props) {
 
       return {
         name: metadata.name,
-        src: URL.createObjectURL(image),
-        file: image,
+        src: URL.createObjectURL(file),
+        file,
+        type: fileType === "mp4" ? "VIDEO" : "IMAGE",
         uploadStatus: false,
         metadata
       }
     }));
 
-    imagesHandler(files);
+    imagesHandler(e.target.files[0].name, rawFiles, files);
   }
 
   const _sort = (a: string, b: string) => {
