@@ -1,23 +1,20 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { NftEntity } from '~/types/entity/nft.entity'
+import NftImage from './Core/NftImage'
 
 interface Props {
   nft: NftEntity
 }
 
 const NftItem = ({ nft }: Props) => {
+  const style = "my-8 h-full w-full object-cover object-center group-hover:opacity-75"
+
   return (
     <div>
       <Link href={`/nft/${nft.id}`}>
         <div className="group relative cursor-pointer">
-          <div className="relative h-72 overflow-hidden rounded-lg">
-            <Image
-              src={nft.imageUrl ?? '/img/image-placeholder.png'}
-              alt={nft.name}
-              className="my-8 h-full w-full object-cover object-center group-hover:opacity-75"
-              layout="fill"
-            />
+          <div className="relative overflow-hidden rounded-lg">
+            <NftImage name={nft.name} type={nft.type} src={nft.imageUrl ?? '/img/image-placeholder.png'} size={400} style={style} />
           </div>
           <div className="absolute inset-x-0 top-0 flex h-72 items-end justify-end overflow-hidden rounded-lg p-4">
             <div

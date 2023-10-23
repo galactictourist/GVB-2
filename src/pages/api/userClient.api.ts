@@ -2,10 +2,10 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { USER_COOKIES } from '~/utils/constants'
 
-export const userClient = (baseURL: string) => {
+export const userClient = (baseURL: string, timer = 10000) => {
   const instance = axios.create({
     baseURL: baseURL,
-    timeout: 10000,
+    timeout: timer,
   })
 
   instance.interceptors.request.use(
