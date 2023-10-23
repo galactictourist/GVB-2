@@ -6,9 +6,9 @@ const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
 
 export type AllCollectionsResp = CollectionEntity[]
 
-export const useAllCollections = () => {
-  return useQuery<AllCollectionsResp>(['all-collections'], async () => {
-    const { data: resp } = await mainClient.post('/collections/all', {
+export const usePublishedCollections = () => {
+  return useQuery<AllCollectionsResp>(['published-collections'], async () => {
+    const { data: resp } = await mainClient.post('/collections/_search', {
       ownerIds: [],
     })
 

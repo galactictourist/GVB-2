@@ -13,15 +13,16 @@ type RawBatchData = {
   name: string
   collection: string
   cause: string
-  charity: string
-  percentage: number
+  batch: number
   rank: number
   price: number
 }
 
 const ListNftsForm = () => {
   const { data: collections, isLoading } = useAllCollections()
-  const { data: causes, isLoading: isCausesLoading } = useChildCauses()
+  const { data: childCauses, isLoading: isCausesLoading } = useChildCauses()
+  const causes = childCauses?.reduce((arr: any, cause) => [...arr, ...cause.children], [])
+
 
   const [collectionId, setCollectionId] = useState<string>("")
   const [batches, setBatches] = useState<NftBatch[]>([])
@@ -54,22 +55,21 @@ const ListNftsForm = () => {
     if (!isLoading) {
       const newBatchesObj = data.reduce((obj: any, d: any) => {
         if (!obj.hasOwnProperty(d.charity)) {
-          obj[d.charity] = {
+          const cause = causes?.find((c: any) => c.name === d.cause)
+          obj[d.batch] = {
             collection: d.collection,
-            cause: [d.cause],
-            charity: d.charity,
-            percentage: d.percentage,
+            cause: [cause],
             nfts: []
           }
         }
 
-        obj[d.charity].nfts.push({
+        obj[d.batch].nfts.push({
           id: d.id,
           name: d.name,
           rank: d.rank,
           price: d.price,
-          src: nfts[d.id].imageUrl,
-          type: nfts[d.id].type
+          src: nfts[d.id]?.imageUrl ? nfts[d.id].imageUrl : "",
+          type: nfts[d.id]?.type
         });
 
         return obj;
@@ -83,19 +83,21 @@ const ListNftsForm = () => {
 
   const generateCsvCallback = () => {
     if (collections) {
-      const headers = "id,name,collection,cause,charity,percentage,rank,price";
+      const headers = "id,name,collection,cause,batch,rank,price";
       if (!isLoading) {
         const collection = collections?.find(collection => collection.id === collectionId);
-        const cause: any = causes?.reduce((obj, cause) => {
-          const child = cause.children.find(x => x.id === collection?.topicId);
-          if (child) {
-            return child
-          }
-          return obj
-        }, {})
+        const cause = causes?.find((c: any) => c.id === collection?.topicId)
 
-        const dataString = nfts.map(nft => `${nft.id},${nft.name},${collection?.name},${cause.name},,,,`).join("\n");
+        let dataString = "";
+
+        if (nfts.length > 0 && cause) {
+          dataString = nfts.map(nft => {
+            return `${nft.id},${nft.name},${collection?.name},${cause.name},,,`;
+          }).join("\n");
+
+        }
         return headers + "\n" + dataString;
+
       }
 
     }

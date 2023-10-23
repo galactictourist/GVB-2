@@ -2,7 +2,7 @@ import { BaseEntity } from './base.entity'
 import { TopicEntity } from './topic.entity'
 
 export enum CollectionStatus {
-  ACTIVE = 'ACTIVE',
+  DRAFT = 'DRAFT',
   PUBLISHED = 'PUBLISHED',
 }
 

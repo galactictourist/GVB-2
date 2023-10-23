@@ -31,6 +31,7 @@ export default function EditCollection() {
           artistAddress: formData.artistAddress,
           description: formData.description,
           topicId: formData.cause,
+          status: formData.status
         },
       },
       {

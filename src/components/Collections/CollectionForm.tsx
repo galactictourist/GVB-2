@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useChildCauses } from '~/hooks/useChildCauses'
-import { CollectionEntity } from '~/types/entity/collection.entity'
+import { CollectionEntity, CollectionStatus } from '~/types/entity/collection.entity'
 import { ADMIN_PAGES } from '~/utils/constants'
 
 interface Props {
@@ -18,7 +18,6 @@ interface Props {
 const CollectionForm = ({ formLabelTexts, submitHandler, isLoading, collection }: Props) => {
   const { data: causes } = useChildCauses()
   const [preview, setPreview] = useState<string>()
-
   const {
     register,
     handleSubmit,
@@ -41,6 +40,7 @@ const CollectionForm = ({ formLabelTexts, submitHandler, isLoading, collection }
       setValue('artistAddress', collection.artistAddress)
       setValue('description', collection.description)
       setValue('cause', collection.topicId)
+      setValue('status', collection.status)
       setPreview(collection.imageUrl)
     }
   }, [collection])
@@ -162,6 +162,17 @@ const CollectionForm = ({ formLabelTexts, submitHandler, isLoading, collection }
               which charities that will benefit from the sales of your NFTs
             </p>
           </div>
+          <br />
+          {formLabelTexts.header === "Edit collection" && <div className="sm:col-span-2 md:col-span-2">
+            <label htmlFor="about" className="block text-sm font-medium text-gray-700">
+              Status
+            </label>
+            <select className="n4gForm h-10 capitalize" defaultValue={collection?.status} {...register('status')}>
+              {Object.keys(CollectionStatus).map((status) => (
+                <option label={status} key={status} value={status} />
+              ))}
+            </select>
+          </div>}
         </div>
       </div>
       <div className="flex gap-4">

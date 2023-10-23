@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useCharitiesByTopic } from '~/hooks/useCharitiesByTopic';
 import { usePagination } from '~/hooks/usePagination';
 import { maxDisplayedNfts } from '~/utils/constants';
 import { SimplePagination } from '../Pagination/SimplePagination';
@@ -6,7 +7,7 @@ import NftPanel from './NftPanel';
 
 export interface NftBatch {
   collection: string
-  cause: string[]
+  cause: { id: string, name: string }[]
   charity: string
   percentage: number
   nfts: BatchNftData[]
@@ -28,6 +29,8 @@ interface Props {
 }
 
 const BatchPanel = ({ index, batch, updateBatch }: Props) => {
+  const { data: charityTopics, isLoading } = useCharitiesByTopic(batch.cause[0].id)
+
   const pagination = usePagination();
   const { pageSetter, limitSetter, totalSetter, changePage } = pagination;
   const { page, limit, total } = pagination;
@@ -35,6 +38,7 @@ const BatchPanel = ({ index, batch, updateBatch }: Props) => {
   const [showNfts, setShowNfts] = useState(false);
   const [nfts, setNfts] = useState<BatchNftData[]>([]);
   const [count, setCount] = useState(0);
+  const [charity, setCharity] = useState("Select Charity");
 
   const showNftsHandler = () => {
     setShowNfts(!showNfts);
@@ -64,10 +68,15 @@ const BatchPanel = ({ index, batch, updateBatch }: Props) => {
     <div key={1} className='flex flex-col gap-5 h-50 w-100 p-3 mt-3 rounded-md border border-solid border-sky-500'>
       <div className='flex justify-between'>
         <div className='flex gap-3'>
-          <div className='flex items-center gap-1'>Cause: {batch.cause}</div>
-          <div className='flex items-center gap-1'>Charity:{batch.charity}</div>
+          <div className='flex items-center gap-1'>Cause: {batch.cause[0].name}</div>
+          <select className="n4gForm h-10 capitalize" defaultValue={charity}>
+            <option label="Select Charity" key="Select Charity" />
+            {!isLoading && charityTopics!.map((charityTopic) => (
+              <option label={charityTopic.charity.name} key={charityTopic.charityId} value={charityTopic.charity.name} />
+            ))}
+          </select>
           <div className='flex items-center gap-1'>Percent:
-            <input className="w-20 rounded-md" type="number" value={batch.percentage} min="1" max="99" onChange={(e) => updateBatch(index, { ...batch, percentage: +e.target.value })} />
+            <input className="w-20 rounded-md" type="number" value="0" min="1" max="99" onChange={(e) => updateBatch(index, { ...batch, percentage: +e.target.value })} />
           </div>
         </div>
         <div className="flex gap-5">
