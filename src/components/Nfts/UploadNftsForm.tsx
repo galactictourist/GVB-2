@@ -3,14 +3,14 @@ import toast from 'react-hot-toast'
 import DisabledButton from '~/components/Core/DisabledButton'
 import { SimplePagination } from '~/components/Pagination/SimplePagination'
 import { useHandleUploadBulk } from '~/handlers/useHandleUploadBulk'
-import { useHandleUploadFiles } from '~/handlers/useHandleUploadFiles'
+import { UploadFilesResponse, useHandleUploadFiles } from '~/handlers/useHandleUploadFiles'
 import { useAllCollections } from '~/hooks/useAllCollections'
 import { usePagination } from '~/hooks/usePagination'
 import { userClient } from '~/pages/api/userClient.api'
 import { NftEntity } from '~/types/entity/nft.entity'
 import { StorageEntity } from '~/types/entity/storage.entity'
 import { maxDisplayedUploadedImages } from '~/utils/constants'
-import Video from '../Core/Video'
+import NftImage from '../Core/NftImage'
 import UploadZipForm from './UploadZipForm'
 
 export interface ImageItem {
@@ -39,7 +39,7 @@ const UploadNftsForm = () => {
   const handleUploadFiles = useHandleUploadFiles()
   const handleUploadBulkNft = useHandleUploadBulk();
 
-  const uploadOnSuccess = (data: StorageEntity[]) => {
+  const uploadOnSuccess = (data: StorageEntity[], ipfsUrl: String) => {
     const toastId = toast.loading('Creating nft metadata in progress...')
     const bulkData: any[] = []
 
@@ -62,11 +62,11 @@ const UploadNftsForm = () => {
           },
           royality: 1,
           attributes: imageItem.metadata.attributes,
-          file: imageItem.file
+          file: imageItem.file,
+          imageIpfsUrl: `https://ipfs.io/ipfs/${ipfsUrl}/${storageEntity?.originalname}`
         })
       }
     })
-
     handleUploadBulkNft.mutate({
       data: bulkData
     }, {
@@ -93,21 +93,23 @@ const UploadNftsForm = () => {
   const bulkUpload = async () => {
     const toastId = toast.loading('Uploading files in progress...')
     handleUploadFiles.mutate(rawFiles as any, {
-      onSuccess: (data: StorageEntity[]) => {
+      onSuccess: (data: UploadFilesResponse) => {
         toast.dismiss(toastId);
-        uploadOnSuccess(data)
+        uploadOnSuccess(data.storageEntities, data.ipfsUrl)
       }
     });
   }
 
   const getExistingNfts = async (id: string) => {
     const { data: resp } = await userClient(process.env.NEXT_PUBLIC_API!).get(`/collections/${id}/nfts`)
-    const nfts = resp.data.map((nft: NftEntity) => ({
-      name: nft.name,
-      src: nft.imageUrl,
-      metadata: nft,
-      uploadStatus: nft.status === "ACTIVE"
-    }))
+    const nfts = resp.data.map((nft: NftEntity) => {
+      return {
+        name: nft.name,
+        src: nft.imageIpfsUrl ? nft.imageIpfsUrl : nft.imageUrl,
+        metadata: nft,
+        uploadStatus: nft.status === "ACTIVE"
+      }
+    })
     setUploadedImages(nfts);
     pageHandler(1, nfts);
   }
@@ -207,9 +209,7 @@ const UploadNftsForm = () => {
             {displayedImages.map((image, _id) => (
               <tr key={_id}>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                  {(image.metadata.type === "IMAGE" || image.type === "IMAGE") ?
-                    <img alt={`nft image ${_id}`} src={image.src} width={50} height={50} /> :
-                    <Video src={image.src} />}
+                  <NftImage name={image.name} type={image.metadata.type || image.type} src={image.src} />
                 </td>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                   {image.name}

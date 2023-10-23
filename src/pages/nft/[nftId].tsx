@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { nftAbi } from '~/abi/erc721'
 import { marketAbi } from '~/abi/market'
+import NftImage from '~/components/Core/NftImage'
 import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
 import { useCharity } from '~/hooks/useCharity'
 import { useProfile } from '~/hooks/useProfile'
@@ -419,14 +420,9 @@ const NftPage: NextPage = () => {
                     className="relative h-[480px] cursor-pointer"
                     onClick={() => setIsShowImage(true)}
                   >
-                    {nft.imageUrl && (
-                      <Image
-                        className="absolute rounded-b-lg"
-                        src={`${nft.imageUrl}`}
-                        layout="fill"
-                        alt={nft.name}
-                      />
-                    )}
+                    {nft.imageUrl &&
+                      <NftImage name={nft.name} type={nft.type} src={nft.imageUrl} size={600} style="absolute rounded-b-lg" />
+                    }
                   </div>
                   <Transition.Root show={isShowImage}>
                     <div className="fixed top-0 left-0 z-30 flex h-screen w-screen bg-n4gBlack opacity-75" />
