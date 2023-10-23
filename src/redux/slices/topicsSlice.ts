@@ -1,3 +1,4 @@
+import { CharityTopicEntity } from '~/types/entity/charity-topic.entity'
 import { createSlice } from '~/utils/@reduxjs/toolkit'
 
 export interface ITopic {
@@ -6,6 +7,7 @@ export interface ITopic {
   createdAt: string
   updatedAt: string
   parentId: string
+  charityTopics: CharityTopicEntity[]
 }
 
 const topicsSlice = createSlice({

@@ -400,7 +400,6 @@ const NftPage: NextPage = () => {
       })
     }
   }
-
   return (
     <>
       <Header />
@@ -443,13 +442,7 @@ const NftPage: NextPage = () => {
                           height: '650px',
                         }}
                       >
-                        <Image
-                          className="absolute rounded-b-lg"
-                          src={`${nft.imageUrl}`}
-                          layout="fill"
-                          alt={nft.name}
-                          width={320}
-                        />
+                        <NftImage name={nft.name} type={nft.type} src={nft.imageUrl} size={600} style="absolute rounded-b-lg" />
                         <span className="fixed top-0 right-0 z-40 mt-[-50px] mr-[-50px] cursor-pointer">
                           <XMarkIcon
                             className="h-[32px] w-[32px] font-bold text-white"

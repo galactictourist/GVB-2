@@ -98,7 +98,15 @@ const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
                       </td>
                       {!_.isUndefined(interest.parentId) && <td className="px-3 py-4 text-sm text-gray-500">{interest.parentId}</td>}
                       <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <Link href={`${labels.updateUrl}/${interest.id}`}>
+                        <Link href={{
+                          pathname: `${labels.updateUrl}/${interest.id}`,
+                          query: {
+                            id: interest.id,
+                            name: interest.name,
+                            causeId: interest.charityTopics?.length > 0 && interest.charityTopics[0].topicId,
+                            walletAddress: interest.charityTopics?.length > 0 && interest.charityTopics[0].wallet
+                          }
+                        }}>
                           <div className="text-indigo-600 hover:text-indigo-900">Edit</div>
                         </Link>
                       </td>

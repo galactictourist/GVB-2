@@ -1,34 +1,24 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import UpdateInterestTemplate from '~/components/Core/UpdateInterestTemplate'
+import { useDispatch } from 'react-redux'
+import CharityTemplate, { CharityValues } from '~/components/Charities/CharityTemplate'
 import { updateCharity } from '~/redux/slices/adminSlice'
-import { getCharityById } from '~/redux/slices/charitiesSlice'
-import { RootState } from '~/redux/store'
 
-const CreateCause: NextPage = () => {
+const UpdateCharity: NextPage = () => {
   const dispatch = useDispatch()
   const router = useRouter()
-  const charityId = router.query.id
-  const { loading, currentCharity } = useSelector((state: RootState) => state.charities)
-  const { name } = currentCharity
-  const labels = {
-    interestLabel: "Update Charity",
-    description: "Update an existing charity."
+
+  const values = {
+    name: router.query.name as string,
+    causeId: router.query.causeId as string,
+    wallet: router.query.walletAddress as string,
   }
 
-  useEffect(() => {
-    if (charityId) {
-      dispatch(
-        getCharityById({
-          id: charityId,
-        })
-      )
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const labels = {
+    pageLabel: "Edit Charity",
+    submitBtnLabel: "Update"
+  }
 
   const successMessage = (name: string) => {
     toast.success(`Collection ${name} updated`, {
@@ -36,20 +26,19 @@ const CreateCause: NextPage = () => {
     })
   }
 
-  const submitHandler = (name: string) => {
+  const submitHandler = (values: CharityValues) => {
     dispatch(
       updateCharity({
-        id: charityId,
-        payload: {
-          name,
-        },
+        id: router.query.id,
+        payload: values,
       })
     )
-    successMessage(name)
+    successMessage("Update successful!")
     router.push('/admin/charities')
   }
 
-  return <UpdateInterestTemplate loading={loading} labels={labels} value={name} submitHandler={submitHandler} />
+
+  return <CharityTemplate labels={labels} values={values} submitHandler={submitHandler} />
 }
 
-export default CreateCause
+export default UpdateCharity
