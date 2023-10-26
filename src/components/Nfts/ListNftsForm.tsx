@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useAllCollections } from '~/hooks/useAllCollections';
+import { useBatchesByCollection } from '~/hooks/useBatchesByCollection';
 import { useChildCauses } from '~/hooks/useChildCauses';
 import { userClient } from '~/pages/api/userClient.api';
+import { BatchEntity } from '~/types/entity/batch.entity';
 import { NftEntity } from '~/types/entity/nft.entity';
 import DisabledButton from '../Core/DisabledButton';
 import GenerateCsvButton from '../Core/GenerateCsvButton';
@@ -20,6 +22,7 @@ type RawBatchData = {
 
 const ListNftsForm = () => {
   const { data: collections, isLoading } = useAllCollections()
+  const { data: batchList, isLoading: isBatchListLoading } = useBatchesByCollection(collections![0])
   const { data: childCauses, isLoading: isCausesLoading } = useChildCauses()
   const causes = childCauses?.reduce((arr: any, cause) => [...arr, ...cause.children], [])
 
@@ -34,9 +37,9 @@ const ListNftsForm = () => {
     getNfts(e.target.value)
   }
 
-  const updateBatch = (index: number, batch: NftBatch) => {
-    const newBatches = [...batches];
-    newBatches[index] = batch;
+  const updateBatch = (index: number, property: string, value: any) => {
+    let newBatches = [...batches];
+    newBatches[+index][property] = value;
     setBatches(newBatches);
   }
 
@@ -47,6 +50,7 @@ const ListNftsForm = () => {
 
   const _batchDataProcessing = async (data: RawBatchData[]) => {
     const { data: resp } = await userClient(process.env.NEXT_PUBLIC_API!).get(`/collections/${collectionId}/nfts`)
+
     const nfts = resp.data.reduce((obj: any, d: any) => {
       obj[d.id] = d;
       return obj;
@@ -54,20 +58,22 @@ const ListNftsForm = () => {
 
     if (!isLoading) {
       const newBatchesObj = data.reduce((obj: any, d: any) => {
-        if (!obj.hasOwnProperty(d.charity)) {
+        if (!obj.hasOwnProperty(d.batch)) {
           const cause = causes?.find((c: any) => c.name === d.cause)
           obj[d.batch] = {
+            collectionId,
             collection: d.collection,
             cause: [cause],
-            nfts: []
+            nfts: [],
+            percentage: 0
           }
         }
 
         obj[d.batch].nfts.push({
           id: d.id,
           name: d.name,
-          rank: d.rank,
-          price: d.price,
+          rank: d.rank !== "" ? d.rank : 0,
+          price: d.price !== "" ? d.price : 0,
           src: nfts[d.id]?.imageUrl ? nfts[d.id].imageUrl : "",
           type: nfts[d.id]?.type
         });
@@ -109,12 +115,39 @@ const ListNftsForm = () => {
     setNfts(resp.data);
   }
 
+  const processBatchList = (batchList: BatchEntity[]) => {
+    const collection = collections?.find((c: any) => c.id === collectionId);
+    const cause = causes?.find((c: any) => c.id === collection?.topicId);
+    return batchList.map(batch => ({
+      cause: [cause],
+      collection: collection?.name,
+      collectionId: batch.collectionId,
+      charityId: batch.charityId,
+      percentage: batch.charityShare / 100,
+      nfts: batch.nfts.map(nft => ({
+        id: nft.nftId,
+        name: nft.nft?.name,
+        price: (+nft.price).toFixed(0),
+        rank: 0,
+        src: nft.nft?.imageUrl,
+        type: nft.nft?.type
+      }))
+    }))
+  }
+
   useEffect(() => {
     if (collections) {
       setCollectionId(collections[0].id)
       getNfts(collections[0].id)
     }
   }, [collections])
+
+  useEffect(() => {
+    if (!isLoading && !isBatchListLoading && !isCausesLoading) {
+      const batches = processBatchList(batchList!);
+      setBatches(batches)
+    }
+  }, [isLoading, isBatchListLoading, isCausesLoading])
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -143,8 +176,8 @@ const ListNftsForm = () => {
         </div>
         <div>
           {!batches.length && "No NFTs batches are associated with this collection."}
-          {batches.length > 0 && batches.map((batch, i) => (
-            <BatchPanel key={i} index={i} batch={batch} updateBatch={updateBatch} />
+          {batches.length > 0 && collections && causes && batches.map((batch, i) => (
+            <BatchPanel key={i} index={i} batch={batch} changeHandler={updateBatch} />
           ))}
         </div>
       </div>

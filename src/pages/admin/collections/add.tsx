@@ -24,7 +24,6 @@ export default function CreateCollection() {
     formData.append('artistAddress', data.artistAddress)
     formData.append('description', data.description)
     formData.append('topicId', data.cause)
-    console.log(formData)
     setLoading(true)
     const toastId = toast.loading('Create collection in progress...')
 

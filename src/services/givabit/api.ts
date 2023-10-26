@@ -7,6 +7,12 @@ import { SaleEntity } from '~/types/entity/sale.entity'
 import { TopicEntity } from '~/types/entity/topic.entity'
 import { USER_COOKIES } from '~/utils/constants'
 
+interface NftItem {
+  id: string
+  price: number
+  rank: number
+}
+
 export class GivabitApi {
   private instance: AxiosInstance
   private TOKEN_KEY = 'givabit-token'
@@ -207,9 +213,41 @@ export class GivabitApi {
     }
   }
 
+  async signNftBatch(info: {
+    countryCode: string
+    charityId: string
+    charityShare: number
+    network: string
+    currency: string
+    expiryInMinutes: number,
+    nfts: NftItem[]
+  }) {
+    const cookies = Cookies.get(USER_COOKIES.JWT)
+    const { data: result } = await this.instance.post('/sales/signNftBatch', info, {
+      headers: {
+        Authorization: `Bearer ${cookies}`,
+      },
+    })
+    return {
+      data: result.data,
+    }
+  }
+
   async createSale(sale: { clientSignature: string; saleData: string; serverSignature: string }) {
     const cookies = Cookies.get(USER_COOKIES.JWT)
     const { data: result } = await this.instance.post('/sales', sale, {
+      headers: {
+        Authorization: `Bearer ${cookies}`,
+      },
+    })
+    return {
+      data: result.data,
+    }
+  }
+
+  async createBatchSale(sale: { clientSignature: string; saleData: string; serverSignature: string }) {
+    const cookies = Cookies.get(USER_COOKIES.JWT)
+    const { data: result } = await this.instance.post('/sales/batch', sale, {
       headers: {
         Authorization: `Bearer ${cookies}`,
       },
