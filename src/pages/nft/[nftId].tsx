@@ -7,23 +7,21 @@ import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useAccount, useSignTypedData, useSigner } from 'wagmi'
 import Footer from '~/components/Footer'
 import { CharityList } from '~/components/Form/CharityList'
 import Header from '~/components/Header'
 import NFTDetails from '~/components/NftDetail/NftDetails'
 import { useNft } from '~/hooks/useNft'
 import { givabitApi } from '~/services/givabit/api'
-import { CHAIN_ID } from '~/utils/constants'
 
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
-import { nftAbi } from '~/abi/erc721'
 import { marketAbi } from '~/abi/market'
 import NftImage from '~/components/Core/NftImage'
 import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
 import { useCharity } from '~/hooks/useCharity'
+import { useListNft } from '~/hooks/useListNft'
 import { useProfile } from '~/hooks/useProfile'
 import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
@@ -67,15 +65,9 @@ const NftPage: NextPage = () => {
 
   const { data: prof } = useProfile({ id: userId })
 
-  const { address } = useAccount()
-  const { data: signer } = useSigner({
-    chainId: CHAIN_ID,
-  })
-  const { data: signedData, signTypedData } = useSignTypedData()
+  const { listNft, isListOpen, signedData, address, signer, serverSignature, saleData, setListOpen } = useListNft();
   const handleSaleStatus = useHandleSaleStatus()
 
-  const [serverSignature, setServerSignature] = useState()
-  const [saleData, setSaleData] = useState()
   const [sale, setSale] = useState<SaleEntity>()
   const [additionalAmount, setAdditionalAmount] = useState<string>()
 
@@ -117,10 +109,11 @@ const NftPage: NextPage = () => {
   //   }
   //   return ''
   // }
-  const [isListOpen, setListOpen] = useState<boolean>(false)
+  // const [isListOpen, setListOpen] = useState<boolean>(false)
   const [isShowImage, setIsShowImage] = useState<boolean>(false)
 
   const handleListOpen = () => {
+    // console.log("listing")
     setListOpen(true)
   }
 
@@ -145,119 +138,20 @@ const NftPage: NextPage = () => {
     //   return
     // }
 
-    if (!data.charityId) {
-      toast.error('You need to choose charity')
-      return
-    }
+    console.log({ data })
 
-    listNft(data)
-  }
-
-  const listNft = async (data: any) => {
-    if (!address) {
-      toast.error('You need to connect wallet')
-      return
-    }
-
-    if (data.charityShare < 10 || data.charityShare > 100) {
-      toast.error('Charity share should be more than 10%, less than 100%')
-      return
-    }
-
-    const toastId = toast.loading('Processing list nft...')
-    setListOpen(false)
-
-    let signResp
-    try {
-      signResp = await givabitApi.signingNftSale({
-        nftId: data.id,
-        charityId: data.charityId,
-        // topicId: data.topicId,
-        network: data.network,
-        currency: data.currency,
-        price: data.price,
-        charityShare: data.charityShare * 100,
-        expiryInMinutes: 30 * 24 * 60,
-        quantity: 1,
-        countryCode: 'US',
-      })
-
-      setServerSignature(signResp.data.serverSignature)
-      setSaleData(signResp.data.saleData)
-    } catch (ex: any) {
-      console.log(ex)
-      toast.error(ex.response.data.message ?? 'Get error while prepare listing.', {
-        id: toastId,
-      })
-      return
-    }
-
-    // Make sign
-    const typedData = JSON.parse(signResp.data.signingData)
-    console.log('typedData', typedData)
-
-    const nftContract = new Contract(typedData.message.nftContract, nftAbi, signer as Signer)
-
-    // if (typedData.message.isMinted)
-    // const isApproved = (await nftContract.getApproved(
-    //   typedData.message.tokenId
-    // )) as TransactionResponse
-    // console.log('isApproved', isApproved)
-    // if (!isApproved) {
-    // const txResponse = (await nftContract.approve(
-    //   typedData.domain.verifyingContract,
-    //   typedData.message.tokenId,
-    //   {
-    //     from: connectedAccount,
-    //   }
-    // )) as TransactionResponse
-    // const txReceipt = await txResponse.wait()
+    // if (!data.charityId) {
+    //   toast.error('You need to choose charity')
+    //   return
     // }
-    // OR
 
-    try {
-      const approvedAll = await nftContract.isApprovedForAll(
-        address,
-        typedData.domain.verifyingContract
-      )
-      console.log('approvedAll', approvedAll)
-      if (!approvedAll) {
-        const txResponse = (await nftContract.setApprovalForAll(
-          typedData.domain.verifyingContract,
-          true,
-          {
-            from: address,
-          }
-        )) as TransactionResponse
-        const txReceipt = await txResponse.wait()
-        console.log('approved successful', txReceipt)
-      }
-    } catch (ex: any) {
-      console.log(ex)
-      toast.error(ex.message ?? 'Get error while approve', {
-        id: toastId,
-      })
-      return
-    }
-
-    try {
-      await signTypedData({
-        domain: typedData.domain,
-        types: typedData.types,
-        value: typedData.message,
-      })
-      toast.remove(toastId)
-    } catch (ex: any) {
-      console.log(ex)
-      toast.error(ex.message ?? 'Get error while sign data', {
-        id: toastId,
-      })
-      return
-    }
+    // listNft(data)
   }
 
   useEffect(() => {
     if (signedData && serverSignature && saleData) {
+      console.log('creating')
+
       givabitApi
         .createSale({
           clientSignature: signedData,
