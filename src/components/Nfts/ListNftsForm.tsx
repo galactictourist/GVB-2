@@ -119,6 +119,7 @@ const ListNftsForm = () => {
     const collection = collections?.find((c: any) => c.id === collectionId);
     const cause = causes?.find((c: any) => c.id === collection?.topicId);
     return batchList.map(batch => ({
+      isListed: true,
       cause: [cause],
       collection: collection?.name,
       collectionId: batch.collectionId,

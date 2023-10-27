@@ -54,8 +54,9 @@ const BatchPanel = ({ index, batch, changeHandler }: Props) => {
 
   const nftChangeHandler = (nftIndex: number, property: string, value: string | number) => {
     const batchNftIndex = ((page - 1) * maxDisplayedNfts) + nftIndex;
+    console.log({ property, value })
     let updatedNfts = batch.nfts;
-    updatedNfts[batchNftIndex][property] = value;
+    updatedNfts[batchNftIndex][property] = property !== "name" ? +(isNaN(+value) ? 0 : +value) : value;
     changeHandler(index, "nfts", updatedNfts)
   }
 
@@ -122,12 +123,12 @@ const BatchPanel = ({ index, batch, changeHandler }: Props) => {
           >
             View NFTs List
           </button>
-          <button onClick={listBatchHandler}
+          {!batch.isListed && <button onClick={listBatchHandler}
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
           >
             List Batch
-          </button>
+          </button>}
         </div>
 
       </div>
