@@ -21,11 +21,11 @@ const NftPanel = ({ index, nft, changeHandler }: Props) => {
         <div className="flex gap-5">
           <div>
             <label>Rank:</label>&nbsp;
-            <input className="w-10 border rounded-md border-gray-300" onChange={(e) => changeHandler(index, "rank", +e.target.value)} value={nft.rank} />
+            <input className="w-10 border rounded-md border-gray-300" onChange={(e) => changeHandler(index, "rank", e.target.value)} value={nft.rank} />
           </div>
           <div>
             <label>Price:</label>&nbsp;
-            <input className="w-10 border rounded-md border-gray-300" onChange={(e) => changeHandler(index, "price", +e.target.value)} value={nft.price} />
+            <input className="w-10 border rounded-md border-gray-300" onChange={(e) => changeHandler(index, "price", e.target.value)} value={nft.price} />
           </div>
         </div>
       </div>
