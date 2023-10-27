@@ -4,7 +4,6 @@ import { useCharitiesByTopic } from '~/hooks/useCharitiesByTopic';
 import { useListNftBatch } from '~/hooks/useListNftBatch';
 import { usePagination } from '~/hooks/usePagination';
 import { givabitApi } from '~/services/givabit/api';
-import { CharityTopicEntity } from '~/types/entity/charity-topic.entity';
 import { maxDisplayedNfts } from '~/utils/constants';
 import { SimplePagination } from '../Pagination/SimplePagination';
 import NftPanel from './NftPanel';
@@ -34,7 +33,6 @@ const BatchPanel = ({ index, batch, changeHandler }: Props) => {
   const { pageSetter, limitSetter, totalSetter, changePage } = pagination;
   const { page, limit, total } = pagination;
 
-  const [topics, setTopics] = useState<CharityTopicEntity[]>([])
   const [showNfts, setShowNfts] = useState(false);
   const [nfts, setNfts] = useState<BatchNftData[]>([]);
   const [count, setCount] = useState(0);
@@ -82,12 +80,6 @@ const BatchPanel = ({ index, batch, changeHandler }: Props) => {
   }, [])
 
   useEffect(() => {
-    if (!isLoading && charityTopics) {
-      setTopics(charityTopics);
-    }
-  }, [isLoading, charityTopics])
-
-  useEffect(() => {
     if (signedData && serverSignature && saleData) {
       givabitApi
         .createBatchSale({
@@ -111,12 +103,14 @@ const BatchPanel = ({ index, batch, changeHandler }: Props) => {
       <div className='flex justify-between'>
         <div className='flex gap-3'>
           <div className='flex items-center gap-1'>Cause: {batch.cause[0]?.name}</div>
-          <select className="n4gForm h-10 capitalize" defaultValue={charityId} onChange={(e) => setCharityId(e.target.value)}>
-            <option label="Select Charity" key="" />
-            {!isLoading && topics.map((charityTopic) => (
-              <option label={charityTopic.charity.name} key={charityTopic.charityId} value={charityTopic.charityId} />
-            ))}
-          </select>
+          <div>
+            <select className="n4gForm h-10 capitalize" value={charityId} onChange={(e) => setCharityId(e.target.value)}>
+              <option label="Select Charity" key="" />
+              {!isLoading && charityTopics?.map((charityTopic) => (
+                <option label={charityTopic.charity.name} key={charityTopic.charityId} value={charityTopic.charityId} />
+              ))}
+            </select>
+          </div>
           <div className='flex items-center gap-1'>Percent:
             <input className="w-20 rounded-md" type="number" value={batch.percentage} max="99" onChange={(e) => changeHandler(index, "percentage", e.target.value)} />
           </div>

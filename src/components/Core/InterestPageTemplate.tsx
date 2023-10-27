@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import Link from 'next/link';
 import AdminContainer from '~/components/Admin/AdminContainer';
+import { useChildCauses } from '~/hooks/useChildCauses';
 import { ITopic } from '~/redux/slices/topicsSlice';
+
 
 interface Labels {
   interestLabel: string
@@ -18,6 +20,16 @@ interface Props {
 }
 
 const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
+  const { data, isLoading: isCausesLoading } = useChildCauses()
+  const causes = data?.reduce((obj: any, cause) => {
+    obj[cause.id] = cause.name;
+    return obj;
+  }, {})
+  const childCauses = data?.reduce((obj: any, cause) => {
+    cause.children.forEach(child => obj[child.id] = child.name)
+    return obj;
+  }, {})
+
   return (
     <>
       <AdminContainer>
@@ -65,12 +77,12 @@ const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
                     >
                       updatedAt
                     </th>
-                    {!_.isUndefined(interests[0]?.parentId) && <th
+                    <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                      parentId
-                    </th>}
+                      {labels.interestLabel === "Causes" ? "Parent Cause" : "Cause"}
+                    </th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                       <span className="sr-only">Edit</span>
                     </th>
@@ -96,7 +108,8 @@ const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
                       <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
                         {interest.updatedAt}
                       </td>
-                      {!_.isUndefined(interest.parentId) && <td className="px-3 py-4 text-sm text-gray-500">{interest.parentId}</td>}
+                      {labels.interestLabel === "Causes" && <td className="px-3 py-4 text-sm text-gray-500">{!_.isUndefined(causes) && causes[interest.parentId]}</td>}
+                      {labels.interestLabel !== "Causes" && <td className="px-3 py-4 text-sm text-gray-500">{!_.isUndefined(causes) && interest.charityTopics.length > 0 ? childCauses[interest.charityTopics[0].topicId] : ""}</td>}
                       <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <Link href={{
                           pathname: `${labels.updateUrl}/${interest.id}`,
