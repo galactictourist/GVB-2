@@ -11,7 +11,7 @@ export const useCharitiesByTopic = (batch: NftBatch) => {
     ['charity', id],
     async () => {
       const { data: resp } = await mainClient.get(`/topics/${id}/charities`)
-      return resp.data
+      return resp.data.filter((topic: CharityTopicEntity) => topic.charity.status === "ACTIVE")
     },
     {
       enabled: !!id,

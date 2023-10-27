@@ -77,7 +77,7 @@ export default function CollectionPage() {
 
                 {collection.ownerId == userId && (
                   <div className="my-4 flex items-center justify-center gap-4">
-                    <Link href={`/collection/${collection.id}/edit`}>
+                    {nfts?.length! > 0 && <Link href={`/collection/${collection.id}/edit`}>
                       <button
                         type="button"
                         className="flex items-center gap-2 rounded-lg border border-n4gMediumTeal px-4 py-2 text-n4gMediumTeal text-white "
@@ -85,7 +85,7 @@ export default function CollectionPage() {
                         <PencilIcon className="h-8 w-8" />
                         Edit
                       </button>
-                    </Link>
+                    </Link>}
                     <Link href={`/collection/${collection.id}/add`}>
                       <button
                         type="button"
