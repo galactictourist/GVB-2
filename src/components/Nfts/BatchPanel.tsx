@@ -52,7 +52,7 @@ const BatchPanel = ({ index, batch, changeHandler }: Props) => {
     await listNftBatch(listBatchData);
   }
 
-  const nftChangeHandler = (nftIndex: number, property: string, value: string | number) => {
+  const nftChangeHandler = (nftIndex: number, property: string, value: string) => {
     const batchNftIndex = ((page - 1) * maxDisplayedNfts) + nftIndex;
     console.log({ property, value })
     let updatedNfts = batch.nfts;

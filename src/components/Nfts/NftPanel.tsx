@@ -4,7 +4,7 @@ import { BatchNftData } from './BatchPanel';
 interface Props {
   index: number
   nft: BatchNftData
-  changeHandler: (index: number, property: string, value: string | number) => void
+  changeHandler: (index: number, property: string, value: string) => void
 }
 
 const NftPanel = ({ index, nft, changeHandler }: Props) => {
