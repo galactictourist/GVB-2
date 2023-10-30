@@ -224,6 +224,11 @@ const NftPage: NextPage = () => {
     }
   }
 
+  const artValueValidator = (price: number, charityShare: number) => {
+    const value = (price * (1 - charityShare / 10000));
+    return value >= 0 ? value.toFixed(3) : 0;
+  }
+
   const handleBuy = async () => {
     if (!address) {
       toast.error('You need to connect wallet')
@@ -452,10 +457,7 @@ const NftPage: NextPage = () => {
                                 <div className="flex items-center">
                                   <span className="pr-2 text-xl text-black">Art:</span>
                                   <span className="text-xl font-bold text-black">
-                                    {(
-                                      Number(sale?.price) *
-                                      (1 - Number(sale?.charityShare) / 10000)
-                                    ).toFixed(3)}
+                                    {artValueValidator(+sale?.price, +sale?.charityShare)}
                                   </span>
                                 </div>
                               </div>
