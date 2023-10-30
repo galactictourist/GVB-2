@@ -2,6 +2,7 @@ import { Menu, Popover, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Bars3Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { signMessage } from '@wagmi/core'
+import Cookies from 'js-cookie'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -110,15 +111,15 @@ const HeaderNoSSR: React.FC<any> = () => {
   }, [])
 
   const handleDisconnect = () => {
+    Object.keys(Cookies.get()).forEach(cookieName => Cookies.remove(cookieName))
     disconnect()
     dispatch(signOut())
   }
 
   return (
     <Popover
-      className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${
-        !isScrolled && 'transition duration-700'
-      }`}
+      className={`fixed z-30 w-full ${isScrolled && 'bg-white shadow-sm '} ${!isScrolled && 'transition duration-700'
+        }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between  py-2 md:justify-start md:space-x-10">
