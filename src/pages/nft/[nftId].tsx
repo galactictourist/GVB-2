@@ -124,11 +124,14 @@ const NftPage: NextPage = () => {
 
   const calcCharityPercent = () => {
     const charity = (Number(sale?.price) * Number(sale?.charityShare)) / 10000
+    console.log({ charity, char: (charity / rangeMaxValue) * 100, price: Number(sale?.price), share: Number(sale?.charityShare) })
+
     return (charity / rangeMaxValue) * 100
   }
 
   const calcArtPercent = () => {
     const charity = (Number(sale?.price) * Number(sale?.charityShare)) / 10000
+    console.log({ charity })
     return ((rangeMaxValue - charity - rangeValue) / rangeMaxValue) * 100
   }
 
@@ -225,7 +228,8 @@ const NftPage: NextPage = () => {
   }
 
   const artValueValidator = (price: number, charityShare: number) => {
-    const value = (price * (1 - charityShare / 10000));
+    const value = (price * (1 - charityShare / 1000000));
+    console.log({ value })
     return value >= 0 ? value.toFixed(3) : 0;
   }
 
@@ -418,7 +422,7 @@ const NftPage: NextPage = () => {
                         <div className="flex flex-col items-center justify-between">
                           <div className="py-1">
                             <span className="text-2xl font-semibold">
-                              {Number(sale?.price).toFixed(3)} MATIC
+                              {(+sale?.price >= 0 ? +sale?.price : Math.abs(+sale?.price)).toFixed(3)} MATIC
                             </span>
                           </div>
                           <button
@@ -444,19 +448,22 @@ const NftPage: NextPage = () => {
                             <div className="flex h-full flex-1 flex-col justify-between">
                               <div className="flex justify-between py-2">
                                 <div className="flex items-center text-xl">
-                                  <span className="pr-3 text-lg text-gray-600">
-                                    Charity: {charity?.name}
+                                  <span className="pr-3 text-lg font-bold text-gray-600">
+                                    Charity:
+                                  </span>
+                                  <span className="pr-3 text-lg text-n4gMediumTeal">
+                                    {charity?.name}
                                   </span>
                                   <span className="font-bold text-n4gMediumTeal">
                                     {(
                                       (Number(sale?.price) * Number(sale?.charityShare)) /
-                                      10000
+                                      1000000
                                     ).toFixed(3)}
                                   </span>
                                 </div>
                                 <div className="flex items-center">
-                                  <span className="pr-2 text-xl text-black">Art:</span>
-                                  <span className="text-xl font-bold text-black">
+                                  <span className="pr-2 text-xl font-bold text-black">Art:</span>
+                                  <span className="text-xl text-black">
                                     {artValueValidator(+sale?.price, +sale?.charityShare)}
                                   </span>
                                 </div>
@@ -501,7 +508,7 @@ const NftPage: NextPage = () => {
                       <div className="flex flex-col justify-between">
                         <div className="py-1">
                           <span className="text-2xl font-semibold">
-                            {rangeMaxValue.toFixed(3)} MATIC
+                            {(rangeMaxValue >= 0 ? rangeMaxValue : Math.abs(rangeMaxValue)).toFixed(3)} MATIC
                           </span>
                         </div>
                         <button
@@ -527,11 +534,11 @@ const NftPage: NextPage = () => {
                           <div className="flex h-full flex-1 flex-col justify-between">
                             <div className="flex justify-between">
                               <div className="flex items-center text-xl">
-                                <span className="pr-2">Charity:</span>
+                                <span className="pr-2 font-bold">Charity:</span>
                                 <span className="text-n4gMediumTeal">
                                   {(
                                     (Number(sale?.price) * Number(sale?.charityShare)) /
-                                    10000
+                                    1000000
                                   ).toFixed(3)}
                                   +
                                 </span>
@@ -539,21 +546,18 @@ const NftPage: NextPage = () => {
                                   type="number"
                                   value={rangeValue}
                                   onChange={(e) => handleRangeValue(e.target.value)}
-                                  className="n4gForm w-[110px] p-[5px] text-xl"
+                                  className="n4gForm w-[110px] p-[5px] text-green-600 text-xl"
                                 />
                               </div>
                               <div className="flex items-center">
-                                <span className="pr-2 text-xl text-black">Art:</span>
-                                <span className="text-xl font-bold text-black">
-                                  {(
-                                    Number(sale?.price) *
-                                    (1 - Number(sale?.charityShare) / 10000)
-                                  ).toFixed(3)}
+                                <span className="pr-2 text-xl font-bold text-black">Art:</span>
+                                <span className="text-xl text-black">
+                                  {artValueValidator(+sale?.price, +sale?.charityShare)}
                                 </span>
                               </div>
                             </div>
                             <div className="flex">
-                              <span className="text-md -mt-3 text-gray-600">{charity?.name}</span>
+                              <span className="text-md -mt-3 text-n4gMediumTeal">{charity?.name}</span>
                             </div>
                             <div className="relative flex items-center justify-center">
                               <div className="flex w-full overflow-hidden rounded-full bg-transparent">
