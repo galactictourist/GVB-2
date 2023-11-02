@@ -1,8 +1,8 @@
 import { useQuery } from 'react-query'
-import { adminClient } from '~/pages/api/adminClient.api'
+import { userClient } from '~/pages/api/userClient.api'
 import { NftEntity } from '~/types/entity/nft.entity'
 
-const mainClient = adminClient(process.env.NEXT_PUBLIC_API || '')
+const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
 
 export type MyNftsResp = {
   data: NftEntity[]
