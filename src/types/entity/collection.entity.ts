@@ -10,6 +10,7 @@ export interface CollectionEntity extends BaseEntity {
   id: string
   name: string
   artistAddress: string
+  artistName: string
   description: string
   imageStorageId: string
   imageUrl: string

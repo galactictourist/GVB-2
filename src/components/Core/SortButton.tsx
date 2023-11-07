@@ -6,11 +6,11 @@ import {
 interface Props {
   name: string
   sortOrder: string
-  sortHandler: Function
+  sortHandler: (e: any) => void
 }
 
 const SortButton = ({ name, sortOrder, sortHandler }: Props) => {
-  return (<button name={name} onClick={(e) => sortHandler(e.target)}>
+  return (<button name={name} onClick={sortHandler}>
     {sortOrder === "ASC" ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronUpIcon className="h-4 w-4" />}
   </button>)
 
