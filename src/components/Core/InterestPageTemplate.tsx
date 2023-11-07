@@ -1,9 +1,10 @@
+
 import _ from 'lodash';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import AdminContainer from '~/components/Admin/AdminContainer';
-import { useChildCauses } from '~/hooks/useChildCauses';
 import { ITopic } from '~/redux/slices/topicsSlice';
-
+import SortButton from './SortButton';
 
 interface Labels {
   interestLabel: string
@@ -19,16 +20,57 @@ interface Props {
   interests: ITopic[]
 }
 
+interface SortData {
+  sortProperty: string
+  orderBy: string
+}
+
 const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
-  const { data, isLoading: isCausesLoading } = useChildCauses()
-  const causes = data?.reduce((obj: any, cause) => {
-    obj[cause.id] = cause.name;
-    return obj;
-  }, {})
-  const childCauses = data?.reduce((obj: any, cause) => {
-    cause.children.forEach(child => obj[child.id] = child.name)
-    return obj;
-  }, {})
+  const [data, setData] = useState<any>();
+  const [sort, setSort] = useState<SortData>({
+    sortProperty: "Name",
+    orderBy: "ASC"
+  });
+
+  const sortHandler = (target: any) => {
+    let sortProperty = !_.isUndefined(target.name) ? target.name : target.parentNode.name;
+    sortProperty = _.isUndefined(sortProperty) ? target.parentNode.parentNode.name : sortProperty;
+
+    let sortData = { ...sort };
+    if (sortData.sortProperty !== sortProperty) {
+      sortData.sortProperty = sortProperty;
+    } else {
+      sortData.orderBy = sortData.orderBy === "ASC" ? "DESC" : "ASC";
+    }
+
+    const newData = _sort(sortData);
+    setData(newData);
+    setSort(sortData);
+  }
+
+  const _sort = (sortData: SortData) => {
+    let newData = [...data];
+
+
+    newData = newData.sort((a: any, b: any) => {
+      if (a[sortData.sortProperty] === "" && b[sortData.sortProperty] !== "") {
+        return 1;
+      } else if (a[sortData.sortProperty] !== "" && b[sortData.sortProperty] === "") {
+        return -1;
+      }
+      return a[sortData.sortProperty] < b[sortData.sortProperty] ? -1 : 1;
+    })
+
+    if (sortData.orderBy === "DESC") {
+      newData = newData.reverse();
+    }
+
+    return newData;
+  }
+
+  useEffect(() => {
+    setData(interests)
+  }, [interests])
 
   return (
     <>
@@ -60,10 +102,12 @@ const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th
+
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 flex items-center gap-2"
                     >
                       Name
+                      <SortButton name="name" sortOrder={sort.orderBy} sortHandler={sortHandler} />
                     </th>
                     <th
                       scope="col"
@@ -77,11 +121,13 @@ const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
                     >
                       updatedAt
                     </th>
+
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 flex items-center gap-2"
                     >
                       {labels.interestLabel === "Causes" ? "Parent Cause" : "Cause"}
+                      <SortButton name="cause" sortOrder={sort.orderBy} sortHandler={sortHandler} />
                     </th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                       <span className="sr-only">Edit</span>
@@ -89,7 +135,7 @@ const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {interests.map((interest) => (
+                  {data?.length > 0 && data.map((interest: any) => (
                     <tr key={interest.name}>
                       <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                         {interest.name}
@@ -108,8 +154,7 @@ const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
                       <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
                         {interest.updatedAt}
                       </td>
-                      {labels.interestLabel === "Causes" && <td className="px-3 py-4 text-sm text-gray-500">{!_.isUndefined(causes) && causes[interest.parentId]}</td>}
-                      {labels.interestLabel !== "Causes" && <td className="px-3 py-4 text-sm text-gray-500">{!_.isUndefined(causes) && interest.charityTopics.length > 0 ? childCauses[interest.charityTopics[0].topicId] : ""}</td>}
+                      <td className="px-3 py-4 text-sm text-gray-500">{interest.cause}</td>
                       <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <Link href={{
                           pathname: `${labels.updateUrl}/${interest.id}`,

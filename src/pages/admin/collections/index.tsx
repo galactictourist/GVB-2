@@ -6,7 +6,8 @@ import { useAllCollections } from '~/hooks/useAllCollections'
 import { ADMIN_PAGES } from '~/utils/constants'
 
 const Collections: NextPage = () => {
-  const { data: collections, isLoading } = useAllCollections()
+  const { data, isLoading } = useAllCollections()
+  const collections = data?.sort((a: any, b: any) => new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1);
 
   return (
     <>
