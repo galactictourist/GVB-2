@@ -1,13 +1,39 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import AdminContainer from '~/components/Admin/AdminContainer'
+import SortButton from '~/components/Core/SortButton'
 import { useAllCollections } from '~/hooks/useAllCollections'
+import { useChildCauses } from '~/hooks/useChildCauses'
+import { useSort } from '~/hooks/useSort'
+import { CollectionEntity } from '~/types/entity/collection.entity'
 import { ADMIN_PAGES } from '~/utils/constants'
 
 const Collections: NextPage = () => {
   const { data, isLoading } = useAllCollections()
-  const collections = data?.sort((a: any, b: any) => new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1);
+  const { data: childCauses, isLoading: isCausesLoading } = useChildCauses()
+  const [collections, setCollections] = useState<CollectionEntity[]>();
+
+  const causes = childCauses?.reduce((obj: any, cause: any) => {
+    let newObj = { ...obj };
+    cause.children.forEach((c: any) => newObj[c.id] = cause.name);
+    return newObj;
+  }, {})
+
+  const { sort, handler } = useSort((newData: any) => setCollections(newData));
+
+  const sortHandler = (e: any) => {
+    handler(e.target, collections)
+  }
+
+  useEffect(() => {
+    if (data && causes) {
+      const collections = data?.map((ce: CollectionEntity) => ({ ...ce, cause: causes[ce.topicId] }))
+        .sort((a: any, b: any) => new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1);
+      setCollections(collections);
+    }
+  }, [data])
 
   return (
     <>
@@ -50,21 +76,29 @@ const Collections: NextPage = () => {
                     </th>
                     <th
                       scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 flex items-center gap-2"
+                    >
+                      Cause
+                      <SortButton name="cause" sortOrder={sort.orderBy} sortHandler={sortHandler} />
+                    </th>
+                    <th
+                      scope="col"
                       className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
                     >
                       Description
                     </th>
                     <th
                       scope="col"
-                      className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 flex items-center gap-2"
                     >
                       Status
+                      <SortButton name="status" sortOrder={sort.orderBy} sortHandler={sortHandler} />
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                      Creator
+                      Artist
                     </th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                       <span className="sr-only">Details</span>
@@ -89,12 +123,15 @@ const Collections: NextPage = () => {
                           </dl>
                         </td>
                         <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
+                          {collection.cause}
+                        </td>
+                        <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                           {collection.description}
                         </td>
                         <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
                           {collection.status}
                         </td>
-                        <td className="px-3 py-4 text-sm text-gray-500">{collection.ownerId}</td>
+                        <td className="px-3 py-4 text-sm text-gray-500">{collection.artistName}</td>
                         <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <a
                             href={`${ADMIN_PAGES.COLLECTIONS.EDIT}/${collection.id}`}

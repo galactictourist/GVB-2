@@ -1,8 +1,8 @@
 
-import _ from 'lodash';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import AdminContainer from '~/components/Admin/AdminContainer';
+import { useSort } from '~/hooks/useSort';
 import { ITopic } from '~/redux/slices/topicsSlice';
 import SortButton from './SortButton';
 
@@ -27,45 +27,10 @@ interface SortData {
 
 const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
   const [data, setData] = useState<any>();
-  const [sort, setSort] = useState<SortData>({
-    sortProperty: "Name",
-    orderBy: "ASC"
-  });
+  const { sort, handler } = useSort((newData: any) => setData(newData));
 
-  const sortHandler = (target: any) => {
-    let sortProperty = !_.isUndefined(target.name) ? target.name : target.parentNode.name;
-    sortProperty = _.isUndefined(sortProperty) ? target.parentNode.parentNode.name : sortProperty;
-
-    let sortData = { ...sort };
-    if (sortData.sortProperty !== sortProperty) {
-      sortData.sortProperty = sortProperty;
-    } else {
-      sortData.orderBy = sortData.orderBy === "ASC" ? "DESC" : "ASC";
-    }
-
-    const newData = _sort(sortData);
-    setData(newData);
-    setSort(sortData);
-  }
-
-  const _sort = (sortData: SortData) => {
-    let newData = [...data];
-
-
-    newData = newData.sort((a: any, b: any) => {
-      if (a[sortData.sortProperty] === "" && b[sortData.sortProperty] !== "") {
-        return 1;
-      } else if (a[sortData.sortProperty] !== "" && b[sortData.sortProperty] === "") {
-        return -1;
-      }
-      return a[sortData.sortProperty] < b[sortData.sortProperty] ? -1 : 1;
-    })
-
-    if (sortData.orderBy === "DESC") {
-      newData = newData.reverse();
-    }
-
-    return newData;
+  const sortHandler = (e: any) => {
+    handler(e.target, data)
   }
 
   useEffect(() => {
