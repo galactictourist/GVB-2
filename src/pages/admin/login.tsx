@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -7,6 +8,13 @@ import Header from '~/components/Header'
 import { login } from '~/redux/slices/adminSlice'
 import { RootState } from '~/redux/store'
 
+const cookiesList: string[] = [
+  'user_snmjwt',
+  'user_givabit_wallet',
+  'user_givabit_id',
+  'admin_snmjwt'
+];
+
 const AdminLogin: NextPage = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -14,7 +22,6 @@ const AdminLogin: NextPage = () => {
 
   const dispatch = useDispatch()
   const { id, error, loading } = useSelector((state: RootState) => state.admin)
-  console.log()
 
   const infoMessage = () => {
     toast.success('Trying to log in', {
@@ -34,6 +41,15 @@ const AdminLogin: NextPage = () => {
     })
   }
 
+  const submitHandler = (e: any) => {
+    dispatch(
+      login({
+        username: username,
+        password: password,
+      })
+    )
+  }
+
   useEffect(() => {
     if (loading) infoMessage()
     if (id && !loading) {
@@ -44,14 +60,9 @@ const AdminLogin: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, error, loading])
 
-  const submitHandler = (e: any) => {
-    dispatch(
-      login({
-        username: username,
-        password: password,
-      })
-    )
-  }
+  useEffect(() => {
+    cookiesList.forEach(cookie => Cookies.remove(cookie));
+  }, []);
 
   return (
     <>

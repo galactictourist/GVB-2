@@ -113,7 +113,6 @@ const NftPage: NextPage = () => {
   const [isShowImage, setIsShowImage] = useState<boolean>(false)
 
   const handleListOpen = () => {
-    // console.log("listing")
     setListOpen(true)
   }
 
@@ -124,14 +123,11 @@ const NftPage: NextPage = () => {
 
   const calcCharityPercent = () => {
     const charity = (Number(sale?.price) * Number(sale?.charityShare)) / 10000
-    console.log({ charity, char: (charity / rangeMaxValue) * 100, price: Number(sale?.price), share: Number(sale?.charityShare) })
-
     return (charity / rangeMaxValue) * 100
   }
 
   const calcArtPercent = () => {
     const charity = (Number(sale?.price) * Number(sale?.charityShare)) / 10000
-    console.log({ charity })
     return ((rangeMaxValue - charity - rangeValue) / rangeMaxValue) * 100
   }
 
@@ -141,20 +137,16 @@ const NftPage: NextPage = () => {
     //   return
     // }
 
-    console.log({ data })
+    if (!data.charityId) {
+      toast.error('You need to choose charity')
+      return
+    }
 
-    // if (!data.charityId) {
-    //   toast.error('You need to choose charity')
-    //   return
-    // }
-
-    // listNft(data)
+    listNft(data)
   }
 
   useEffect(() => {
     if (signedData && serverSignature && saleData) {
-      console.log('creating')
-
       givabitApi
         .createSale({
           clientSignature: signedData,
@@ -192,7 +184,6 @@ const NftPage: NextPage = () => {
       const response = await (
         (await contractMp.cancelOrders([sale.signedData.message])) as TransactionResponse
       ).wait()
-      console.log(response)
 
       toastId = toast.loading('Confirming unlist transaction', {
         id: toastId,
@@ -229,7 +220,6 @@ const NftPage: NextPage = () => {
 
   const artValueValidator = (price: number, charityShare: number) => {
     const value = (price * (1 - charityShare / 1000000));
-    console.log({ value })
     return value >= 0 ? value.toFixed(3) : 0;
   }
 
@@ -269,7 +259,6 @@ const NftPage: NextPage = () => {
           }
         )) as TransactionResponse
       ).wait()
-      console.log(response)
 
       toastId = toast.loading('Confirming buy transaction', {
         id: toastId,
@@ -535,19 +524,21 @@ const NftPage: NextPage = () => {
                             <div className="flex justify-between">
                               <div className="flex items-center text-xl">
                                 <span className="pr-2 font-bold">Charity:</span>
-                                <span className="text-n4gMediumTeal">
-                                  {(
-                                    (Number(sale?.price) * Number(sale?.charityShare)) /
-                                    1000000
-                                  ).toFixed(3)}
-                                  +
-                                </span>
                                 <input
                                   type="number"
                                   value={rangeValue}
                                   onChange={(e) => handleRangeValue(e.target.value)}
                                   className="n4gForm w-[110px] p-[5px] text-green-600 text-xl"
                                 />
+                                <span>
+                                  &nbsp;&nbsp;+&nbsp;&nbsp;
+                                </span>
+                                <span className="text-n4gMediumTeal">
+                                  {(
+                                    (Number(sale?.price) * Number(sale?.charityShare)) /
+                                    1000000
+                                  ).toFixed(3)}
+                                </span>
                               </div>
                               <div className="flex items-center">
                                 <span className="pr-2 text-xl font-bold text-black">Art:</span>
@@ -557,7 +548,7 @@ const NftPage: NextPage = () => {
                               </div>
                             </div>
                             <div className="flex">
-                              <span className="text-md -mt-3 text-n4gMediumTeal">{charity?.name}</span>
+                              <span className="text-md -mt-3 text-gray-600">{charity?.name}</span>
                             </div>
                             <div className="relative flex items-center justify-center">
                               <div className="flex w-full overflow-hidden rounded-full bg-transparent">
