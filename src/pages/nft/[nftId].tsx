@@ -94,7 +94,7 @@ const NftPage: NextPage = () => {
       setValue('id', nft.id)
 
       const listedSales = nft.sales.filter((s) => s.status == 'LISTING')
-
+      console.log({ sale: listedSales[0] })
       if (listedSales.length > 0) {
         setSale(listedSales[0])
       } else {
@@ -220,7 +220,7 @@ const NftPage: NextPage = () => {
   }
 
   const artValueValidator = (price: number, charityShare: number) => {
-    const value = (price * (1 - charityShare / 1000000));
+    const value = (price * (1 - charityShare / 10000));
     return value >= 0 ? value.toFixed(3) : 0;
   }
 
@@ -452,7 +452,7 @@ const NftPage: NextPage = () => {
                                 <div className="flex items-center">
                                   <span className="pr-2 text-xl font-bold text-black">Art:</span>
                                   <span className="text-xl text-black">
-                                    {artValueValidator(+sale?.price, +sale?.charityShare * 100)}
+                                    {artValueValidator(+sale?.price, +sale?.charityShare)}
                                   </span>
                                 </div>
                               </div>
@@ -538,7 +538,7 @@ const NftPage: NextPage = () => {
                                 <span className="text-n4gMediumTeal">
                                   {(
                                     (Number(sale?.price) * Number(sale?.charityShare)) /
-                                    1000000
+                                    10000
                                   ).toFixed(3)}
                                 </span>
                               </div>
