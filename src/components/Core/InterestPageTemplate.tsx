@@ -20,11 +20,6 @@ interface Props {
   interests: ITopic[]
 }
 
-interface SortData {
-  sortProperty: string
-  orderBy: string
-}
-
 const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
   const [data, setData] = useState<any>();
   const { sort, handler } = useSort((newData: any) => setData(newData));
