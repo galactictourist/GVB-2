@@ -117,8 +117,10 @@ const NftPage: NextPage = () => {
   }
 
   const handleRangeValue = (val: any) => {
-    setRangeValue(Number(val))
-    setRangeMaxValue(Number(sale?.price ?? 0) + Number(val))
+    if (!isNaN(val)) {
+      setRangeValue(Number(val))
+      setRangeMaxValue(Number(sale?.price ?? 0) + Number(val))
+    }
   }
 
   const calcCharityPercent = () => {
@@ -176,8 +178,7 @@ const NftPage: NextPage = () => {
     }
 
     let toastId = toast.loading('Unlist is in progress')
-
-    const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
+    const marketContractAddress = sale.signedData?.domain.verifyingContract || '0x0'
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
 
     try {
@@ -440,23 +441,24 @@ const NftPage: NextPage = () => {
                                   <span className="pr-3 text-lg font-bold text-gray-600">
                                     Charity:
                                   </span>
-                                  <span className="pr-3 text-lg text-n4gMediumTeal">
-                                    {charity?.name}
-                                  </span>
+
                                   <span className="font-bold text-n4gMediumTeal">
                                     {(
                                       (Number(sale?.price) * Number(sale?.charityShare)) /
-                                      1000000
+                                      10000
                                     ).toFixed(3)}
                                   </span>
                                 </div>
                                 <div className="flex items-center">
                                   <span className="pr-2 text-xl font-bold text-black">Art:</span>
                                   <span className="text-xl text-black">
-                                    {artValueValidator(+sale?.price, +sale?.charityShare)}
+                                    {artValueValidator(+sale?.price, +sale?.charityShare * 100)}
                                   </span>
                                 </div>
                               </div>
+                              <span className="pr-3 text-lg text-gray-600">
+                                {charity?.name}
+                              </span>
                               <div className="relative flex items-center justify-center">
                                 <div className="flex w-full overflow-hidden rounded-full bg-transparent">
                                   <div
@@ -525,7 +527,7 @@ const NftPage: NextPage = () => {
                               <div className="flex items-center text-xl">
                                 <span className="pr-2 font-bold">Charity:</span>
                                 <input
-                                  type="number"
+                                  min={0}
                                   value={rangeValue}
                                   onChange={(e) => handleRangeValue(e.target.value)}
                                   className="n4gForm w-[110px] p-[5px] text-green-600 text-xl"
