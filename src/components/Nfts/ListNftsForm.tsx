@@ -124,7 +124,7 @@ const ListNftsForm = () => {
       collection: collection?.name,
       collectionId: batch.collectionId,
       charityId: batch.charityId,
-      percentage: batch.charityShare * 100,
+      percentage: batch.charityShare,
       nfts: batch.nfts.map(nft => ({
         id: nft.nftId,
         name: nft.nft?.name,
