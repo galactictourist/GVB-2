@@ -40,7 +40,7 @@ export const useListNft = () => {
         // topicId: data.topicId,
         network: data.network,
         currency: data.currency,
-        price: data.price,
+        price: +data.price * 100,
         charityShare: data.charityShare,
         expiryInMinutes: 30 * 24 * 60,
         quantity: 1,
