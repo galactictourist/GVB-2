@@ -94,7 +94,7 @@ const NftPage: NextPage = () => {
       setValue('id', nft.id)
 
       const listedSales = nft.sales.filter((s) => s.status == 'LISTING')
-      console.log({ sale: listedSales[0] })
+
       if (listedSales.length > 0) {
         setSale(listedSales[0])
       } else {
@@ -117,10 +117,8 @@ const NftPage: NextPage = () => {
   }
 
   const handleRangeValue = (val: any) => {
-    if (!isNaN(val)) {
-      setRangeValue(Number(val))
-      setRangeMaxValue(Number(sale?.price ?? 0) + Number(val))
-    }
+    setRangeValue(Number(val))
+    setRangeMaxValue(Number(sale?.price ?? 0) + Number(val))
   }
 
   const calcCharityPercent = () => {
@@ -527,6 +525,8 @@ const NftPage: NextPage = () => {
                               <div className="flex items-center text-xl">
                                 <span className="pr-2 font-bold">Charity:</span>
                                 <input
+                                  type="number"
+                                  step=".01"
                                   min={0}
                                   value={rangeValue}
                                   onChange={(e) => handleRangeValue(e.target.value)}
