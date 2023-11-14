@@ -301,11 +301,7 @@ const NftPage: NextPage = () => {
           <div className={style.wrapper}>
             <div className={style.nftContainer}>
               <div className="flex w-[480px] flex-col space-y-4">
-                <div className="rounded-lg border">
-                  <div className="flex items-center justify-between p-4">
-                    <Image height={20} width={20} src="/img/polygon-logo.svg" alt="polygon" />
-                  </div>
-
+                <div>
                   <div
                     className="relative h-[480px] cursor-pointer"
                     onClick={() => setIsShowImage(true)}
@@ -502,7 +498,7 @@ const NftPage: NextPage = () => {
                         </div>
                         <button
                           type="button"
-                          className="mt-2 flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal"
+                          className="mt-2 flex w-32 items-center justify-center gap-4 rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-800"
                           onClick={handleBuy}
                         >
                           <span className="text-xl">Buy</span>
@@ -521,7 +517,7 @@ const NftPage: NextPage = () => {
                             />
                           </div>
                           <div className="flex h-full flex-1 flex-col justify-between">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between gap-5">
                               <div className="flex items-center text-xl">
                                 <span className="pr-2 font-bold">Charity:</span>
                                 <input
