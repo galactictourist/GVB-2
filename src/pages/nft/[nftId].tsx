@@ -17,6 +17,8 @@ import { givabitApi } from '~/services/givabit/api'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
+import { FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton } from 'react-share'
+import 'react-social-icons/facebook'
 import { marketAbi } from '~/abi/market'
 import NftImage from '~/components/Core/NftImage'
 import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
@@ -26,10 +28,7 @@ import { useProfile } from '~/hooks/useProfile'
 import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
 import { getCauseBgColor, getCauseTextColor, getEtherscan, shortify, sleep } from '~/utils'
-import FacebookIcon from '../../../public/img/facebook.svg'
 import GivabitHeart from '../../../public/img/givabit_heart.svg'
-import InstagramIcon from '../../../public/img/instagram.svg'
-import TwitterIcon from '../../../public/img/twitter.svg'
 
 const style = {
   wrapper: `flex-col space-y-4 lg:py-8`,
@@ -38,21 +37,6 @@ const style = {
   rightContainer: `flex flex-1 flex-col space-y-4`,
   icon: `h-6 w-6 text-gray-500`,
 }
-
-const actionItems = [
-  {
-    icon: <Image src={FacebookIcon} alt="facebook" width={30} height={30} />,
-    name: 'facebook',
-  },
-  {
-    icon: <Image src={TwitterIcon} alt="twitter" width={30} height={30} />,
-    name: 'twitter',
-  },
-  {
-    icon: <Image src={InstagramIcon} alt="instagram" width={30} height={30} />,
-    name: 'instagram',
-  },
-]
 
 const NftPage: NextPage = () => {
   const router = useRouter()
@@ -384,6 +368,21 @@ const NftPage: NextPage = () => {
                       </a>
                     </Link>
                   </div>
+                  {nft.ownerId == userId && (
+                    <div className="flex gap-1">
+                      <FacebookShareButton
+                        url={window.location.href}
+                      >
+                        <FacebookIcon size={40} round={true} />
+                      </FacebookShareButton>
+
+                      <TwitterShareButton
+                        url={window.location.href}
+                      >
+                        <TwitterIcon size={40} round={true} />
+                      </TwitterShareButton>
+                    </div>
+                  )}
                   {/* <div className="flex divide-x divide-gray-300 rounded-lg border border-gray-300">
                     {actionItems.map((item, index) => (
                       <Link key={index} href={getSocialUrl(prof, item.name)}>
