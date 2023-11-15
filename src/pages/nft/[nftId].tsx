@@ -700,7 +700,8 @@ const NftPage: NextPage = () => {
                             <div className="mt-1">
                               <input
                                 id="price"
-                                type="text"
+                                type="number"
+                                step=".01"
                                 {...register('price', {
                                   valueAsNumber: true,
                                 })}
@@ -719,7 +720,8 @@ const NftPage: NextPage = () => {
                             </label>
                             <div className="mt-1">
                               <input
-                                type="text"
+                                type="number"
+                                step=".01"
                                 id="charityShare"
                                 {...register('charityShare', {
                                   valueAsNumber: true,
