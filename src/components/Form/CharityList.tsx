@@ -6,7 +6,7 @@ import { useChildCauses } from '~/hooks/useChildCauses'
 import { CharityEntity } from '~/types/entity/charities.entity'
 import { classNames } from '~/utils'
 
-export function CharityList({ causeId, onChange }: { causeId: string, onChange: (val: string) => void }) {
+export function CharityList({ causeId = "", onChange }: { causeId?: string, onChange: (val: string) => void }) {
   const [query, setQuery] = useState('')
   const [selectedCharity, selectedCharitySetter] = useState<CharityEntity>()
 
