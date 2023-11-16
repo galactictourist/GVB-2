@@ -370,7 +370,9 @@ const NftPage: NextPage = () => {
                   {nft.ownerId == userId && (
                     <div className="flex gap-1">
                       <FacebookShareButton
-                        url={window.location.href}
+                        // url={window.location.href}
+                        url={"https://givabit2.vercel.app/nft/189b7ee3-a361-47ba-bcea-8bba3a96d989"}
+                        quote={"Welcome, hello"}
                       >
                         <FacebookIcon size={40} round={true} />
                       </FacebookShareButton>
@@ -649,7 +651,7 @@ const NftPage: NextPage = () => {
                           </div> */}
 
                           <div className="sm:col-span-6">
-                            <CharityList onChange={(val: string) => setValue('charityId', val)} />
+                            <CharityList causeId={nft?.cause?.id} onChange={(val: string) => setValue('charityId', val)} />
                             <div className="mt-1"></div>
                           </div>
 
@@ -736,7 +738,7 @@ const NftPage: NextPage = () => {
                     <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                       <button
                         type="submit"
-                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
                       >
                         List
                       </button>

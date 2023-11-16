@@ -2,22 +2,34 @@ import { Combobox } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { useEffect, useMemo, useState } from 'react'
 import { useCharities } from '~/hooks/useCharities'
+import { useChildCauses } from '~/hooks/useChildCauses'
 import { CharityEntity } from '~/types/entity/charities.entity'
 import { classNames } from '~/utils'
 
-export function CharityList({ onChange }: { onChange: (val: string) => void }) {
+export function CharityList({ causeId, onChange }: { causeId: string, onChange: (val: string) => void }) {
   const [query, setQuery] = useState('')
   const [selectedCharity, selectedCharitySetter] = useState<CharityEntity>()
 
-  const { data: charities } = useCharities()
+  const { data } = useCharities()
+  const { data: causes } = useChildCauses()
+
+  const childCauses = causes?.find(cause => cause.id === causeId)!.children.map(c => c.id);
+  const charities = data?.filter(charity => {
+    for (let i = 0; i < charity.charityTopics.length; i++) {
+      const charityTopic = charity.charityTopics[i];
+      if (childCauses?.includes(charityTopic.topicId)) {
+        return true;
+      }
+    }
+  });
 
   const filteredCharities = useMemo(() => {
     if (charities) {
       return query === ''
         ? charities
         : charities.filter((charity) => {
-            return charity.name.toLowerCase().includes(query.toLowerCase())
-          })
+          return charity.name.toLowerCase().includes(query.toLowerCase())
+        })
     }
 
     return []
