@@ -36,7 +36,7 @@ const ListNftsForm = () => {
   const selectCollectionId = async (e: any) => {
     const { data: resp } = await mainClient.get(`/batches/${e.target.value}`)
     if (resp) {
-      const selectedbatches = processBatchList(resp.data!);
+      const selectedbatches = processBatchList(resp.data!, e.target.value);
       setCollectionId(e.target.value)
       setBatches(selectedbatches)
       getNfts(e.target.value)
@@ -121,8 +121,8 @@ const ListNftsForm = () => {
     setNfts(resp.data);
   }
 
-  const processBatchList = (batchList: BatchEntity[]) => {
-    const collection = collections?.find((c: any) => c.id === collectionId);
+  const processBatchList = (batchList: BatchEntity[], id: string) => {
+    const collection = collections?.find((c: any) => c.id === id);
     const cause = causes?.find((c: any) => c.id === collection?.topicId);
     return batchList.map(batch => ({
       isListed: true,
@@ -151,7 +151,7 @@ const ListNftsForm = () => {
 
   useEffect(() => {
     if (!isCollectionLoading && !isBatchListLoading && !isCausesLoading) {
-      const batches = processBatchList(batchList!);
+      const batches = processBatchList(batchList!, collectionId);
       setBatches(batches)
     }
   }, [isCollectionLoading, isBatchListLoading, isCausesLoading])
