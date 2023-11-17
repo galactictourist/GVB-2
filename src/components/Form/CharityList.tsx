@@ -15,12 +15,8 @@ export function CharityList({ causeId = "", onChange }: { causeId?: string, onCh
 
   const childCauses = causes?.find(cause => cause.id === causeId)!.children.map(c => c.id);
   const charities = data?.filter(charity => {
-    for (let i = 0; i < charity.charityTopics.length; i++) {
-      const charityTopic = charity.charityTopics[i];
-      if (childCauses?.includes(charityTopic.topicId)) {
-        return true;
-      }
-    }
+    const charityTopic = charity.charityTopics[0];
+    return childCauses?.includes(charityTopic.topicId);
   });
 
   const filteredCharities = useMemo(() => {
