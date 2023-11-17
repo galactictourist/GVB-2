@@ -651,7 +651,7 @@ const NftPage: NextPage = () => {
                           </div> */}
 
                           <div className="sm:col-span-6">
-                            <CharityList causeId={nft?.cause?.id} onChange={(val: string) => setValue('charityId', val)} />
+                            <CharityList causeId={nft?.collection?.topicId} onChange={(val: string) => setValue('charityId', val)} />
                             <div className="mt-1"></div>
                           </div>
 

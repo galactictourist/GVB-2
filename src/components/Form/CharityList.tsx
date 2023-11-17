@@ -2,22 +2,18 @@ import { Combobox } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { useEffect, useMemo, useState } from 'react'
 import { useCharities } from '~/hooks/useCharities'
-import { useChildCauses } from '~/hooks/useChildCauses'
 import { CharityEntity } from '~/types/entity/charities.entity'
 import { classNames } from '~/utils'
 
 export function CharityList({ causeId = "", onChange }: { causeId?: string, onChange: (val: string) => void }) {
   const [query, setQuery] = useState('')
   const [selectedCharity, selectedCharitySetter] = useState<CharityEntity>()
-
   const { data } = useCharities()
-  const { data: causes } = useChildCauses()
 
-  const childCauses = causes?.find(cause => cause.id === causeId)!.children.map(c => c.id);
   const charities = data?.filter(charity => {
     const charityTopic = charity.charityTopics[0];
     if (charityTopic?.topicId) {
-      return childCauses?.includes(charityTopic.topicId);
+      return causeId === charityTopic.topicId;
     }
     return false;
   });
