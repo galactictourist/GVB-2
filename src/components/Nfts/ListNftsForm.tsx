@@ -10,6 +10,8 @@ import GenerateCsvButton from '../Core/GenerateCsvButton';
 import UploadCsvButton from '../Core/UploadCsvButton';
 import BatchPanel, { NftBatch } from './BatchPanel';
 
+const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
+
 type RawBatchData = {
   id: number
   name: string
@@ -21,7 +23,7 @@ type RawBatchData = {
 }
 
 const ListNftsForm = () => {
-  const { data: collections, isLoading } = useAllCollections()
+  const { data: collections, isLoading: isCollectionLoading } = useAllCollections()
   const { data: batchList, isLoading: isBatchListLoading } = useBatchesByCollection(collections![0])
   const { data: childCauses, isLoading: isCausesLoading } = useChildCauses()
   const causes = childCauses?.reduce((arr: any, cause) => [...arr, ...cause.children], [])
@@ -31,10 +33,14 @@ const ListNftsForm = () => {
   const [batches, setBatches] = useState<NftBatch[]>([])
   const [nfts, setNfts] = useState<NftEntity[]>([])
 
-  const selectCollectionId = (e: any) => {
-    setCollectionId(e.target.value)
-    setBatches([])
-    getNfts(e.target.value)
+  const selectCollectionId = async (e: any) => {
+    const { data: resp } = await mainClient.get(`/batches/${e.target.value}`)
+    if (resp) {
+      const selectedbatches = processBatchList(resp.data!);
+      setCollectionId(e.target.value)
+      setBatches(selectedbatches)
+      getNfts(e.target.value)
+    }
   }
 
   const updateBatch = (index: number, property: string, value: any) => {
@@ -56,7 +62,7 @@ const ListNftsForm = () => {
       return obj;
     }, {})
 
-    if (!isLoading) {
+    if (!isCollectionLoading) {
       const newBatchesObj = data.reduce((obj: any, d: any) => {
         if (!obj.hasOwnProperty(d.batch)) {
           const cause = causes?.find((c: any) => c.name === d.cause)
@@ -90,7 +96,7 @@ const ListNftsForm = () => {
   const generateCsvCallback = () => {
     if (collections) {
       const headers = "id,name,collection,cause,batch,rank,price";
-      if (!isLoading) {
+      if (!isCollectionLoading) {
         const collection = collections?.find(collection => collection.id === collectionId);
         const cause = causes?.find((c: any) => c.id === collection?.topicId)
 
@@ -144,11 +150,11 @@ const ListNftsForm = () => {
   }, [collections])
 
   useEffect(() => {
-    if (!isLoading && !isBatchListLoading && !isCausesLoading) {
+    if (!isCollectionLoading && !isBatchListLoading && !isCausesLoading) {
       const batches = processBatchList(batchList!);
       setBatches(batches)
     }
-  }, [isLoading, isBatchListLoading, isCausesLoading])
+  }, [isCollectionLoading, isBatchListLoading, isCausesLoading])
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
