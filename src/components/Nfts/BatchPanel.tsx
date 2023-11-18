@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { useCharitiesByTopic } from '~/hooks/useCharitiesByTopic';
 import { useListNftBatch } from '~/hooks/useListNftBatch';
 import { usePagination } from '~/hooks/usePagination';
 import { givabitApi } from '~/services/givabit/api';
+import { CharityTopicEntity } from '~/types/entity/charity-topic.entity';
 import { maxDisplayedNfts } from '~/utils/constants';
 import { SimplePagination } from '../Pagination/SimplePagination';
 import NftPanel from './NftPanel';
@@ -21,13 +21,13 @@ export interface BatchNftData {
 
 interface Props {
   index: number
-  batch: NftBatch
+  batch: NftBatch,
+  charityTopics: CharityTopicEntity[],
   changeHandler: (index: number, property: string, value: any) => void
 }
 
-const BatchPanel = ({ index, batch, changeHandler }: Props) => {
+const BatchPanel = ({ index, batch, charityTopics, changeHandler }: Props) => {
   const { listNftBatch, isListOpen, signedData, address, signer, serverSignature, saleData, setListOpen } = useListNftBatch();
-  const { data: charityTopics, isLoading } = useCharitiesByTopic(batch)
 
   const pagination = usePagination();
   const { pageSetter, limitSetter, totalSetter, changePage } = pagination;
@@ -54,7 +54,6 @@ const BatchPanel = ({ index, batch, changeHandler }: Props) => {
 
   const nftChangeHandler = (nftIndex: number, property: string, value: string) => {
     const batchNftIndex = ((page - 1) * maxDisplayedNfts) + nftIndex;
-    console.log({ property, value })
     let updatedNfts = batch.nfts;
     updatedNfts[batchNftIndex][property] = property !== "name" ? +(isNaN(+value) ? 0 : +value) : value;
     changeHandler(index, "nfts", updatedNfts)
@@ -107,8 +106,8 @@ const BatchPanel = ({ index, batch, changeHandler }: Props) => {
           <div>
             <select className="n4gForm h-10 capitalize" value={charityId} onChange={(e) => setCharityId(e.target.value)}>
               <option label="Select Charity" key="" />
-              {!isLoading && charityTopics?.map((charityTopic) => (
-                <option label={charityTopic.charity.name} key={charityTopic.charityId} value={charityTopic.charityId} />
+              {charityTopics?.map((charityTopic) => (
+                <option label={charityTopic.name} key={charityTopic.id} value={charityTopic.id} />
               ))}
             </select>
           </div>

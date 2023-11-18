@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAllCollections } from '~/hooks/useAllCollections';
 import { useBatchesByCollection } from '~/hooks/useBatchesByCollection';
 import { useChildCauses } from '~/hooks/useChildCauses';
 import { userClient } from '~/pages/api/userClient.api';
+import { getCharities } from '~/redux/slices/charitiesSlice';
+import { RootState } from '~/redux/store';
 import { BatchEntity } from '~/types/entity/batch.entity';
 import { NftEntity } from '~/types/entity/nft.entity';
 import DisabledButton from '../Core/DisabledButton';
@@ -23,11 +26,25 @@ type RawBatchData = {
 }
 
 const ListNftsForm = () => {
+  const dispatch = useDispatch()
+
   const { data: collections, isLoading: isCollectionLoading } = useAllCollections()
   const { data: batchList, isLoading: isBatchListLoading } = useBatchesByCollection(collections![0])
   const { data: childCauses, isLoading: isCausesLoading } = useChildCauses()
+  const { loading, allCharities } = useSelector((state: RootState) => state.charities)
+
   const causes = childCauses?.reduce((arr: any, cause) => [...arr, ...cause.children], [])
 
+  const parsedChildCauses = childCauses?.reduce((obj: any, cause) => {
+    cause.children.forEach(child => obj[child.id] = child.name)
+    return obj;
+  }, {})
+  const charities: any = parsedChildCauses && allCharities.map((charity: any) => {
+    return {
+      ...charity,
+      cause: charity.charityTopics.length > 0 ? parsedChildCauses[charity.charityTopics[0].topicId] : ""
+    }
+  })
 
   const [collectionId, setCollectionId] = useState<string>("")
   const [batches, setBatches] = useState<NftBatch[]>([])
@@ -52,6 +69,10 @@ const ListNftsForm = () => {
   const csvHandler = async (data: RawBatchData[]) => {
     const newBatches = await _batchDataProcessing(data);
     setBatches([...batches, ...newBatches]);
+  }
+
+  const filterCharities = (causeName: string) => {
+    return charities.filter((charity: any) => charity.cause === causeName);
   }
 
   const _batchDataProcessing = async (data: RawBatchData[]) => {
@@ -156,6 +177,11 @@ const ListNftsForm = () => {
     }
   }, [isCollectionLoading, isBatchListLoading, isCausesLoading])
 
+  useEffect(() => {
+    dispatch(getCharities())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -184,7 +210,7 @@ const ListNftsForm = () => {
         <div>
           {!batches.length && "No NFTs batches are associated with this collection."}
           {batches.length > 0 && collections && causes && batches.map((batch, i) => (
-            <BatchPanel key={i} index={i} batch={batch} changeHandler={updateBatch} />
+            <BatchPanel key={i} index={i} batch={batch} charityTopics={filterCharities(batch.cause[0].name)} changeHandler={updateBatch} />
           ))}
         </div>
       </div>
@@ -193,3 +219,7 @@ const ListNftsForm = () => {
 }
 
 export default ListNftsForm
+function dispatch(arg0: any) {
+  throw new Error('Function not implemented.');
+}
+
