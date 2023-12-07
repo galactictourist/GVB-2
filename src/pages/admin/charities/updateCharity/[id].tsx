@@ -13,6 +13,7 @@ const UpdateCharity: NextPage = () => {
     name: router.query.name as string,
     causeId: router.query.causeId as string,
     wallet: router.query.walletAddress as string,
+    status: router.query.status as string,
   }
 
   const labels = {

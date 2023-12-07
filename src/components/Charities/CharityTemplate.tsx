@@ -7,6 +7,7 @@ export interface CharityValues {
   name: string
   causeId: string
   wallet: string
+  status: string
 }
 
 interface Labels {
@@ -24,7 +25,8 @@ interface Props {
 const defaultValues = {
   name: "",
   causeId: "",
-  wallet: ""
+  wallet: "",
+  status: "active"
 }
 
 const CharityTemplate = ({ labels, values = defaultValues, submitHandler }: Props) => {
@@ -34,6 +36,7 @@ const CharityTemplate = ({ labels, values = defaultValues, submitHandler }: Prop
   const [walletAddress, setWalletAddress] = useState(values.wallet)
   const [causeId, setCauseId] = useState<string>("Select Cause")
   const [causes, setCauses] = useState([])
+  const [status, setStatus] = useState<string>(values.status)
 
   useEffect(() => {
     if (resp) {
@@ -95,9 +98,16 @@ const CharityTemplate = ({ labels, values = defaultValues, submitHandler }: Prop
                   />
                 </div>
               </div>
+              <div className="sm:col-span-6 md:col-span-4">
+                <p className="text-md font-semibold">Status</p>
+                <select className="n4gForm h-10 capitalize" defaultValue={status} onChange={(e) => setStatus(e.target.value)}>
+                  <option label="Active" id="active" value="active" />
+                  <option label="Inactive" id="inactive" value="inactive" />
+                </select>
+              </div>
             </div>
           </div>
-          <button onClick={(e) => submitHandler({ name, causeId, wallet: walletAddress })}>
+          <button onClick={(e) => submitHandler({ name, causeId, wallet: walletAddress, status: status.toUpperCase() })}>
             <div className="flex w-32 items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-n4gDarkTeal">
               {labels.submitBtnLabel}
             </div>

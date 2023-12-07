@@ -121,8 +121,9 @@ const InterestPageTemplate = ({ loading, labels, interests }: Props) => {
                           query: {
                             id: interest.id,
                             name: interest.name,
-                            causeId: interest.charityTopics?.length > 0 && interest.charityTopics[0].topicId,
-                            walletAddress: interest.charityTopics?.length > 0 && interest.charityTopics[0].wallet
+                            causeId: interest.charityTopics?.length > 0 ? interest.charityTopics[0].topicId : "",
+                            walletAddress: interest.charityTopics?.length > 0 ? interest.charityTopics[0].wallet : "",
+                            status: interest.status.toLowerCase()
                           }
                         }}>
                           <div className="text-indigo-600 hover:text-indigo-900">Edit</div>
