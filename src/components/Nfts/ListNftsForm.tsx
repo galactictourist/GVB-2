@@ -210,7 +210,7 @@ const ListNftsForm = () => {
         <div>
           {!batches.length && "No NFTs batches are associated with this collection."}
           {batches.length > 0 && collections && causes && batches.map((batch, i) => (
-            <BatchPanel key={i} index={i} batch={batch} charityTopics={filterCharities(batch.cause[0].name)} changeHandler={updateBatch} />
+            <BatchPanel key={i} index={i} batch={batch} charityTopics={filterCharities(batch.cause[0]?.name)} changeHandler={updateBatch} />
           ))}
         </div>
       </div>
