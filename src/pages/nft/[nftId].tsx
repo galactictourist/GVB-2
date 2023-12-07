@@ -160,7 +160,7 @@ const NftPage: NextPage = () => {
     }
 
     let toastId = toast.loading('Unlist is in progress')
-    const marketContractAddress = '0x403Fa3cbdA11Bfd05e0df664a4714Faa74AFB5F1'
+    const marketContractAddress = '0xa7536a5C9aA1D93cF0f44eDF4652A56780Bb8477'
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
 
     try {
@@ -219,7 +219,7 @@ const NftPage: NextPage = () => {
 
     let toastId = toast.loading('Buy NFT is in progress')
 
-    const marketContractAddress = '0x403Fa3cbdA11Bfd05e0df664a4714Faa74AFB5F1'
+    const marketContractAddress = '0xa7536a5C9aA1D93cF0f44eDF4652A56780Bb8477'
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
 
     try {
