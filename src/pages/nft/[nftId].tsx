@@ -21,6 +21,7 @@ import { FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton } fr
 import { marketAbi } from '~/abi/market'
 import NftImage from '~/components/Core/NftImage'
 import { useHandleSaleStatus } from '~/handlers/useHandleSaleStatus'
+import { useHandleUpdateNft } from '~/handlers/useHandleUpdateNft'
 import { useCharity } from '~/hooks/useCharity'
 import { useListNft } from '~/hooks/useListNft'
 import { useProfile } from '~/hooks/useProfile'
@@ -38,6 +39,7 @@ const style = {
 }
 
 const NftPage: NextPage = () => {
+  const handleUpdateNft = useHandleUpdateNft();
   const router = useRouter()
   const { nftId } = router.query
   const { data: nft, refetch: loadNft } = useNft({
@@ -45,7 +47,6 @@ const NftPage: NextPage = () => {
   })
 
   const { id: userId } = useSelector((state: RootState) => state.auth)
-
   const { data: prof } = useProfile({ id: userId })
 
   const { listNft, isListOpen, signedData, address, signer, serverSignature, saleData, setListOpen } = useListNft();
@@ -159,7 +160,7 @@ const NftPage: NextPage = () => {
     }
 
     let toastId = toast.loading('Unlist is in progress')
-    const marketContractAddress = sale.signedData?.domain.verifyingContract || '0x0'
+    const marketContractAddress = '0x403Fa3cbdA11Bfd05e0df664a4714Faa74AFB5F1'
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
 
     try {
@@ -218,7 +219,7 @@ const NftPage: NextPage = () => {
 
     let toastId = toast.loading('Buy NFT is in progress')
 
-    const marketContractAddress = sale.signedData.domain.verifyingContract || '0x0'
+    const marketContractAddress = '0x403Fa3cbdA11Bfd05e0df664a4714Faa74AFB5F1'
     const contractMp = new Contract(marketContractAddress, marketAbi, signer as Signer)
 
     try {
@@ -246,27 +247,33 @@ const NftPage: NextPage = () => {
         id: toastId,
       })
 
-      for (let i = 0; i < 30; i++) {
-        const isFinished = await handleSaleStatus.mutateAsync({
-          nftId: nftId as string,
-          actionStatus: 'BUY',
-        })
-        if (isFinished) {
-          toast.success('Buy NFT successed.', {
-            id: toastId,
-            duration: 10000,
-            position: 'top-right',
-          })
-          loadNft()
-          return
-        }
-
-        await sleep(3000)
+      if (response) {
+        handleUpdateNft.mutate(
+          {
+            id: nft?.id,
+            data: {
+              ownerId: userId,
+              isMinted: true
+            }
+          },
+          {
+            onSuccess: () => {
+              toast.success('Buy NFT successed.', {
+                id: toastId,
+                duration: 10000,
+                position: 'top-right',
+              })
+              loadNft()
+              return
+            },
+            onError(error: any) {
+              toast.error('Buy confirmation failed.', {
+                id: toastId,
+              })
+            },
+          }
+        )
       }
-
-      toast.error('Buy confirmation failed.', {
-        id: toastId,
-      })
     } catch (ex) {
       console.log(ex)
       toast.error('Buy NFT failed.', {
