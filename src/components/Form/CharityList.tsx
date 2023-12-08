@@ -41,7 +41,7 @@ export function CharityList({ causeId = "", onChange }: { causeId?: string, onCh
       <Combobox.Label className="block text-sm font-medium text-gray-700">Charity</Combobox.Label>
       <div className="relative mt-1">
         <Combobox.Input
-          className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+          className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-n4gGreen focus:outline-none focus:ring-1 focus:ring-n4gGreen sm:text-sm"
           onChange={(event) => setQuery(event.target.value)}
           displayValue={(charity?: CharityEntity) => charity?.name || ''}
         />
@@ -58,7 +58,7 @@ export function CharityList({ causeId = "", onChange }: { causeId?: string, onCh
                 className={({ active }) =>
                   classNames(
                     'relative cursor-default select-none py-2 pl-8 pr-4',
-                    active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                    active ? 'bg-n4gGreen text-white' : 'text-gray-900'
                   )
                 }
               >

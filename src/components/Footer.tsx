@@ -90,7 +90,7 @@ const navigation = {
 
 const Footer: React.FC<any> = () => {
   return (
-    <footer className="bg-gray-800" aria-labelledby="footer-heading">
+    <footer className="bg-black" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
@@ -171,7 +171,7 @@ const Footer: React.FC<any> = () => {
               <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
                 <button
                   type="submit"
-                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-500 py-2 px-4 text-base font-medium text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-n4gMediumTeal py-2 px-4 text-base font-medium text-white hover:bg-n4gDarkTeal focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   Subscribe
                 </button>
@@ -188,7 +188,7 @@ const Footer: React.FC<any> = () => {
               </a>
             ))}
           </div>
-          <p className="mt-8 text-base text-gray-400 md:order-1 md:mt-0">
+          <p className="mt-8 text-base text-white md:order-1 md:mt-0 mainFont">
             &copy; 2023 Givabit. All rights reserved.
           </p>
         </div>
