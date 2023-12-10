@@ -27,7 +27,7 @@ import { useListNft } from '~/hooks/useListNft'
 import { useProfile } from '~/hooks/useProfile'
 import { RootState } from '~/redux/store'
 import { SaleEntity } from '~/types/entity/sale.entity'
-import { getCauseBgColor, getCauseTextColor, getEtherscan, shortify, sleep } from '~/utils'
+import { getCauseBgColor, getCauseTextColor, getEtherscan, shortify } from '~/utils'
 import GivabitHeart from '../../../public/img/givabit_heart.svg'
 
 const style = {
@@ -172,11 +172,9 @@ const NftPage: NextPage = () => {
         id: toastId,
       })
 
-      for (let i = 0; i < 30; i++) {
-        const isFinished = await handleSaleStatus.mutateAsync({
-          nftId: nftId as string,
-          actionStatus: 'UNLIST',
-        })
+      if (response && nft) {
+        const isFinished = await givabitApi.deleteSale(nft.id);
+
         if (isFinished) {
           toast.success('Unlist successed.', {
             id: toastId,
@@ -186,8 +184,6 @@ const NftPage: NextPage = () => {
           loadNft()
           return
         }
-
-        await sleep(3000)
       }
 
       toast.error('Unlist confirmation failed.', {

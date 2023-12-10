@@ -245,6 +245,18 @@ export class GivabitApi {
     }
   }
 
+  async deleteSale(id: string) {
+    const cookies = Cookies.get(USER_COOKIES.JWT)
+    const { data: result } = await this.instance.delete(`/sales/${id}`, {
+      headers: {
+        Authorization: `Bearer ${cookies}`,
+      },
+    })
+    return {
+      data: result.data,
+    }
+  }
+
   async createBatchSale(sale: { clientSignature: string; saleData: string; serverSignature: string }) {
     const cookies = Cookies.get(USER_COOKIES.JWT)
     const { data: result } = await this.instance.post('/sales/batch', sale, {
