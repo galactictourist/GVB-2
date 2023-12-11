@@ -669,9 +669,9 @@ const NftPage: NextPage = () => {
                               <select
                                 id="network"
                                 {...register('network')}
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-n4gGreen focus:ring-n4gGreen sm:text-sm"
                               >
-                                <option value="POLYGON_MUMBAI">Polygon Mumbai</option>
+                                <option value="POLYGON_MUMBAI" className='bg-n4gGreen'>Polygon Mumbai</option>
                               </select>
                             </div>
                           </div>
@@ -687,9 +687,9 @@ const NftPage: NextPage = () => {
                               <select
                                 id="currency"
                                 {...register('currency')}
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-n4gGreen focus:ring-n4gGreen sm:text-sm"
                               >
-                                <option value="NATIVE_CURRENCY">Polygon</option>
+                                <option value="NATIVE_CURRENCY" className='bg-n4gGreen'>Polygon</option>
                               </select>
                             </div>
                           </div>
@@ -710,7 +710,7 @@ const NftPage: NextPage = () => {
                                   valueAsNumber: true,
                                 })}
                                 required
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-n4gGreen focus:ring-n4gGreen sm:text-sm"
                               />
                             </div>
                           </div>
@@ -731,7 +731,7 @@ const NftPage: NextPage = () => {
                                   valueAsNumber: true,
                                 })}
                                 required
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-n4gGreen focus:ring-n4gGreen sm:text-sm"
                               />
                             </div>
                           </div>
@@ -747,7 +747,7 @@ const NftPage: NextPage = () => {
                       </button>
                       <button
                         type="button"
-                        className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+                        className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-n4gGreen focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
                         onClick={() => setListOpen(false)}
                       >
                         Cancel
