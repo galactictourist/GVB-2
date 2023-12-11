@@ -5,7 +5,18 @@ import { CollectionEntity } from '~/types/entity/collection.entity'
 
 const mainClient = userClient(process.env.NEXT_PUBLIC_API || '')
 
-export const useBatchesByCollection = ({ id }: CollectionEntity) => {
+export const useBatchesByCollection = (entity: CollectionEntity) => {
+  if (entity === undefined) {
+    return useQuery<BatchEntity[]>(
+      ['batch'],
+      () => {
+        return []
+      }
+    )
+  }
+
+  const { id } = entity;
+
   return useQuery<BatchEntity[]>(
     ['batch', id],
     async () => {

@@ -143,7 +143,7 @@ const UploadNftsForm = () => {
   }
 
   useEffect(() => {
-    if (collections) {
+    if (collections && collections.length > 0) {
       setCollectionId(collections[0].id)
       getExistingNfts(collections[0].id);
     }

@@ -145,6 +145,11 @@ const ListNftsForm = () => {
   const processBatchList = (batchList: BatchEntity[], id: string) => {
     const collection = collections?.find((c: any) => c.id === id);
     const cause = causes?.find((c: any) => c.id === collection?.topicId);
+
+    if (batchList === undefined) {
+      return []
+    }
+
     return batchList.map(batch => ({
       isListed: true,
       cause: [cause],
@@ -164,7 +169,7 @@ const ListNftsForm = () => {
   }
 
   useEffect(() => {
-    if (collections) {
+    if (collections && collections.length > 0) {
       setCollectionId(collections[0].id)
       getNfts(collections[0].id)
     }
