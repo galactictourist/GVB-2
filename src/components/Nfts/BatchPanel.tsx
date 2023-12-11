@@ -46,7 +46,7 @@ const BatchPanel = ({ index, batch, charityTopics, changeHandler }: Props) => {
       collectionId: batch.collectionId,
       charityId: charityId,
       charityShare: batch.percentage,
-      nfts: batch.nfts
+      nfts: batch.nfts.filter((nft: any) => nft.price > 0)
     }
 
     await listNftBatch(listBatchData);

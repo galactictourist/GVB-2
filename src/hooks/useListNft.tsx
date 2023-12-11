@@ -29,6 +29,11 @@ export const useListNft = () => {
       return
     }
 
+    if (data.price === 0) {
+      toast.error('Price should be more than 0 to be listed')
+      return
+    }
+
     const toastId = toast.loading('Processing list nft...')
     setListOpen(false)
 
