@@ -21,12 +21,12 @@ export default function EditCollection() {
   const handleUpdateCollection = useHandleUpdateCollection()
   const handleUploadImage = useHandleUploadImage()
 
-  const updateCollection = (formData: any, imgUrl: string) => {
+  const updateCollection = (formData: any, imgId: string) => {
     handleUpdateCollection.mutate(
       {
         id: collectionId as string,
         data: {
-          imageStorageId: imgUrl,
+          imageStorageId: imgId,
           name: formData.name,
           artistAddress: formData.artistAddress,
           description: formData.description,
@@ -59,7 +59,7 @@ export default function EditCollection() {
         { image: data.file[0], postUrl: '/storage/collection/image' },
         {
           onSuccess(resp) {
-            updateCollection(data, resp.url)
+            updateCollection(data, resp.id)
           },
           onError(error: any) {
             console.log(error)

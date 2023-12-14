@@ -9,4 +9,5 @@ export interface StorageEntity extends BaseEntity {
   path: string
   size: number
   url: string
+  id: string
 }
