@@ -9,7 +9,7 @@ export default function UploadZipForm({ label, imagesHandler }: Props) {
   const uploadZipHandler = async (e: any) => {
     const rawContents = await zip.loadAsync(e.target.files[0]);
     const fileKeys = Object.keys(rawContents.files)
-      .filter(key => key.match(/\d\.(jpg|jpeg|png|mp4)$/i) && !key.match(/MACOSX/i))
+      .filter(key => key.match(/(\d|\w)\.(gif|jpg|jpeg|png|mp4)$/i) && !key.match(/MACOSX/i))
       .sort(_sort);
 
     let rawFiles: File[] = [];
@@ -21,7 +21,7 @@ export default function UploadZipForm({ label, imagesHandler }: Props) {
     const files = await Promise.all(fileKeys.map(async (key, i) => {
       // convert raw image data to image file
       const fileContent = await rawContents.file(key)!.async('blob');
-      const [, fileType] = key.match(/\.(jpg|jpeg|png|mp4)$/)!;
+      const [, fileType] = key.match(/\.(gif|jpg|jpeg|png|mp4)$/)!;
       const fileFormat = fileType === "mp4" ? `video/${fileType}` : `image/${fileType}`;
       const file = new File([fileContent], key, { type: fileFormat });
       rawFiles.push(file)

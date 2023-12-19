@@ -209,7 +209,7 @@ const UploadNftsForm = () => {
             {displayedImages.map((image, _id) => (
               <tr key={_id}>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                  <NftImage name={image.name} type={image.metadata.type || image.type} src={image.src} />
+                  <NftImage name={image.name} type={image.metadata.type || image.type} src={image.src.match(/blob/) ? image.src : image.metadata.imageUrl} />
                 </td>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                   {image.name}
